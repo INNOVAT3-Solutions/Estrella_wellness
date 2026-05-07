@@ -63,7 +63,8 @@ const InfoIcon = ({ type }: { type: "website" | "phone" | "address" }) => {
   return <div className="mr-3 flex-shrink-0">{icons[type]}</div>;
 };
 
-interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
+interface HeroSectionProps {
+  className?: string;
   logo?: {
     url: string;
     alt: string;
@@ -86,7 +87,7 @@ interface HeroSectionProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
   (
-    { className, logo, slogan, title, subtitle, callToAction, backgroundImage, contactInfo, ...props },
+    { className, logo, slogan, title, subtitle, callToAction, backgroundImage, contactInfo },
     ref
   ) => {
     const containerVariants = {
@@ -107,7 +108,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         opacity: 1,
         transition: {
           duration: 0.6,
-          ease: "easeOut",
+          ease: "easeOut" as const,
         },
       },
     };
@@ -122,7 +123,6 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         initial="hidden"
         animate="visible"
         variants={containerVariants}
-        {...props}
       >
         {/* Left Side: Content */}
         <div className="flex w-full flex-col justify-between p-8 md:w-1/2 md:p-14 lg:w-3/5 lg:p-20 lg:min-h-[680px]">
@@ -216,7 +216,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           }}
           initial={{ clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" }}
           animate={{ clipPath: "polygon(25% 0, 100% 0, 100% 100%, 0% 100%)" }}
-          transition={{ duration: 1.2, ease: "circOut" }}
+          transition={{ duration: 1.2, ease: "circOut" as const }}
         ></motion.div>
       </motion.section>
     );

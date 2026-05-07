@@ -9,8 +9,8 @@ export function FinalCta() {
       <div className="grid lg:grid-cols-12">
         <div className="relative aspect-[4/5] w-full lg:col-span-5 lg:aspect-auto lg:min-h-[640px]">
           <Image
-            src="/images/candid-moment-inside-modern-south-florida.png"
-            alt="Estrella patient experience"
+            src="/images/weight-transformation.png"
+            alt="Estrella patient on a weight transformation journey"
             fill
             className="object-cover"
           />
