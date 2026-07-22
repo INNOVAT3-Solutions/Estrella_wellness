@@ -1,14 +1,29 @@
+"use client";
+
 import { Reveal } from "@/components/ui/reveal";
 import { TestimonialsColumn } from "@/components/ui/testimonials-columns-1";
-import { TESTIMONIALS } from "@/lib/social-proof";
+import { testimonialCards } from "@/lib/social-proof";
+import { useLang, pick } from "@/lib/i18n";
+
+const COPY = {
+  en: {
+    eyebrow: "In their words",
+    title1: "Patients on",
+    title2: "the program.",
+    lead: "Selected accounts from weight loss patients across our clinics — published with consent, edited only for length.",
+  },
+  es: {
+    eyebrow: "En sus palabras",
+    title1: "Pacientes del",
+    title2: "programa.",
+    lead: "Testimonios seleccionados de pacientes de pérdida de peso de nuestras clínicas — publicados con consentimiento, editados solo por extensión.",
+  },
+};
 
 export function Testimonials() {
-  const cards = TESTIMONIALS.map((t) => ({
-    text: t.quote,
-    image: t.image,
-    name: t.name,
-    role: `${t.program} · ${t.city}`,
-  }));
+  const { lang } = useLang();
+  const t = pick(lang, COPY);
+  const cards = testimonialCards(lang);
 
   const col1 = cards.slice(0, 3);
   const col2 = cards.slice(3, 6);
@@ -19,17 +34,16 @@ export function Testimonials() {
       <div className="container-x">
         <div className="grid items-end gap-10 border-b border-navy-900/15 pb-14 md:grid-cols-12">
           <Reveal className="md:col-span-7">
-            <div className="eyebrow">In their words</div>
+            <div className="eyebrow">{t.eyebrow}</div>
             <h2 className="mt-5 font-display text-display-lg font-light text-navy-900">
-              Patient
+              {t.title1}
               <br />
-              <span className="font-normal italic">testimony.</span>
+              <span className="font-normal italic">{t.title2}</span>
             </h2>
           </Reveal>
           <Reveal delay={120} className="md:col-span-5 md:text-right">
             <p className="max-w-md text-[16px] leading-[1.65] text-navy-900/65 md:ml-auto">
-              Selected accounts from patients across our clinics — published
-              with consent, edited only for length.
+              {t.lead}
             </p>
           </Reveal>
         </div>

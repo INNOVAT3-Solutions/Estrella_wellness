@@ -7,277 +7,192 @@ import {
   StepHeading,
 } from "@/components/intake/fields";
 import { IntakeFooter } from "@/components/intake/progress";
+import { useLang, pick } from "@/lib/i18n";
+
+/** Stored values — keep byte-identical for persisted data. */
+const WL_GOALS = [
+  "Weight loss",
+  "Appetite suppression",
+  "Blood sugar support",
+  "Energy improvement",
+  "Reduced cravings",
+  "Metabolic health",
+];
+
+const DURATIONS = [
+  "Less than 1 year",
+  "1–5 years",
+  "5–10 years",
+  "More than 10 years",
+];
+
+const PREVIOUS_MEDS = [
+  "Semaglutide",
+  "Tirzepatide",
+  "Phentermine",
+  "Contrave",
+  "Other",
+];
+
+const EATING_HABITS = [
+  "Frequent overeating",
+  "Emotional eating",
+  "Late-night eating",
+  "Sugar cravings",
+  "Portion control struggles",
+  "Inconsistent eating schedule",
+];
+
+const COPY = {
+  en: {
+    eyebrow: "Section 6 of 8",
+    title: "Tell us more about your weight loss",
+    subtitle:
+      "A few quick questions about your history with weight. The more your doctor knows, the better your plan.",
+    blockTitle: "GLP-1 Weight Loss Program",
+    goalsLabel: "What are your primary goals?",
+    durationLabel: "How long have you struggled with weight management?",
+    triedLabel: "Have you previously tried weight loss medications?",
+    whichLabel: "Which ones?",
+    habitsLabel: "What best describes your eating habits?",
+    yes: "Yes",
+    no: "No",
+    goals: {} as Record<string, string>,
+    durations: {} as Record<string, string>,
+    meds: {} as Record<string, string>,
+    habits: {} as Record<string, string>,
+  },
+  es: {
+    eyebrow: "Sección 6 de 8",
+    title: "Cuéntanos más sobre tu pérdida de peso",
+    subtitle:
+      "Unas preguntas rápidas sobre tu historia con el peso. Mientras más sepa tu médico, mejor será tu plan.",
+    blockTitle: "Programa de Pérdida de Peso GLP-1",
+    goalsLabel: "¿Cuáles son tus metas principales?",
+    durationLabel: "¿Cuánto tiempo llevas batallando con el manejo del peso?",
+    triedLabel: "¿Has probado medicamentos para bajar de peso anteriormente?",
+    whichLabel: "¿Cuáles?",
+    habitsLabel: "¿Qué describe mejor tus hábitos de alimentación?",
+    yes: "Sí",
+    no: "No",
+    goals: {
+      "Weight loss": "Pérdida de peso",
+      "Appetite suppression": "Supresión del apetito",
+      "Blood sugar support": "Apoyo del azúcar en sangre",
+      "Energy improvement": "Más energía",
+      "Reduced cravings": "Menos antojos",
+      "Metabolic health": "Salud metabólica",
+    } as Record<string, string>,
+    durations: {
+      "Less than 1 year": "Menos de 1 año",
+      "1–5 years": "1–5 años",
+      "5–10 years": "5–10 años",
+      "More than 10 years": "Más de 10 años",
+    } as Record<string, string>,
+    meds: {
+      "Semaglutide": "Semaglutida",
+      "Tirzepatide": "Tirzepatida",
+      "Phentermine": "Fentermina",
+      "Contrave": "Contrave",
+      "Other": "Otro",
+    } as Record<string, string>,
+    habits: {
+      "Frequent overeating": "Comer en exceso con frecuencia",
+      "Emotional eating": "Comer por emociones",
+      "Late-night eating": "Comer tarde en la noche",
+      "Sugar cravings": "Antojos de azúcar",
+      "Portion control struggles": "Dificultad para controlar porciones",
+      "Inconsistent eating schedule": "Horarios de comida irregulares",
+    } as Record<string, string>,
+  },
+};
 
 export default function GoalDetailsPage() {
   const { data, set, toggleArr } = useIntake();
+  const { lang } = useLang();
+  const t = pick(lang, COPY);
 
-  const wantsWeight =
-    data.goals.includes("Weight loss") ||
-    data.goals.includes("Appetite control");
-  const wantsRecovery =
-    data.goals.includes("Recovery") || data.goals.includes("Athletic recovery");
-  const wantsHormone =
-    data.goals.includes("Hormone optimization") ||
-    data.goals.includes("Healthy aging") ||
-    data.goals.includes("Muscle preservation");
-  const wantsSexual =
-    data.goals.includes("Sexual performance") || data.goals.includes("Libido");
+  const localize = (
+    values: string[],
+    map: Record<string, string>
+  ): { value: string; label: string }[] =>
+    values.map((v) => ({
+      value: v,
+      label: lang === "es" ? map[v] ?? v : v,
+    }));
 
-  const showAny =
-    wantsWeight || wantsRecovery || wantsHormone || wantsSexual;
-
-  let valid = true;
-  if (wantsWeight) {
-    valid =
-      valid &&
-      data.weightLossGoals.length > 0 &&
-      !!data.weightStruggleDuration &&
-      !!data.triedWeightLossMeds &&
-      data.eatingHabits.length > 0;
-  }
-  if (wantsRecovery) {
-    valid =
-      valid &&
-      data.recoveryGoals.length > 0 &&
-      !!data.hasActiveInjury &&
-      !!data.recentSurgery;
-  }
-  if (wantsHormone) {
-    valid = valid && data.hormoneSymptoms.length > 0 && !!data.hadRecentLabs;
-  }
-  if (wantsSexual) {
-    valid = valid && !!data.edFrequency && !!data.takingNitrates;
-  }
+  const valid =
+    data.weightLossGoals.length > 0 &&
+    !!data.weightStruggleDuration &&
+    !!data.triedWeightLossMeds &&
+    data.eatingHabits.length > 0;
 
   return (
     <div className="mx-auto max-w-4xl">
       <StepHeading
-        eyebrow="Section 6 of 8"
-        title="Tell us a little more about your goals"
-        subtitle="A few quick questions, tailored to what you selected. The more your provider knows, the better your plan."
+        eyebrow={t.eyebrow}
+        title={t.title}
+        subtitle={t.subtitle}
       />
 
-      {!showAny && (
-        <div className="rounded-3xl border border-navy-100 bg-white p-6 shadow-soft sm:p-8">
-          <p className="text-navy-700">
-            Based on your goals, no extra questions are needed in this
-            section. Continue when you're ready.
-          </p>
-        </div>
-      )}
+      <Block title={t.blockTitle}>
+        <Sub label={t.goalsLabel} required>
+          <MultiSelect
+            cols={3}
+            options={localize(WL_GOALS, t.goals)}
+            values={data.weightLossGoals}
+            onToggle={(v) => toggleArr("weightLossGoals", v)}
+          />
+        </Sub>
 
-      {wantsWeight && (
-        <Block title="Weight loss program">
-          <Sub label="What are your primary goals?" required>
+        <Sub label={t.durationLabel} required>
+          <RadioGroup
+            cols={2}
+            options={localize(DURATIONS, t.durations)}
+            value={data.weightStruggleDuration}
+            onChange={(v) => set("weightStruggleDuration", v)}
+          />
+        </Sub>
+
+        <Sub label={t.triedLabel} required>
+          <RadioGroup
+            options={[
+              { value: "Yes", label: t.yes },
+              { value: "No", label: t.no },
+            ]}
+            value={
+              data.triedWeightLossMeds === "yes"
+                ? "Yes"
+                : data.triedWeightLossMeds === "no"
+                ? "No"
+                : ""
+            }
+            onChange={(v) =>
+              set("triedWeightLossMeds", v === "Yes" ? "yes" : "no")
+            }
+          />
+        </Sub>
+
+        {data.triedWeightLossMeds === "yes" && (
+          <Sub label={t.whichLabel}>
             <MultiSelect
               cols={3}
-              options={[
-                "Weight loss",
-                "Appetite suppression",
-                "Blood sugar support",
-                "Energy improvement",
-                "Reduced cravings",
-                "Metabolic health",
-              ]}
-              values={data.weightLossGoals}
-              onToggle={(v) => toggleArr("weightLossGoals", v)}
+              options={localize(PREVIOUS_MEDS, t.meds)}
+              values={data.previousWeightMeds}
+              onToggle={(v) => toggleArr("previousWeightMeds", v)}
             />
           </Sub>
+        )}
 
-          <Sub
-            label="How long have you struggled with weight management?"
-            required
-          >
-            <RadioGroup
-              cols={2}
-              options={[
-                "Less than 1 year",
-                "1–5 years",
-                "5–10 years",
-                "More than 10 years",
-              ]}
-              value={data.weightStruggleDuration}
-              onChange={(v) => set("weightStruggleDuration", v)}
-            />
-          </Sub>
-
-          <Sub label="Have you previously tried weight loss medications?" required>
-            <RadioGroup
-              options={["Yes", "No"]}
-              value={
-                data.triedWeightLossMeds === "yes"
-                  ? "Yes"
-                  : data.triedWeightLossMeds === "no"
-                  ? "No"
-                  : ""
-              }
-              onChange={(v) =>
-                set("triedWeightLossMeds", v === "Yes" ? "yes" : "no")
-              }
-            />
-          </Sub>
-
-          {data.triedWeightLossMeds === "yes" && (
-            <Sub label="Which ones?">
-              <MultiSelect
-                cols={3}
-                options={[
-                  "Semaglutide",
-                  "Tirzepatide",
-                  "Phentermine",
-                  "Contrave",
-                  "Other",
-                ]}
-                values={data.previousWeightMeds}
-                onToggle={(v) => toggleArr("previousWeightMeds", v)}
-              />
-            </Sub>
-          )}
-
-          <Sub label="What best describes your eating habits?" required>
-            <MultiSelect
-              cols={2}
-              options={[
-                "Frequent overeating",
-                "Emotional eating",
-                "Late-night eating",
-                "Sugar cravings",
-                "Portion control struggles",
-                "Inconsistent eating schedule",
-              ]}
-              values={data.eatingHabits}
-              onToggle={(v) => toggleArr("eatingHabits", v)}
-            />
-          </Sub>
-        </Block>
-      )}
-
-      {wantsRecovery && (
-        <Block title="Recovery program">
-          <Sub label="What are you seeking recovery support for?" required>
-            <MultiSelect
-              cols={2}
-              options={[
-                "Workout recovery",
-                "Joint discomfort",
-                "Tendon / ligament recovery",
-                "Injury recovery",
-                "Mobility support",
-                "Chronic inflammation",
-              ]}
-              values={data.recoveryGoals}
-              onToggle={(v) => toggleArr("recoveryGoals", v)}
-            />
-          </Sub>
-          <Sub label="Do you currently have an active injury?" required>
-            <RadioGroup
-              options={["Yes", "No"]}
-              value={
-                data.hasActiveInjury === "yes"
-                  ? "Yes"
-                  : data.hasActiveInjury === "no"
-                  ? "No"
-                  : ""
-              }
-              onChange={(v) =>
-                set("hasActiveInjury", v === "Yes" ? "yes" : "no")
-              }
-            />
-          </Sub>
-          <Sub label="Have you undergone surgery in the last 12 months?" required>
-            <RadioGroup
-              options={["Yes", "No"]}
-              value={
-                data.recentSurgery === "yes"
-                  ? "Yes"
-                  : data.recentSurgery === "no"
-                  ? "No"
-                  : ""
-              }
-              onChange={(v) => set("recentSurgery", v === "Yes" ? "yes" : "no")}
-            />
-          </Sub>
-        </Block>
-      )}
-
-      {wantsHormone && (
-        <Block title="Hormone optimization">
-          <Sub label="Which symptoms are you experiencing?" required>
-            <MultiSelect
-              cols={2}
-              options={[
-                "Low energy",
-                "Poor recovery",
-                "Reduced libido",
-                "Brain fog",
-                "Mood changes",
-                "Muscle loss",
-                "Poor sleep",
-                "Increased body fat",
-              ]}
-              values={data.hormoneSymptoms}
-              onToggle={(v) => toggleArr("hormoneSymptoms", v)}
-            />
-          </Sub>
-          <Sub label="Have you had hormone labs completed in the last 12 months?" required>
-            <RadioGroup
-              options={["Yes", "No"]}
-              value={
-                data.hadRecentLabs === "yes"
-                  ? "Yes"
-                  : data.hadRecentLabs === "no"
-                  ? "No"
-                  : ""
-              }
-              onChange={(v) => set("hadRecentLabs", v === "Yes" ? "yes" : "no")}
-            />
-          </Sub>
-          {data.hadRecentLabs === "yes" && (
-            <div className="rounded-2xl border border-dashed border-navy-200 bg-sand-50 p-5 text-sm text-navy-600">
-              You'll be able to upload your labs after your account is created.
-              Your provider will review them with your intake.
-            </div>
-          )}
-        </Block>
-      )}
-
-      {wantsSexual && (
-        <Block title="Sexual health">
-          <Sub
-            label="Are you experiencing difficulty with erections?"
-            required
-          >
-            <RadioGroup
-              cols={3}
-              options={["Occasionally", "Frequently", "Almost always"]}
-              value={data.edFrequency}
-              onChange={(v) => set("edFrequency", v)}
-            />
-          </Sub>
-          <Sub
-            label="Are you currently taking nitrates or nitroglycerin?"
-            required
-          >
-            <RadioGroup
-              options={["Yes", "No"]}
-              value={
-                data.takingNitrates === "yes"
-                  ? "Yes"
-                  : data.takingNitrates === "no"
-                  ? "No"
-                  : ""
-              }
-              onChange={(v) =>
-                set("takingNitrates", v === "Yes" ? "yes" : "no")
-              }
-            />
-            <p className="mt-2 text-xs text-rose-700">
-              Important: Nitrate or nitroglycerin use is a contraindication for
-              ED medications.
-            </p>
-          </Sub>
-        </Block>
-      )}
+        <Sub label={t.habitsLabel} required>
+          <MultiSelect
+            cols={2}
+            options={localize(EATING_HABITS, t.habits)}
+            values={data.eatingHabits}
+            onToggle={(v) => toggleArr("eatingHabits", v)}
+          />
+        </Sub>
+      </Block>
 
       <IntakeFooter
         back="/qualify/allergies"

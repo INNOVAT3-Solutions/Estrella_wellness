@@ -1,5 +1,6 @@
 import { Hero } from "@/components/home/hero";
 import { PressStrip } from "@/components/home/press-strip";
+import { WhatsIncluded } from "@/components/home/whats-included";
 import { ProgramsGrid } from "@/components/home/programs-grid";
 import { StatsBar } from "@/components/home/stats-bar";
 import { HowItWorks } from "@/components/home/how-it-works";
@@ -14,9 +15,10 @@ export default function HomePage() {
     <>
       <Hero />
       <PressStrip />
+      <WhatsIncluded />
       <ProgramsGrid />
-      <StatsBar />
       <HowItWorks />
+      <StatsBar />
       <Testimonials />
       <Comparison />
       <PharmacyPartner />

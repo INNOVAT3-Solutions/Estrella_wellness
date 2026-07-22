@@ -4,10 +4,27 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
+import { useLang, pick } from "@/lib/i18n";
+
+const COPY = {
+  en: {
+    cta: "Start consultation",
+    price: `${fmtPrice(WEIGHT_LOSS.price)}/mo`,
+    reg: fmtPrice(WEIGHT_LOSS.regularPrice),
+  },
+  es: {
+    cta: "Iniciar consulta",
+    price: `${fmtPrice(WEIGHT_LOSS.price)}/mes`,
+    reg: fmtPrice(WEIGHT_LOSS.regularPrice),
+  },
+};
 
 export function StickyMobileCta() {
   const pathname = usePathname() || "";
   const [show, setShow] = useState(false);
+  const { lang } = useLang();
+  const t = pick(lang, COPY);
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > 480);
@@ -27,9 +44,11 @@ export function StickyMobileCta() {
       <div className="border-t border-navy-900/15 bg-cream-50/95 px-4 py-3 backdrop-blur-md">
         <Link
           href="/qualify"
-          className="flex w-full items-center justify-center gap-2 bg-navy-900 px-5 py-4 text-[12px] font-medium uppercase tracking-[0.2em] text-cream-50 active:bg-navy-800"
+          className="flex w-full items-center justify-center gap-2 bg-navy-900 px-5 py-4 text-[12px] font-medium uppercase tracking-[0.18em] text-cream-50 active:bg-navy-800"
         >
-          Begin intake
+          {t.cta}
+          <span className="text-cream-50/50 line-through">{t.reg}</span>
+          <span className="font-bold text-sun-300">{t.price}</span>
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>

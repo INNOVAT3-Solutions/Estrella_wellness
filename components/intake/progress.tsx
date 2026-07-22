@@ -3,20 +3,30 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useLang, pick } from "@/lib/i18n";
+import { LangToggle } from "@/components/ui/lang-toggle";
 
-export const STEPS = [
-  { slug: "account", label: "Account" },
-  { slug: "program", label: "Goals" },
-  { slug: "health", label: "Health" },
-  { slug: "medications", label: "Medications" },
-  { slug: "allergies", label: "Allergies" },
-  { slug: "goal-details", label: "Details" },
-  { slug: "lifestyle", label: "Lifestyle" },
-  { slug: "consent", label: "Consent" },
-  { slug: "review", label: "Review" },
+/** Slugs drive routing — do not change them. Labels are bilingual. */
+export const STEPS: { slug: string; label: { en: string; es: string } }[] = [
+  { slug: "account", label: { en: "Account", es: "Cuenta" } },
+  { slug: "program", label: { en: "Goals", es: "Metas" } },
+  { slug: "health", label: { en: "Health", es: "Salud" } },
+  { slug: "medications", label: { en: "Medications", es: "Medicamentos" } },
+  { slug: "allergies", label: { en: "Allergies", es: "Alergias" } },
+  { slug: "goal-details", label: { en: "Details", es: "Detalles" } },
+  { slug: "lifestyle", label: { en: "Lifestyle", es: "Estilo de vida" } },
+  { slug: "consent", label: { en: "Consent", es: "Consentimiento" } },
+  { slug: "review", label: { en: "Review", es: "Revisión" } },
 ];
 
+const PROGRESS_COPY = {
+  en: { step: "Step", of: "of" },
+  es: { step: "Paso", of: "de" },
+};
+
 export function IntakeProgress() {
+  const { lang } = useLang();
+  const t = pick(lang, PROGRESS_COPY);
   const pathname = usePathname() || "";
   const currentSlug = pathname.split("/").pop() || "";
   const currentIndex = STEPS.findIndex((s) => s.slug === currentSlug);
@@ -62,14 +72,17 @@ export function IntakeProgress() {
                   >
                     {i + 1}
                   </span>
-                  {s.label}
+                  {pick(lang, s.label)}
                 </div>
               );
             })}
           </div>
         </div>
         <div className="flex items-center gap-3 text-xs text-navy-500">
-          Step {safeIdx + 1} of {STEPS.length}
+          <span className="whitespace-nowrap">
+            {t.step} {safeIdx + 1} {t.of} {STEPS.length}
+          </span>
+          <LangToggle variant="compact" />
         </div>
       </div>
       <div className="h-1 w-full bg-navy-50">
@@ -82,12 +95,17 @@ export function IntakeProgress() {
   );
 }
 
+const FOOTER_COPY = {
+  en: { back: "Back", next: "Continue" },
+  es: { back: "Atrás", next: "Continuar" },
+};
+
 export function IntakeFooter({
   back,
   next,
   onNext,
   nextDisabled,
-  nextLabel = "Continue",
+  nextLabel,
 }: {
   back?: string;
   next?: string;
@@ -95,12 +113,16 @@ export function IntakeFooter({
   nextDisabled?: boolean;
   nextLabel?: string;
 }) {
+  const { lang } = useLang();
+  const t = pick(lang, FOOTER_COPY);
+  const nextText = nextLabel ?? t.next;
+
   return (
     <div className="sticky bottom-0 z-30 mt-10 border-t border-navy-100 bg-white/95 backdrop-blur">
       <div className="container-x flex h-20 items-center justify-between gap-4">
         {back ? (
           <Link href={back} className="btn-secondary text-sm">
-            Back
+            {t.back}
           </Link>
         ) : (
           <span />
@@ -121,7 +143,7 @@ export function IntakeFooter({
               nextDisabled ? "pointer-events-none opacity-40" : ""
             }`}
           >
-            {nextLabel}
+            {nextText}
           </Link>
         ) : (
           <button
@@ -130,7 +152,7 @@ export function IntakeFooter({
             disabled={nextDisabled}
             className="btn-primary text-sm disabled:opacity-40"
           >
-            {nextLabel}
+            {nextText}
           </button>
         )}
       </div>

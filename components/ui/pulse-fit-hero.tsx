@@ -28,6 +28,8 @@ interface PulseFitHeroProps {
   showHeader?: boolean;
   title: React.ReactNode;
   subtitle: string;
+  /** Optional offer / pricing block rendered between the subtitle and the actions. */
+  offer?: React.ReactNode;
   primaryAction?: {
     label: string;
     onClick: () => void;
@@ -61,6 +63,7 @@ export function PulseFitHero({
   showHeader = true,
   title,
   subtitle,
+  offer,
   primaryAction,
   secondaryAction,
   disclaimer,
@@ -152,6 +155,17 @@ export function PulseFitHero({
             <p className="font-sans font-normal text-navy-900/70 text-[17px] sm:text-[19px] leading-[1.65] max-w-xl">
               {subtitle}
             </p>
+
+            {/* Offer / pricing block */}
+            {offer && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.35 }}
+              >
+                {offer}
+              </motion.div>
+            )}
 
             {/* Action Buttons */}
             {(primaryAction || secondaryAction) && (
@@ -257,7 +271,7 @@ export function PulseFitHero({
           <motion.div
             className="flex items-center"
             animate={{
-              x: [0, -((programs.length * 380) / 2)],
+              x: [0, -(programs.length * 380)],
             }}
             transition={{
               x: {

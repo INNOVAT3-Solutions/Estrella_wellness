@@ -3,6 +3,17 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
+/**
+ * An option can be a plain string (used as both stored value and label) or a
+ * { value, label } pair — `value` is the canonical stored/compared string
+ * (kept in English so persisted data and risk-tier logic stay stable) and
+ * `label` is what's displayed (translatable).
+ */
+export type FieldOption = string | { value: string; label: string };
+
+const normalizeOption = (opt: FieldOption): { value: string; label: string } =>
+  typeof opt === "string" ? { value: opt, label: opt } : opt;
+
 export function Field({
   label,
   required,
@@ -34,7 +45,7 @@ export function MultiSelect({
   onToggle,
   cols = 2,
 }: {
-  options: string[];
+  options: FieldOption[];
   values: string[];
   onToggle: (v: string) => void;
   cols?: 1 | 2 | 3;
@@ -48,13 +59,14 @@ export function MultiSelect({
         cols === 3 && "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
       )}
     >
-      {options.map((opt) => {
-        const checked = values.includes(opt);
+      {options.map((raw) => {
+        const opt = normalizeOption(raw);
+        const checked = values.includes(opt.value);
         return (
           <button
-            key={opt}
+            key={opt.value}
             type="button"
-            onClick={() => onToggle(opt)}
+            onClick={() => onToggle(opt.value)}
             data-checked={checked}
             className="checkbox-card text-left"
           >
@@ -82,7 +94,9 @@ export function MultiSelect({
                 </svg>
               )}
             </span>
-            <span className="text-sm font-medium text-navy-800">{opt}</span>
+            <span className="text-sm font-medium text-navy-800">
+              {opt.label}
+            </span>
           </button>
         );
       })}
@@ -96,7 +110,7 @@ export function RadioGroup({
   onChange,
   cols = 2,
 }: {
-  options: string[];
+  options: FieldOption[];
   value: string;
   onChange: (v: string) => void;
   cols?: 1 | 2 | 3;
@@ -110,13 +124,14 @@ export function RadioGroup({
         cols === 3 && "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
       )}
     >
-      {options.map((opt) => {
-        const checked = value === opt;
+      {options.map((raw) => {
+        const opt = normalizeOption(raw);
+        const checked = value === opt.value;
         return (
           <button
-            key={opt}
+            key={opt.value}
             type="button"
-            onClick={() => onChange(opt)}
+            onClick={() => onChange(opt.value)}
             data-checked={checked}
             className="checkbox-card text-left"
           >
@@ -130,7 +145,9 @@ export function RadioGroup({
             >
               {checked && <span className="h-2 w-2 rounded-full bg-white" />}
             </span>
-            <span className="text-sm font-medium text-navy-800">{opt}</span>
+            <span className="text-sm font-medium text-navy-800">
+              {opt.label}
+            </span>
           </button>
         );
       })}

@@ -1,10 +1,22 @@
-export type ProgramSlug =
-  | "weight-loss"
-  | "recovery"
-  | "hormone-optimization"
-  | "longevity"
-  | "performance"
-  | "sexual-health";
+import type { Lang } from "@/lib/i18n";
+
+/* ------------------------------------------------------------------ */
+/*  Pricing — the GLP-1 weight loss program promo                      */
+/* ------------------------------------------------------------------ */
+
+export const PRICING = {
+  /** Regular monthly price of the wellness (GLP-1 weight loss) program. */
+  regular: 299.99,
+  /** Limited-time special — consultation included. */
+  promo: 199.99,
+};
+
+export const fmtPrice = (n: number) =>
+  `$${n.toFixed(2)}`;
+
+/* ------------------------------------------------------------------ */
+/*  Types                                                              */
+/* ------------------------------------------------------------------ */
 
 export type Compound = {
   name: string;
@@ -18,51 +30,81 @@ export type Compound = {
   consideration?: string;
 };
 
-export type Pathway = {
-  name: string;
-  description: string;
-  items: string[];
+export type Included = {
+  title: string;
+  body: string;
 };
 
-export type Program = {
-  slug: ProgramSlug;
+export type ProgramCopy = {
   name: string;
   shortName: string;
   tagline: string;
   headline: string;
   description: string;
   benefits: string[];
+  /** Everything that comes with the consultation / monthly program. */
+  includes: Included[];
   compounds: Compound[];
-  /** Used when a program has multiple delivery routes / product groupings (e.g. Weight Loss). */
-  pathways?: Pathway[];
-  /** Used when a program is a single protocol that addresses multiple patient profiles. */
-  useCases?: string[];
-  image: string;
-  /**
-   * Four images for the diced hero (2x2 warped grid).
-   * Order on render is bottom-right, bottom-left, top-right, top-left.
-   */
-  slides: { title: string; image: string }[];
-  accent: string;
-  startingPrice: number;
-  priceNote?: string;
-  ribbon?: string;
 };
 
-export const PROGRAMS: Program[] = [
-  {
-    slug: "weight-loss",
-    name: "Weight Loss & Metabolic Optimization",
+export type Program = {
+  slug: "weight-loss";
+  image: string;
+  slides: { title: string; image: string }[];
+  accent: string;
+  price: number;
+  regularPrice: number;
+  en: ProgramCopy;
+  es: ProgramCopy;
+};
+
+/* ------------------------------------------------------------------ */
+/*  The program — GLP-1 weight loss / wellness                         */
+/* ------------------------------------------------------------------ */
+
+export const WEIGHT_LOSS: Program = {
+  slug: "weight-loss",
+  image: "/images/weight-loss-metabolic.png",
+  slides: [
+    { title: "Weight Loss · Scene 1", image: "/images/weight-loss-scene-1.png" },
+    { title: "Weight Loss · Scene 2", image: "/images/weight-loss-scene-2.png" },
+    { title: "Weight Loss · Scene 3", image: "/images/weight-loss-scene-3.png" },
+    { title: "Weight Loss · Scene 4", image: "/images/weight-loss-scene-4.png" },
+  ],
+  accent: "from-sun-400/20 to-navy-400/10",
+  price: PRICING.promo,
+  regularPrice: PRICING.regular,
+
+  en: {
+    name: "GLP-1 Weight Loss Program",
     shortName: "Weight Loss",
-    tagline: "Sustainable, clinician-guided fat loss.",
-    headline: "Clinician-Guided Weight Loss Programs",
+    tagline: "Doctor-guided GLP-1 weight loss — consultation included.",
+    headline: "The GLP-1 Weight Loss Program",
     description:
-      "Personalized metabolic programs combining GLP-1 therapy, lifestyle coaching, and ongoing provider review — designed to support steady, sustainable progress.",
+      "One complete wellness program: a doctor's consultation, the GLP-1 peptide your doctor designates for you, a guided nutrition plan, and management exercises — all included in one monthly price.",
     benefits: [
       "Appetite and craving support",
-      "Sustainable fat loss",
+      "Sustainable, doctor-supervised fat loss",
       "Metabolic and blood sugar support",
-      "Energy support throughout the day",
+      "A plan built around your life",
+    ],
+    includes: [
+      {
+        title: "Doctor consultation",
+        body: "A licensed Estrella provider reviews your health history one-on-one and designs your personal weight loss plan.",
+      },
+      {
+        title: "Your designated peptide",
+        body: "The GLP-1 peptide medication designated for you by your doctor after your consultation — shipped discreetly to your door.",
+      },
+      {
+        title: "Guided nutrition plan",
+        body: "A nutrition plan built to work alongside your medication and accelerate your weight loss.",
+      },
+      {
+        title: "Management exercises",
+        body: "Simple, sustainable exercises selected to support your plan — no gym membership required.",
+      },
     ],
     compounds: [
       {
@@ -105,365 +147,160 @@ export const PROGRAMS: Program[] = [
           "Investigational compound. Available only as a compounded preparation under a licensed clinician's prescription.",
       },
     ],
-    pathways: [
-      {
-        name: "Injectable",
-        description:
-          "Weekly subcutaneous self-injection — the established delivery route for GLP-1 and dual-agonist therapies.",
-        items: ["Tirzepatide", "Semaglutide", "Retatrutide"],
-      },
-      {
-        name: "Oral disintegrating tablet (ODT)",
-        description:
-          "A needle-free, fast-dissolving format. Considered for patients who prefer to avoid injection.",
-        items: ["Tirzepatide ODT", "Semaglutide ODT"],
-      },
-      {
-        name: "Enhanced metabolic combinations",
-        description:
-          "Compounded combinations pairing a GLP-1 agonist with a supportive co-agent. Selected by your provider only when clinically indicated.",
-        items: [
-          "Tirzepatide / Glycine",
-          "Tirzepatide / NAD+",
-          "Semaglutide / NAD+",
-        ],
-      },
-    ],
-    image: "/images/weight-loss-metabolic.png",
-    slides: [
-      { title: "Weight Loss · Scene 1", image: "/images/weight-loss-scene-1.png" },
-      { title: "Weight Loss · Scene 2", image: "/images/weight-loss-scene-2.png" },
-      { title: "Weight Loss · Scene 3", image: "/images/weight-loss-scene-3.png" },
-      { title: "Weight Loss · Scene 4", image: "/images/weight-loss-scene-4.png" },
-    ],
-    accent: "from-sun-400/20 to-navy-400/10",
-    startingPrice: 199,
-    priceNote: "billed monthly · cancel anytime",
-    ribbon: "Most popular",
   },
-  {
-    slug: "recovery",
-    name: "Recovery & Repair",
-    shortName: "Recovery",
-    tagline: "Support how your body heals and rebuilds.",
-    headline: "Clinician-Guided Recovery Programs",
+
+  es: {
+    name: "Programa de Pérdida de Peso GLP-1",
+    shortName: "Pérdida de Peso",
+    tagline:
+      "Pérdida de peso con GLP-1 guiada por médicos — consulta incluida.",
+    headline: "El Programa de Pérdida de Peso GLP-1",
     description:
-      "Programs designed to support tissue repair, joint comfort, and athletic recovery — with provider oversight at every step.",
+      "Un programa de bienestar completo: la consulta con el médico, el péptido GLP-1 que tu médico designa para ti, un plan de nutrición guiado y ejercicios de manejo — todo incluido en un solo precio mensual.",
     benefits: [
-      "Joint and tendon support",
-      "Faster training recovery",
-      "Mobility and movement support",
-      "Reduced day-to-day soreness",
+      "Control del apetito y los antojos",
+      "Pérdida de grasa sostenible y supervisada por médicos",
+      "Apoyo metabólico y del azúcar en sangre",
+      "Un plan hecho a la medida de tu vida",
+    ],
+    includes: [
+      {
+        title: "Consulta médica",
+        body: "Un proveedor licenciado de Estrella revisa tu historial de salud uno a uno y diseña tu plan personal de pérdida de peso.",
+      },
+      {
+        title: "Tu péptido designado",
+        body: "El péptido GLP-1 que tu médico designa para ti después de la consulta — enviado discretamente a tu puerta.",
+      },
+      {
+        title: "Plan de nutrición guiado",
+        body: "Un plan de nutrición diseñado para trabajar junto con tu medicamento y acelerar tu pérdida de peso.",
+      },
+      {
+        title: "Ejercicios de manejo",
+        body: "Ejercicios simples y sostenibles seleccionados para apoyar tu plan — sin necesidad de gimnasio.",
+      },
     ],
     compounds: [
       {
-        name: "BPC-157",
-        format: "Subcutaneous injection (compounded)",
+        name: "Tirzepatida",
+        format: "Inyección subcutánea · semanal",
         summary:
-          "A synthetic peptide based on a fragment of a protein found in gastric juice. Studied in the context of tissue and joint support.",
+          "Un agonista dual de los receptores GIP/GLP-1 estudiado por su papel en la regulación del apetito y la respuesta a la glucosa.",
         supports: [
-          "Designed to support tissue-repair processes",
-          "Studied in joint, tendon, and gastrointestinal contexts",
-          "Often paired with TB-500 in recovery-focused protocols",
+          "Diseñado para apoyar la regulación del apetito y reducir la ingesta de alimentos",
+          "Estudiado por su efecto en el azúcar en sangre después de las comidas",
+          "A menudo seleccionado para pacientes que buscan apoyo metabólico a largo plazo",
         ],
         consideration:
-          "Compounded medication. Not FDA-approved for any indication. Requires provider review and prescription.",
+          "No se recomienda durante el embarazo ni en pacientes con ciertos antecedentes médicos personales o familiares. Se requiere evaluación completa.",
       },
       {
-        name: "TB-500",
-        format: "Subcutaneous injection (compounded)",
+        name: "Semaglutida",
+        format: "Inyección subcutánea · semanal",
         summary:
-          "A synthetic peptide based on a regulatory protein (thymosin beta-4) involved in cellular repair signaling.",
+          "Un agonista del receptor GLP-1 que imita una hormona intestinal natural involucrada en las señales de apetito y glucosa.",
         supports: [
-          "Designed to support tissue-repair processes",
-          "Studied for its role in cellular migration and healing pathways",
-          "Considered alongside BPC-157 in athletic-recovery protocols",
+          "Diseñado para apoyar la regulación del apetito",
+          "Estudiado en el contexto del equilibrio glucémico",
+          "Disponible como opción semanal de acción prolongada",
         ],
         consideration:
-          "Compounded medication. Not FDA-approved for any indication. Requires provider review and prescription.",
+          "Los efectos gastrointestinales son comunes, especialmente al aumentar la dosis. Se requiere revisión médica y ajuste de dosis.",
+      },
+      {
+        name: "Retatrutida",
+        format: "Inyección subcutánea · semanal",
+        summary:
+          "Un triple agonista en investigación (GIP/GLP-1/glucagón) que se estudia actualmente para la regulación metabólica.",
+        supports: [
+          "Diseñado para apoyar el apetito y el equilibrio metabólico",
+          "En estudio por su perfil metabólico más amplio",
+          "Considerado por los médicos para cuadros clínicos específicos",
+        ],
+        consideration:
+          "Compuesto en investigación. Disponible solo como preparación magistral bajo receta de un médico licenciado.",
       },
     ],
-    useCases: [
-      "Joint or tendon discomfort affecting day-to-day movement",
-      "Recovery from a recent injury or procedure (with clearance from your treating physician)",
-      "Athletes pursuing faster training recovery",
-      "Adults focused on mobility and movement support",
-      "Tendon or ligament concerns under active provider review",
-    ],
+  },
+};
+
+export const programCopy = (lang: Lang): ProgramCopy =>
+  lang === "es" ? WEIGHT_LOSS.es : WEIGHT_LOSS.en;
+
+/* ------------------------------------------------------------------ */
+/*  Future programs — HIDDEN. Not rendered or referenced anywhere on   */
+/*  the site by request. Kept here only so the bilingual copy is ready */
+/*  if/when these programs launch.                                     */
+/* ------------------------------------------------------------------ */
+
+export type ComingSoonProgram = {
+  slug: string;
+  image: string;
+  en: { name: string; tagline: string };
+  es: { name: string; tagline: string };
+};
+
+export const COMING_SOON: ComingSoonProgram[] = [
+  {
+    slug: "recovery",
     image: "/images/recovery-repair.png",
-    slides: [
-      { title: "Recovery · Scene 1", image: "/images/recovery-scene-1.png" },
-      { title: "Recovery · Scene 2", image: "/images/recovery-scene-2.png" },
-      { title: "Recovery · Scene 3", image: "/images/recovery-scene-3.png" },
-      { title: "Recovery · Scene 4", image: "/images/recovery-scene-4.png" },
-    ],
-    accent: "from-ocean-400/20 to-navy-400/10",
-    startingPrice: 129,
-    priceNote: "billed monthly · cancel anytime",
+    en: {
+      name: "Recovery & Repair",
+      tagline: "Support how your body heals and rebuilds.",
+    },
+    es: {
+      name: "Recuperación y Reparación",
+      tagline: "Apoya cómo tu cuerpo sana y se reconstruye.",
+    },
   },
   {
     slug: "hormone-optimization",
-    name: "Hormone Optimization & Growth Support",
-    shortName: "Hormone Optimization",
-    tagline: "Support healthy hormone balance as you age.",
-    headline: "Clinician-Guided Hormone Optimization",
-    description:
-      "Hormone-support programs guided by labs and licensed providers — designed to help you feel like yourself again.",
-    benefits: [
-      "Recovery and sleep support",
-      "Lean body composition support",
-      "Healthy aging support",
-      "Hormonal balance support",
-    ],
-    compounds: [
-      {
-        name: "Sermorelin",
-        format: "Subcutaneous injection",
-        summary:
-          "A growth-hormone-releasing hormone (GHRH) analog that prompts the body's own pituitary to release growth hormone.",
-        supports: [
-          "Designed to support endogenous growth-hormone signaling",
-          "Often considered in sleep-quality and recovery contexts",
-          "Selected by providers as part of healthy-aging protocols",
-        ],
-        consideration:
-          "Compounded medication. Lab work and provider review typically required before initiation.",
-      },
-      {
-        name: "Tesamorelin",
-        format: "Subcutaneous injection",
-        summary:
-          "A synthetic GHRH analog studied in body-composition and metabolic contexts.",
-        supports: [
-          "Designed to support healthy body composition",
-          "Studied in lipid and metabolic contexts",
-          "Selected based on lab work and clinical picture",
-        ],
-        consideration:
-          "Provider-directed therapy. Lab work and ongoing monitoring required.",
-      },
-    ],
-    useCases: [
-      "Adults reporting reduced sleep quality or recovery as they age",
-      "Patients pursuing lean body-composition support under medical guidance",
-      "Healthy-aging protocols where labs indicate provider-supported intervention",
-      "Patients seeking provider-guided hormonal balance support",
-    ],
     image: "/images/hormone-healthy-aging.png",
-    slides: [
-      { title: "Hormone Optimization · Scene 1", image: "/images/hormone-scene-1.png" },
-      { title: "Hormone Optimization · Scene 2", image: "/images/hormone-scene-2.png" },
-      { title: "Hormone Optimization · Scene 3", image: "/images/hormone-scene-3.png" },
-      { title: "Hormone Optimization · Scene 4", image: "/images/hormone-scene-4.png" },
-    ],
-    accent: "from-navy-400/20 to-sun-400/10",
-    startingPrice: 179,
-    priceNote: "billed monthly · cancel anytime",
+    en: {
+      name: "Hormone Optimization",
+      tagline: "Support healthy hormone balance as you age.",
+    },
+    es: {
+      name: "Optimización Hormonal",
+      tagline: "Apoya un equilibrio hormonal saludable con los años.",
+    },
   },
   {
     slug: "longevity",
-    name: "Longevity & Cellular Health",
-    shortName: "Longevity",
-    tagline: "Support cellular energy and healthy aging.",
-    headline: "Clinician-Guided Longevity Programs",
-    description:
-      "Programs focused on cellular health, mitochondrial support, and graceful aging — with safe, supervised protocols.",
-    benefits: [
-      "Cellular energy support",
-      "Cognitive support",
-      "Recovery support",
-      "Healthy aging",
-    ],
-    compounds: [
-      {
-        name: "NAD+",
-        format: "Subcutaneous injection · IV · oral precursor",
-        summary:
-          "A coenzyme central to cellular energy production and redox balance, studied widely in healthy-aging contexts.",
-        supports: [
-          "Designed to support cellular energy metabolism",
-          "Studied for its role in mitochondrial function",
-          "Considered in healthy-aging and recovery protocols",
-        ],
-        consideration:
-          "Route of administration is determined by your provider based on your intake and goals.",
-      },
-      {
-        name: "MOTS-c",
-        format: "Subcutaneous injection (compounded)",
-        summary:
-          "A mitochondrial-derived peptide studied in the context of metabolic regulation and exercise response.",
-        supports: [
-          "Designed to support mitochondrial signaling",
-          "Studied in metabolic and performance contexts",
-          "Considered in longevity-oriented protocols",
-        ],
-        consideration:
-          "Compounded medication. Emerging research; not FDA-approved for any indication.",
-      },
-      {
-        name: "GHK-Cu",
-        format: "Topical · subcutaneous · IV (compounded)",
-        summary:
-          "A naturally occurring copper-binding tripeptide studied in tissue-health and skin contexts.",
-        supports: [
-          "Designed to support tissue health",
-          "Studied for its role in regenerative pathways",
-          "Considered in skin, recovery, and longevity protocols",
-        ],
-        consideration:
-          "Compounded medication. Route is selected by your provider based on goals.",
-      },
-    ],
-    useCases: [
-      "Adults focused on cellular energy and mitochondrial support",
-      "Patients pursuing healthy-aging protocols with provider oversight",
-      "Cognitive-clarity support under provider-directed care",
-      "Recovery-focused longevity protocols",
-    ],
     image: "/images/longevity-cellular.png",
-    slides: [
-      { title: "Longevity · Scene 1", image: "/images/longevity-scene-1.png" },
-      { title: "Longevity · Scene 2", image: "/images/longevity-scene-2.png" },
-      { title: "Longevity · Scene 3", image: "/images/longevity-scene-3.png" },
-      { title: "Longevity · Scene 4", image: "/images/longevity-scene-4.png" },
-    ],
-    accent: "from-ocean-400/20 to-sun-400/10",
-    startingPrice: 159,
-    priceNote: "billed monthly · cancel anytime",
+    en: {
+      name: "Longevity & Cellular Health",
+      tagline: "Support cellular energy and healthy aging.",
+    },
+    es: {
+      name: "Longevidad y Salud Celular",
+      tagline: "Apoya la energía celular y un envejecimiento saludable.",
+    },
   },
   {
     slug: "performance",
-    name: "Performance & Vitality",
-    shortName: "Performance",
-    tagline: "Energy, focus, and recovery — supported.",
-    headline: "Clinician-Guided Performance Programs",
-    description:
-      "For active patients seeking sustainable energy, focus, and recovery — with a personalized protocol from a licensed provider.",
-    benefits: [
-      "Energy optimization",
-      "Endurance support",
-      "Focus and clarity support",
-      "Recovery and performance support",
-    ],
-    compounds: [
-      {
-        name: "NAD+",
-        format: "Subcutaneous injection · IV · oral precursor",
-        summary:
-          "A coenzyme involved in cellular energy production. Considered in performance and recovery protocols.",
-        supports: [
-          "Designed to support cellular energy metabolism",
-          "Studied for its role in mitochondrial function",
-          "Considered in performance and recovery protocols",
-        ],
-        consideration:
-          "Route of administration is determined by your provider based on your intake and goals.",
-      },
-      {
-        name: "MOTS-c",
-        format: "Subcutaneous injection (compounded)",
-        summary:
-          "A mitochondrial-derived peptide studied in the context of exercise response and metabolic regulation.",
-        supports: [
-          "Designed to support mitochondrial signaling",
-          "Studied in performance and metabolic contexts",
-          "Considered in protocols for active adults",
-        ],
-        consideration:
-          "Compounded medication. Emerging research; not FDA-approved for any indication.",
-      },
-      {
-        name: "GHK-Cu",
-        format: "Topical · subcutaneous · IV (compounded)",
-        summary:
-          "A copper-binding tripeptide studied in tissue-health and recovery contexts.",
-        supports: [
-          "Designed to support tissue health",
-          "Studied for its role in regenerative pathways",
-          "Considered alongside performance protocols",
-        ],
-        consideration:
-          "Compounded medication. Route is selected by your provider based on goals.",
-      },
-    ],
-    useCases: [
-      "Active adults pursuing sustainable energy without stimulants",
-      "Patients seeking endurance support under provider direction",
-      "Focus and clarity support as part of a broader protocol",
-      "Recovery-focused performance protocols",
-    ],
     image: "/images/performance-energy.png",
-    slides: [
-      { title: "Performance · Scene 1", image: "/images/performance-scene-1.png" },
-      { title: "Performance · Scene 2", image: "/images/performance-scene-2.png" },
-      { title: "Performance · Scene 3", image: "/images/performance-scene-3.png" },
-      { title: "Performance · Scene 4", image: "/images/performance-scene-4.png" },
-    ],
-    accent: "from-sun-400/20 to-ocean-400/10",
-    startingPrice: 149,
-    priceNote: "billed monthly · cancel anytime",
+    en: {
+      name: "Performance & Vitality",
+      tagline: "Energy, focus, and recovery — supported.",
+    },
+    es: {
+      name: "Rendimiento y Vitalidad",
+      tagline: "Energía, enfoque y recuperación — con apoyo.",
+    },
   },
   {
     slug: "sexual-health",
-    name: "Sexual Health",
-    shortName: "Sexual Health",
-    tagline: "Discreet, clinician-guided support.",
-    headline: "Clinician-Guided Sexual Health Programs",
-    description:
-      "Confidential telehealth support for erectile concerns and intimate wellness, prescribed only after provider review.",
-    benefits: [
-      "Erectile support",
-      "Confidence and intimacy",
-      "Convenient at-home dosing",
-      "Discreet provider review",
-    ],
-    compounds: [
-      {
-        name: "Sildenafil ODT",
-        format: "Oral disintegrating tablet",
-        summary:
-          "A PDE-5 inhibitor — the same active studied for erectile concerns — in a fast-dissolving oral form.",
-        supports: [
-          "Designed to support erectile function in adults with erectile concerns",
-          "Discreet, fast-dissolving format that does not require water",
-          "Reviewed and dosed by a licensed provider",
-        ],
-        consideration:
-          "Not appropriate for use with nitrates or in certain cardiovascular conditions. Full screening and provider prescription required.",
-      },
-      {
-        name: "Tadalafil ODT",
-        format: "Oral disintegrating tablet",
-        summary:
-          "A long-acting PDE-5 inhibitor in a fast-dissolving oral form.",
-        supports: [
-          "Designed to support erectile function in adults with erectile concerns",
-          "Longer half-life than other PDE-5 options",
-          "Reviewed and dosed by a licensed provider",
-        ],
-        consideration:
-          "Not appropriate for use with nitrates or in certain cardiovascular conditions. Full screening and provider prescription required.",
-      },
-    ],
-    useCases: [
-      "Adults seeking discreet, clinician-reviewed support for erectile concerns",
-      "Patients who prefer a needle-free, fast-dissolving format",
-      "Patients seeking a long-acting option (with provider direction)",
-      "Patients who value confidentiality and at-home dosing",
-    ],
     image: "/images/sexual-health.png",
-    slides: [
-      { title: "Sexual Health · Scene 1", image: "/images/sexual-health-scene-1.png" },
-      { title: "Sexual Health · Scene 2", image: "/images/sexual-health-scene-2.png" },
-      { title: "Sexual Health · Scene 3", image: "/images/sexual-health-scene-3.png" },
-      { title: "Sexual Health · Scene 4", image: "/images/sexual-health-scene-4.png" },
-    ],
-    accent: "from-navy-400/20 to-ocean-400/10",
-    startingPrice: 39,
-    priceNote: "billed monthly · cancel anytime",
+    en: {
+      name: "Sexual Health",
+      tagline: "Discreet, clinician-guided support.",
+    },
+    es: {
+      name: "Salud Sexual",
+      tagline: "Apoyo discreto guiado por médicos.",
+    },
   },
 ];
 
-export const programBySlug = (slug: string) =>
-  PROGRAMS.find((p) => p.slug === slug);
