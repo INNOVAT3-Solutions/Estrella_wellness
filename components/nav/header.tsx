@@ -69,18 +69,22 @@ export function Header() {
       className={cn(
         "sticky top-0 z-50 font-heading backdrop-blur-xl transition-[background-color,box-shadow] duration-300",
         scrolled || open
-          ? "bg-white/80 shadow-[0_1px_0_rgba(6,14,34,.06),0_8px_24px_-16px_rgba(6,14,34,.18)]"
-          : "bg-white/45"
+          ? "bg-white/90 shadow-[0_1px_0_rgba(6,14,34,.06),0_8px_24px_-16px_rgba(6,14,34,.18)] lg:bg-white/80"
+          : "bg-white/80 lg:bg-white/45"
       )}
     >
-      <div className="container-x flex h-20 items-center justify-between gap-6">
-        <Link href="/" className="flex items-center gap-3">
+      {/* Phones: menu left, logo centered and large, language right. */}
+      <div className="container-x relative flex h-20 items-center justify-between gap-6">
+        <Link
+          href="/"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:translate-x-0 lg:translate-y-0"
+        >
           <Image
             src="/logo/logo.png"
             alt="Estrella Medical Centers"
             width={235}
             height={110}
-            className="h-11 w-auto"
+            className="h-11 w-auto min-[380px]:h-14 lg:h-11"
             priority
           />
         </Link>
@@ -123,8 +127,7 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-3 lg:hidden">
-          <LangToggle variant="compact" tone="light" />
+        <div className="flex lg:hidden">
           <button
             type="button"
             className="rounded-full bg-white/70 p-3 text-navy-950 ring-1 ring-navy-900/10"
@@ -136,6 +139,7 @@ export function Header() {
             {open ? <X aria-hidden className="h-5 w-5" /> : <Menu aria-hidden className="h-5 w-5" />}
           </button>
         </div>
+        <LangToggle variant="compact" tone="light" icon={false} className="lg:hidden" />
       </div>
 
       {open && (

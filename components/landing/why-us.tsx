@@ -82,12 +82,15 @@ export function WhyUs() {
           </h2>
         </Reveal>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:auto-rows-[16rem] lg:grid-cols-4">
+        {/* Phones: a two-column bento, reordered so the two text tiles pair up
+            side by side and photos alternate with color (order-* below, reset
+            with sm:order-none). */}
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 lg:auto-rows-[16rem] lg:grid-cols-4">
           {/* Blood work: the large photographic tile */}
           <Reveal
             className={cn(
               tile,
-              "min-h-[26rem] sm:col-span-2 lg:row-span-2 lg:min-h-0"
+              "order-1 col-span-2 min-h-[22rem] sm:order-none sm:min-h-[26rem] lg:row-span-2 lg:min-h-0"
             )}
           >
             <Image
@@ -98,7 +101,7 @@ export function WhyUs() {
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"
             />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-950/90 via-navy-950/50 to-transparent p-7 pt-28 sm:p-9 sm:pt-32">
+            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-950/90 via-navy-950/50 to-transparent p-6 pt-28 sm:p-9 sm:pt-32">
               <h3 className="font-heading max-w-sm text-[clamp(1.5rem,2.4vw,2rem)] font-bold leading-tight tracking-[-0.02em] text-white">
                 {t.labs.title}
               </h3>
@@ -113,7 +116,7 @@ export function WhyUs() {
             delay={60}
             className={cn(
               tile,
-              "flex min-h-[16rem] flex-col justify-end bg-navy-950 p-7 pt-24 sm:col-span-2 sm:p-9 lg:min-h-0"
+              "order-4 col-span-2 flex flex-col justify-end bg-navy-950 p-6 pt-24 sm:order-none sm:min-h-[16rem] sm:p-9 sm:pt-24 lg:min-h-0"
             )}
           >
             <div
@@ -125,7 +128,7 @@ export function WhyUs() {
               }}
             />
             <EstrellaStar className="absolute right-6 top-6 w-16 drop-shadow-[0_10px_24px_rgba(200,146,56,.35)] sm:right-9 sm:top-8 sm:w-36" sizes="144px" />
-            <h3 className="font-heading relative max-w-md text-[clamp(1.5rem,2.4vw,2rem)] font-bold leading-tight tracking-[-0.02em] text-white">
+            <h3 className="font-heading relative max-w-[16rem] text-[clamp(1.4rem,2.4vw,2rem)] font-bold leading-tight tracking-[-0.02em] text-white sm:max-w-md">
               {t.clinic.title}
             </h3>
             <p className="relative mt-3 max-w-md text-[15px] leading-relaxed text-white/70">
@@ -134,13 +137,13 @@ export function WhyUs() {
           </Reveal>
 
           {/* Nutritionist: photo */}
-          <Reveal delay={120} className={cn(tile, "min-h-[16rem] lg:min-h-0")}>
+          <Reveal delay={120} className={cn(tile, "order-3 col-span-2 min-h-[15rem] sm:order-none sm:col-span-1 sm:min-h-[16rem] lg:min-h-0")}>
             <Image
               src="/images/nutritionist-session.jpg"
               alt={t.nutrition.alt}
               fill
               quality={90}
-              sizes="(min-width: 1024px) 25vw, 50vw"
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
               className="object-cover"
             />
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-950/85 to-transparent p-6 pt-20">
@@ -153,18 +156,18 @@ export function WhyUs() {
           {/* Every visit: tinted checklist */}
           <Reveal
             delay={180}
-            className={cn(tile, "min-h-[16rem] bg-sun-50 p-6 ring-1 ring-inset ring-sun-200/70 lg:min-h-0")}
+            className={cn(tile, "order-2 min-h-[14rem] bg-sun-50 p-4 ring-1 ring-inset ring-sun-200/70 sm:order-none sm:min-h-[16rem] sm:p-6 lg:min-h-0")}
           >
-            <h3 className="font-heading text-[19px] font-bold leading-snug text-navy-950">
+            <h3 className="font-heading text-[16px] font-bold leading-snug text-navy-950 sm:text-[19px]">
               {t.visit.title}
             </h3>
-            <ul className="mt-5 space-y-2.5">
+            <ul className="mt-4 space-y-2 sm:mt-5 sm:space-y-2.5">
               {t.visit.items.map((item) => (
                 <li
                   key={item}
-                  className="flex items-center gap-3 text-[15px] font-medium text-navy-900/75"
+                  className="flex items-start gap-2.5 text-[14px] font-medium leading-snug text-navy-900/75 sm:gap-3 sm:text-[15px]"
                 >
-                  <span className="h-px w-4 bg-sun-500" />
+                  <span aria-hidden className="mt-[0.65em] h-px w-3 shrink-0 bg-sun-500 sm:w-4" />
                   {item}
                 </li>
               ))}
@@ -176,24 +179,25 @@ export function WhyUs() {
             delay={60}
             className={cn(
               tile,
-              "grid min-h-[16rem] bg-mist-50 sm:col-span-2 sm:grid-cols-2 lg:min-h-0"
+              "order-5 col-span-2 grid min-h-[20rem] bg-mist-50 sm:order-none sm:min-h-[16rem] sm:grid-cols-2 lg:min-h-0"
             )}
           >
-            <div className="flex flex-col justify-end p-7 sm:p-8">
-              <h3 className="font-heading text-[22px] font-bold leading-tight tracking-[-0.02em] text-navy-950">
+            {/* Phones: text over the photo. From sm: text left, photo right. */}
+            <div className="relative z-10 flex flex-col justify-end bg-gradient-to-t from-navy-950/90 via-navy-950/50 to-transparent p-6 pt-28 sm:bg-none sm:p-8">
+              <h3 className="font-heading text-[22px] font-bold leading-tight tracking-[-0.02em] text-white sm:text-navy-950">
                 {t.exercise.title}
               </h3>
-              <p className="mt-2 text-[15px] leading-relaxed text-navy-900/70">
+              <p className="mt-2 text-[15px] leading-relaxed text-white/80 sm:text-navy-900/70">
                 {t.exercise.body}
               </p>
             </div>
-            <div className="relative min-h-[14rem] sm:min-h-0">
+            <div className="absolute inset-0 sm:relative sm:inset-auto">
               <Image
                 src="/images/exercise-bayfront-walk.jpg"
                 alt={t.exercise.alt}
                 fill
                 quality={90}
-                sizes="(min-width: 1024px) 25vw, 50vw"
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover object-[50%_12%]"
               />
             </div>
@@ -204,18 +208,18 @@ export function WhyUs() {
             delay={120}
             className={cn(
               tile,
-              "flex min-h-[16rem] flex-col justify-between bg-sun-400 p-7 sm:col-span-2 sm:p-9 lg:min-h-0"
+              "order-2 flex min-h-[14rem] flex-col justify-between gap-4 bg-sun-400 p-4 sm:order-none sm:col-span-2 sm:min-h-[16rem] sm:gap-6 sm:p-9 lg:min-h-0"
             )}
           >
             <EstrellaStar
               tone="white"
-              className="absolute -bottom-10 -right-8 w-64 opacity-30 sm:w-72"
+              className="absolute -bottom-10 -right-8 hidden w-72 opacity-30 sm:block"
               sizes="288px"
             />
-            <h3 className="font-heading relative text-[clamp(2rem,3.4vw,3rem)] font-extrabold leading-none tracking-[-0.035em] text-navy-950">
+            <h3 className="font-heading relative text-[clamp(1.45rem,6.4vw,1.85rem)] font-extrabold sm:text-[clamp(1.85rem,3.4vw,3rem)] leading-none tracking-[-0.035em] text-navy-950">
               {t.language.title}
             </h3>
-            <p className="relative max-w-sm text-[15px] font-medium leading-relaxed text-navy-950/75">
+            <p className="relative text-[14px] font-medium leading-snug text-navy-950/80 sm:max-w-sm sm:text-[15px] sm:leading-relaxed">
               {t.language.body}
             </p>
           </Reveal>

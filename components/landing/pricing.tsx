@@ -59,7 +59,23 @@ export function Pricing() {
               }}
             />
 
-            <div className="relative p-8 sm:p-12 lg:col-span-7 lg:p-16">
+            {/* Phones: the photo leads and the headline sits on its lower edge */}
+            <div className="relative aspect-[4/5] sm:aspect-[16/11] lg:order-2 lg:col-span-5 lg:aspect-auto">
+              <Image
+                src="/images/progress-old-jeans.jpg"
+                alt={t.alt}
+                fill
+                quality={90}
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover object-[50%_20%] sm:object-[50%_25%] lg:object-[50%_18%]"
+              />
+              <div
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-navy-950 via-navy-950/70 to-transparent lg:hidden"
+              />
+            </div>
+
+            <div className="relative -mt-24 px-7 pb-9 sm:-mt-28 sm:px-12 sm:pb-12 lg:order-1 lg:col-span-7 lg:mt-0 lg:p-16">
               <h2 className="max-w-lg text-balance font-heading text-[clamp(2.1rem,4.2vw,3.5rem)] font-extrabold leading-[1.04] tracking-[-0.035em]">
                 {t.title}
               </h2>
@@ -99,7 +115,7 @@ export function Pricing() {
               </ul>
 
               <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
-                <Link href="/qualify" className="btn-pill">
+                <Link href="/qualify" className="btn-pill w-full sm:w-auto">
                   {t.cta}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -123,16 +139,6 @@ export function Pricing() {
               <p className="mt-2 text-[12px] text-white/70">{t.disclaimer}</p>
             </div>
 
-            <div className="relative aspect-[3/4] sm:aspect-[4/3] lg:col-span-5 lg:aspect-auto">
-              <Image
-                src="/images/progress-old-jeans.jpg"
-                alt={t.alt}
-                fill
-                quality={90}
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover object-[50%_18%]"
-              />
-            </div>
           </div>
         </Reveal>
       </div>
