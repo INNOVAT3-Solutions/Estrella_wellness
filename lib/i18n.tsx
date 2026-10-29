@@ -8,7 +8,9 @@ import {
   ReactNode,
 } from "react";
 
-export type Lang = "en" | "es";
+import { matchLang, type Lang } from "@/lib/lang-detect";
+
+export type { Lang };
 
 type LanguageContextValue = {
   lang: Lang;
@@ -22,24 +24,42 @@ const LanguageContext = createContext<LanguageContextValue>({
 
 const STORAGE_KEY = "estrella-lang";
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
+/**
+ * `initialLang` comes from the server (the device's Accept-Language
+ * header), so the first render is already in the visitor's language.
+ * A language the visitor picked with the toggle wins over detection.
+ */
+export function LanguageProvider({
+  children,
+  initialLang = "en",
+}: {
+  children: ReactNode;
+  initialLang?: Lang;
+}) {
+  const [lang, setLangState] = useState<Lang>(initialLang);
 
   useEffect(() => {
-    const saved = window.localStorage.getItem(STORAGE_KEY);
-    if (saved === "en" || saved === "es") {
-      setLangState(saved);
-      document.documentElement.lang = saved;
-    } else if (navigator.language?.toLowerCase().startsWith("es")) {
-      // First visit from a Spanish-language browser — greet them in Spanish.
-      setLangState("es");
-      document.documentElement.lang = "es";
+    let saved: string | null = null;
+    try {
+      saved = window.localStorage.getItem(STORAGE_KEY);
+    } catch {
+      /* storage blocked: fall back to device detection */
     }
+    const next: Lang =
+      saved === "en" || saved === "es"
+        ? saved
+        : matchLang(navigator.languages?.length ? navigator.languages : [navigator.language]);
+    setLangState(next);
+    document.documentElement.lang = next;
   }, []);
 
   const setLang = (l: Lang) => {
     setLangState(l);
-    window.localStorage.setItem(STORAGE_KEY, l);
+    try {
+      window.localStorage.setItem(STORAGE_KEY, l);
+    } catch {
+      /* ignore */
+    }
     document.documentElement.lang = l;
   };
 

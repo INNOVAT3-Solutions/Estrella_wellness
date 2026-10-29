@@ -1,5 +1,8 @@
 "use client";
 
+// Not currently used on the site. Do not use it to show reviews unless they
+// are real, consented patient reviews.
+
 import React from "react";
 import { motion } from "motion/react";
 
@@ -35,31 +38,31 @@ export const TestimonialsColumn = (props: {
               {props.testimonials.map(({ text, image, name, role }, i) => (
                 <figure
                   key={i}
-                  className="w-full max-w-xs border border-navy-900/15 bg-cream-50 p-8 shadow-soft"
+                  className="w-full max-w-xs rounded-3xl bg-white p-7 font-heading ring-1 ring-navy-900/[0.07] shadow-[0_24px_60px_-28px_rgba(6,14,34,.30)]"
                 >
-                  <blockquote className="font-display text-[18px] font-light leading-[1.5] text-navy-900">
-                    <span className="font-normal italic text-navy-900/35">
+                  <blockquote className="text-[15px] leading-relaxed text-navy-900/80">
+                    <span className="text-sun-600">
                       “
                     </span>
                     {text}
-                    <span className="font-normal italic text-navy-900/35">
+                    <span className="text-sun-600">
                       ”
                     </span>
                   </blockquote>
-                  <figcaption className="mt-7 flex items-center gap-3 border-t border-navy-900/15 pt-5">
+                  <figcaption className="mt-6 flex items-center gap-3 border-t border-navy-900/[0.07] pt-5">
                     <img
                       src={image}
-                      alt={name}
+                      alt=""
                       width={40}
                       height={40}
                       className="h-10 w-10 rounded-full object-cover"
                       loading="lazy"
                     />
                     <div>
-                      <div className="font-display text-[15px] font-normal leading-tight text-navy-900">
+                      <div className="text-[15px] font-bold leading-tight text-navy-950">
                         {name}
                       </div>
-                      <div className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.2em] text-navy-900/55">
+                      <div className="mt-0.5 text-[13px] text-navy-900/70">
                         {role}
                       </div>
                     </div>

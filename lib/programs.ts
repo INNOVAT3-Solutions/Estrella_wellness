@@ -1,13 +1,13 @@
 import type { Lang } from "@/lib/i18n";
 
 /* ------------------------------------------------------------------ */
-/*  Pricing — the GLP-1 weight loss program promo                      */
+/*  Pricing: the GLP-1 weight loss program promo                      */
 /* ------------------------------------------------------------------ */
 
 export const PRICING = {
   /** Regular monthly price of the wellness (GLP-1 weight loss) program. */
   regular: 299.99,
-  /** Limited-time special — consultation included. */
+  /** Limited-time special, consultation included. */
   promo: 199.99,
 };
 
@@ -24,7 +24,7 @@ export type Compound = {
   format?: string;
   /** One-line, factual description of what the active is. */
   summary?: string;
-  /** 2-4 bullets, framed as "designed to support" / "studied for" — never efficacy claims. */
+  /** 2-4 factual bullets. Never efficacy claims, brand names or "FDA-approved". */
   supports?: string[];
   /** One-line note on regulatory status, screening, or who-it's-not-for. */
   consideration?: string;
@@ -59,17 +59,17 @@ export type Program = {
 };
 
 /* ------------------------------------------------------------------ */
-/*  The program — GLP-1 weight loss / wellness                         */
+/*  The program: GLP-1 weight loss / wellness                          */
 /* ------------------------------------------------------------------ */
 
 export const WEIGHT_LOSS: Program = {
   slug: "weight-loss",
-  image: "/images/weight-loss-metabolic.png",
+  image: "/images/weight-loss-hero-1.jpg",
   slides: [
-    { title: "Weight Loss · Scene 1", image: "/images/weight-loss-scene-1.png" },
-    { title: "Weight Loss · Scene 2", image: "/images/weight-loss-scene-2.png" },
-    { title: "Weight Loss · Scene 3", image: "/images/weight-loss-scene-3.png" },
-    { title: "Weight Loss · Scene 4", image: "/images/weight-loss-scene-4.png" },
+    { title: "A doctor reviewing results with a patient on a tablet", image: "/images/weight-loss-hero-1.jpg" },
+    { title: "A nurse giving a patient his weekly injection", image: "/images/weight-loss-hero-2.jpg" },
+    { title: "A woman plating a healthy salmon and quinoa lunch", image: "/images/weight-loss-hero-3.jpg" },
+    { title: "Two people doing dumbbell curls on the Miami bayfront", image: "/images/weight-loss-hero-4.jpg" },
   ],
   accent: "from-sun-400/20 to-navy-400/10",
   price: PRICING.promo,
@@ -78,73 +78,60 @@ export const WEIGHT_LOSS: Program = {
   en: {
     name: "GLP-1 Weight Loss Program",
     shortName: "Weight Loss",
-    tagline: "Doctor-guided GLP-1 weight loss — consultation included.",
+    tagline: "Doctor-led GLP-1 weight loss, open to everyone. Consultation included, no membership needed.",
     headline: "The GLP-1 Weight Loss Program",
     description:
-      "One complete wellness program: a doctor's consultation, the GLP-1 peptide your doctor designates for you, a guided nutrition plan, and management exercises — all included in one monthly price.",
+      "One complete program: a doctor's consultation and blood work review, the GLP-1 medication your doctor chooses if treatment is right for you, given weekly in our Miami clinics, a nutritionist meal plan and a guided exercise program, all in one monthly price. Open to everyone, no membership needed.",
     benefits: [
-      "Appetite and craving support",
-      "Sustainable, doctor-supervised fat loss",
-      "Metabolic and blood sugar support",
-      "A plan built around your life",
+      "Doctor consultation and blood work review",
+      "Weekly injections and check-ins in the clinic",
+      "Nutritionist meal plan and guided exercise",
+      "Care in English and Spanish",
     ],
     includes: [
       {
         title: "Doctor consultation",
-        body: "A licensed Estrella provider reviews your health history one-on-one and designs your personal weight loss plan.",
+        body: "A licensed Estrella doctor reviews your blood work and health history one-on-one, then designs your personal weight loss plan.",
       },
       {
-        title: "Your designated peptide",
-        body: "The GLP-1 peptide medication designated for you by your doctor after your consultation — shipped discreetly to your door.",
+        title: "Your GLP-1 medication",
+        body: "If treatment is right for you, the GLP-1 medication your doctor chooses, given weekly by our medical team at Estrella locations in Miami, with a check-in at every visit.",
       },
       {
-        title: "Guided nutrition plan",
-        body: "A nutrition plan built to work alongside your medication and accelerate your weight loss.",
+        title: "Nutritionist meal plan",
+        body: "A nutritionist builds a plan around the foods you already enjoy and adjusts it as you go.",
       },
       {
-        title: "Management exercises",
-        body: "Simple, sustainable exercises selected to support your plan — no gym membership required.",
+        title: "Guided exercise program",
+        body: "Guided exercises matched to your level, to help you build habits that last.",
       },
     ],
     compounds: [
       {
         name: "Tirzepatide",
-        format: "Subcutaneous injection · weekly",
+        format: "Injection · weekly, in the clinic",
         summary:
-          "A dual GIP/GLP-1 receptor agonist studied for its role in appetite regulation and glucose response.",
+          "A dual GIP/GLP-1 receptor agonist. It acts on hormone receptors involved in appetite and blood sugar signaling.",
         supports: [
-          "Designed to support appetite regulation and reduced food intake",
-          "Studied for its effect on post-meal blood-sugar response",
-          "Often selected for patients pursuing longer-term metabolic support",
+          "Acts on receptors involved in appetite signaling",
+          "Given once a week by our medical team",
+          "Dose chosen and adjusted by your doctor",
         ],
         consideration:
-          "Not recommended during pregnancy or in patients with certain personal or family medical histories. Full screening required.",
+          "Not right for everyone, including during pregnancy or with certain personal or family medical histories. Side effects are possible. Your doctor screens you first and explains the risks.",
       },
       {
         name: "Semaglutide",
-        format: "Subcutaneous injection · weekly",
+        format: "Injection · weekly, in the clinic",
         summary:
-          "A GLP-1 receptor agonist that mimics a naturally occurring gut hormone involved in appetite and glucose signaling.",
+          "A GLP-1 receptor agonist, similar to a natural gut hormone involved in appetite and blood sugar signaling.",
         supports: [
-          "Designed to support appetite regulation",
-          "Studied in the context of glycemic balance",
-          "Available as a long-acting once-weekly option",
+          "Acts on receptors involved in appetite signaling",
+          "Given once a week by our medical team",
+          "Dose chosen and adjusted by your doctor",
         ],
         consideration:
-          "GI side effects are common, particularly during dose escalation. Provider review and dose titration required.",
-      },
-      {
-        name: "Retatrutide",
-        format: "Subcutaneous injection · weekly",
-        summary:
-          "An investigational triple agonist (GIP/GLP-1/glucagon) currently being studied for metabolic regulation.",
-        supports: [
-          "Designed to support appetite and metabolic balance",
-          "Being studied for its broader metabolic profile",
-          "Considered by providers for specific clinical pictures",
-        ],
-        consideration:
-          "Investigational compound. Available only as a compounded preparation under a licensed clinician's prescription.",
+          "Stomach side effects such as nausea are common, especially when the dose goes up. Your doctor reviews your history and adjusts the dose.",
       },
     ],
   },
@@ -153,73 +140,60 @@ export const WEIGHT_LOSS: Program = {
     name: "Programa de Pérdida de Peso GLP-1",
     shortName: "Pérdida de Peso",
     tagline:
-      "Pérdida de peso con GLP-1 guiada por médicos — consulta incluida.",
+      "Pérdida de peso con GLP-1 dirigida por médicos, abierta a todos. Consulta incluida, sin necesidad de membresía.",
     headline: "El Programa de Pérdida de Peso GLP-1",
     description:
-      "Un programa de bienestar completo: la consulta con el médico, el péptido GLP-1 que tu médico designa para ti, un plan de nutrición guiado y ejercicios de manejo — todo incluido en un solo precio mensual.",
+      "Un programa completo: la consulta con el médico y la revisión de tus análisis de sangre, el medicamento GLP-1 que tu médico elija si el tratamiento es adecuado para ti, aplicado cada semana en nuestras clínicas de Miami, un plan de comidas de una nutricionista y un programa de ejercicios guiado, todo en un solo precio mensual. Abierto a todos, sin necesidad de membresía.",
     benefits: [
-      "Control del apetito y los antojos",
-      "Pérdida de grasa sostenible y supervisada por médicos",
-      "Apoyo metabólico y del azúcar en sangre",
-      "Un plan hecho a la medida de tu vida",
+      "Consulta médica y revisión de análisis de sangre",
+      "Inyecciones y chequeos semanales en la clínica",
+      "Plan de comidas de una nutricionista y ejercicios guiados",
+      "Atención en español e inglés",
     ],
     includes: [
       {
         title: "Consulta médica",
-        body: "Un proveedor licenciado de Estrella revisa tu historial de salud uno a uno y diseña tu plan personal de pérdida de peso.",
+        body: "Un médico licenciado de Estrella revisa tus análisis de sangre y tu historial contigo, en persona, y diseña tu plan personal de pérdida de peso.",
       },
       {
-        title: "Tu péptido designado",
-        body: "El péptido GLP-1 que tu médico designa para ti después de la consulta — enviado discretamente a tu puerta.",
+        title: "Tu medicamento GLP-1",
+        body: "Si el tratamiento es adecuado para ti, el medicamento GLP-1 que elija tu médico, aplicado cada semana por nuestro equipo médico en los centros Estrella de Miami, con un chequeo en cada visita.",
       },
       {
-        title: "Plan de nutrición guiado",
-        body: "Un plan de nutrición diseñado para trabajar junto con tu medicamento y acelerar tu pérdida de peso.",
+        title: "Plan de comidas de tu nutricionista",
+        body: "Una nutricionista crea un plan con las comidas que ya te gustan y lo ajusta a medida que avanzas.",
       },
       {
-        title: "Ejercicios de manejo",
-        body: "Ejercicios simples y sostenibles seleccionados para apoyar tu plan — sin necesidad de gimnasio.",
+        title: "Programa de ejercicios guiado",
+        body: "Ejercicios guiados según tu nivel, para ayudarte a crear hábitos que duren.",
       },
     ],
     compounds: [
       {
         name: "Tirzepatida",
-        format: "Inyección subcutánea · semanal",
+        format: "Inyección · semanal, en la clínica",
         summary:
-          "Un agonista dual de los receptores GIP/GLP-1 estudiado por su papel en la regulación del apetito y la respuesta a la glucosa.",
+          "Un agonista dual de los receptores GIP/GLP-1. Actúa sobre receptores hormonales que intervienen en las señales del apetito y del azúcar en sangre.",
         supports: [
-          "Diseñado para apoyar la regulación del apetito y reducir la ingesta de alimentos",
-          "Estudiado por su efecto en el azúcar en sangre después de las comidas",
-          "A menudo seleccionado para pacientes que buscan apoyo metabólico a largo plazo",
+          "Actúa sobre receptores que intervienen en las señales del apetito",
+          "Nuestro equipo médico la aplica una vez por semana",
+          "Tu médico elige y ajusta la dosis",
         ],
         consideration:
-          "No se recomienda durante el embarazo ni en pacientes con ciertos antecedentes médicos personales o familiares. Se requiere evaluación completa.",
+          "No es adecuada para todos, por ejemplo durante el embarazo o con ciertos antecedentes médicos personales o familiares. Puede tener efectos secundarios. Tu médico te evalúa primero y te explica los riesgos.",
       },
       {
         name: "Semaglutida",
-        format: "Inyección subcutánea · semanal",
+        format: "Inyección · semanal, en la clínica",
         summary:
-          "Un agonista del receptor GLP-1 que imita una hormona intestinal natural involucrada en las señales de apetito y glucosa.",
+          "Un agonista del receptor GLP-1, parecido a una hormona intestinal natural que interviene en las señales del apetito y del azúcar en sangre.",
         supports: [
-          "Diseñado para apoyar la regulación del apetito",
-          "Estudiado en el contexto del equilibrio glucémico",
-          "Disponible como opción semanal de acción prolongada",
+          "Actúa sobre receptores que intervienen en las señales del apetito",
+          "Nuestro equipo médico la aplica una vez por semana",
+          "Tu médico elige y ajusta la dosis",
         ],
         consideration:
-          "Los efectos gastrointestinales son comunes, especialmente al aumentar la dosis. Se requiere revisión médica y ajuste de dosis.",
-      },
-      {
-        name: "Retatrutida",
-        format: "Inyección subcutánea · semanal",
-        summary:
-          "Un triple agonista en investigación (GIP/GLP-1/glucagón) que se estudia actualmente para la regulación metabólica.",
-        supports: [
-          "Diseñado para apoyar el apetito y el equilibrio metabólico",
-          "En estudio por su perfil metabólico más amplio",
-          "Considerado por los médicos para cuadros clínicos específicos",
-        ],
-        consideration:
-          "Compuesto en investigación. Disponible solo como preparación magistral bajo receta de un médico licenciado.",
+          "Los efectos estomacales, como las náuseas, son comunes, sobre todo cuando se sube la dosis. Tu médico revisa tu historial y ajusta la dosis.",
       },
     ],
   },
@@ -229,7 +203,7 @@ export const programCopy = (lang: Lang): ProgramCopy =>
   lang === "es" ? WEIGHT_LOSS.es : WEIGHT_LOSS.en;
 
 /* ------------------------------------------------------------------ */
-/*  Future programs — HIDDEN. Not rendered or referenced anywhere on   */
+/*  Future programs: HIDDEN. Not rendered or referenced anywhere on   */
 /*  the site by request. Kept here only so the bilingual copy is ready */
 /*  if/when these programs launch.                                     */
 /* ------------------------------------------------------------------ */
@@ -283,11 +257,11 @@ export const COMING_SOON: ComingSoonProgram[] = [
     image: "/images/performance-energy.png",
     en: {
       name: "Performance & Vitality",
-      tagline: "Energy, focus, and recovery — supported.",
+      tagline: "Energy, focus, and recovery, supported.",
     },
     es: {
       name: "Rendimiento y Vitalidad",
-      tagline: "Energía, enfoque y recuperación — con apoyo.",
+      tagline: "Energía, enfoque y recuperación, con apoyo.",
     },
   },
   {

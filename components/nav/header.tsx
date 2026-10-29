@@ -5,35 +5,28 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X, ArrowRight } from "lucide-react";
-import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import { useLang, pick } from "@/lib/i18n";
+import { SHOW_PATIENT_PORTAL } from "@/lib/features";
 import { LangToggle } from "@/components/ui/lang-toggle";
+import { cn } from "@/lib/cn";
 
 const COPY = {
   en: {
-    promo: "Limited-time offer — GLP-1 Weight Loss Program",
-    promoPrice: `${fmtPrice(WEIGHT_LOSS.price)}/mo`,
-    promoReg: `reg. ${fmtPrice(WEIGHT_LOSS.regularPrice)}`,
-    promoCta: "Start today",
+    home: "Home",
     program: "The program",
     process: "How it works",
-    providers: "Providers",
     faq: "FAQ",
     login: "Patient login",
-    cta: "Start consultation",
+    cta: "Book consultation",
     menu: "Menu",
   },
   es: {
-    promo: "Oferta por tiempo limitado — Programa de Pérdida de Peso GLP-1",
-    promoPrice: `${fmtPrice(WEIGHT_LOSS.price)}/mes`,
-    promoReg: `precio reg. ${fmtPrice(WEIGHT_LOSS.regularPrice)}`,
-    promoCta: "Empieza hoy",
+    home: "Inicio",
     program: "El programa",
     process: "Cómo funciona",
-    providers: "Médicos",
     faq: "Preguntas",
     login: "Portal del paciente",
-    cta: "Iniciar consulta",
+    cta: "Agenda tu consulta",
     menu: "Menú",
   },
 };
@@ -52,164 +45,131 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close the mobile menu on navigation and with the Escape key.
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   if (pathname.startsWith("/qualify")) return null;
 
-  return (
-    <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "border-b border-navy-900/15 bg-cream-50/95 backdrop-blur-md"
-          : "border-b border-transparent bg-cream-50"
-      }`}
-    >
-      {/* Promo announcement bar */}
-      <Link
-        href="/qualify"
-        className="block bg-sun-700 text-cream-50 transition-colors hover:bg-sun-800"
-      >
-        <div className="container-x flex min-h-[40px] flex-wrap items-center justify-center gap-x-3 gap-y-0.5 py-1.5 text-center">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.14em] sm:text-[12px]">
-            {t.promo}
-          </span>
-          <span className="text-[12px] font-bold sm:text-[13px]">
-            {t.promoPrice}
-          </span>
-          <span className="text-[11px] line-through opacity-75">
-            {t.promoReg}
-          </span>
-          <span className="inline-flex items-center gap-1 border-b border-cream-50/60 text-[11px] font-semibold uppercase tracking-[0.14em]">
-            {t.promoCta}
-            <ArrowRight className="h-3 w-3" />
-          </span>
-        </div>
-      </Link>
+  const links = [
+    { href: "/", label: t.home },
+    { href: "/programs/weight-loss", label: t.program },
+    { href: "/how-it-works", label: t.process },
+    { href: "/faq", label: t.faq },
+  ];
 
+  return (
+    // Translucent glass; the homepage hero slides under it (-mt-20), so keep h-20 in sync.
+    <header
+      className={cn(
+        "sticky top-0 z-50 font-heading backdrop-blur-xl transition-[background-color,box-shadow] duration-300",
+        scrolled || open
+          ? "bg-white/80 shadow-[0_1px_0_rgba(6,14,34,.06),0_8px_24px_-16px_rgba(6,14,34,.18)]"
+          : "bg-white/45"
+      )}
+    >
       <div className="container-x flex h-20 items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/logo/logo.png"
             alt="Estrella Medical Centers"
-            width={160}
-            height={40}
-            className="h-9 w-auto"
+            width={235}
+            height={110}
+            className="h-11 w-auto"
             priority
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          <Link
-            href="/programs/weight-loss"
-            className="text-[12px] font-medium uppercase tracking-[0.18em] text-navy-900/80 hover:text-navy-900"
-          >
-            {t.program}
-          </Link>
-          <Link
-            href="/how-it-works"
-            className="text-[12px] font-medium uppercase tracking-[0.18em] text-navy-900/80 hover:text-navy-900"
-          >
-            {t.process}
-          </Link>
-          <Link
-            href="/providers"
-            className="text-[12px] font-medium uppercase tracking-[0.18em] text-navy-900/80 hover:text-navy-900"
-          >
-            {t.providers}
-          </Link>
-          <Link
-            href="/faq"
-            className="text-[12px] font-medium uppercase tracking-[0.18em] text-navy-900/80 hover:text-navy-900"
-          >
-            {t.faq}
-          </Link>
+        <nav className="hidden items-center gap-8 lg:flex">
+          {links.map((l) => {
+            const active =
+              l.href === "/" ? pathname === "/" : pathname.startsWith(l.href);
+            return (
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "relative py-2 text-[14px] font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sun-500",
+                  active
+                    ? "text-navy-950 after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-sun-500"
+                    : "text-navy-900/70 hover:text-navy-950"
+                )}
+              >
+                {l.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        <div className="hidden items-center gap-5 md:flex">
-          <LangToggle variant="full" />
-          <Link
-            href="/dashboard"
-            className="text-[12px] font-medium uppercase tracking-[0.18em] text-navy-900/70 hover:text-navy-900"
-          >
-            {t.login}
-          </Link>
-          <Link
-            href="/qualify"
-            className="inline-flex items-center justify-center gap-2 bg-navy-900 px-6 py-3 text-[12px] font-medium uppercase tracking-[0.18em] text-cream-50 transition-colors hover:bg-navy-800"
-          >
+        <div className="hidden items-center gap-5 lg:flex">
+          <LangToggle variant="compact" tone="light" />
+          {SHOW_PATIENT_PORTAL && (
+            <Link
+              href="/dashboard"
+              className="text-[14px] font-medium text-navy-900/70 hover:text-navy-950"
+            >
+              {t.login}
+            </Link>
+          )}
+          <Link href="/qualify" className="btn-pill-dark px-5 py-2.5 text-[13px]">
             {t.cta}
-            <ArrowRight className="h-3 w-3" />
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
 
-        <div className="flex items-center gap-3 md:hidden">
-          <LangToggle variant="compact" />
+        <div className="flex items-center gap-3 lg:hidden">
+          <LangToggle variant="compact" tone="light" />
           <button
-            className="border border-navy-900/20 p-2.5"
+            type="button"
+            className="rounded-full bg-white/70 p-3 text-navy-950 ring-1 ring-navy-900/10"
             onClick={() => setOpen((v) => !v)}
             aria-label={t.menu}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {open ? <X aria-hidden className="h-5 w-5" /> : <Menu aria-hidden className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
       {open && (
-        <div className="border-t border-navy-900/15 bg-cream-50 md:hidden">
+        <nav id="mobile-menu" aria-label={t.menu} className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-navy-900/[0.07] lg:hidden">
           <div className="container-x flex flex-col gap-1 py-6">
-            <Link
-              href="/programs/weight-loss"
-              className="flex items-center justify-between border-b border-navy-900/10 py-4 text-navy-900 hover:text-sun-700"
-              onClick={() => setOpen(false)}
-            >
-              <span className="font-display text-[17px] font-light">
-                {t.program}
-              </span>
-              <span className="text-right">
-                <span className="mr-2 text-[11px] text-navy-900/40 line-through">
-                  {fmtPrice(WEIGHT_LOSS.regularPrice)}
-                </span>
-                <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-sun-700">
-                  {t.promoPrice}
-                </span>
-              </span>
-            </Link>
-            <Link
-              href="/how-it-works"
-              className="border-b border-navy-900/10 py-4 text-[13px] uppercase tracking-[0.16em] text-navy-900/80"
-              onClick={() => setOpen(false)}
-            >
-              {t.process}
-            </Link>
-            <Link
-              href="/providers"
-              className="border-b border-navy-900/10 py-4 text-[13px] uppercase tracking-[0.16em] text-navy-900/80"
-              onClick={() => setOpen(false)}
-            >
-              {t.providers}
-            </Link>
-            <Link
-              href="/faq"
-              className="border-b border-navy-900/10 py-4 text-[13px] uppercase tracking-[0.16em] text-navy-900/80"
-              onClick={() => setOpen(false)}
-            >
-              {t.faq}
-            </Link>
-            <Link
-              href="/dashboard"
-              className="py-4 text-[13px] uppercase tracking-[0.16em] text-navy-900/80"
-              onClick={() => setOpen(false)}
-            >
-              {t.login}
-            </Link>
+            {links.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="border-b border-navy-900/[0.07] py-4 text-[16px] font-medium text-navy-950 hover:text-sun-700"
+                onClick={() => setOpen(false)}
+              >
+                {l.label}
+              </Link>
+            ))}
+            {SHOW_PATIENT_PORTAL && (
+              <Link
+                href="/dashboard"
+                className="py-4 text-[15px] text-navy-900/70"
+                onClick={() => setOpen(false)}
+              >
+                {t.login}
+              </Link>
+            )}
             <Link
               href="/qualify"
-              className="btn-primary mt-4 w-full"
+              className="btn-pill-dark mt-2 w-full"
               onClick={() => setOpen(false)}
             >
               {t.cta}
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
+        </nav>
       )}
     </header>
   );

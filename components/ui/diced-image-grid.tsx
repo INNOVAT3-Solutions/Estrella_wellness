@@ -6,10 +6,15 @@ type Slide = { title: string; image: string };
 interface DicedImageGridProps {
   slides: Slide[];
   className?: string;
-  /** Render order on screen is bottom-right, bottom-left, top-right, top-left. */
+  /**
+   * Alt text in the active language, in on-screen order (index 0 is
+   * slides[3], index 3 is slides[0]). Falls back to each slide's title.
+   * Render order on screen is bottom-right, bottom-left, top-right, top-left.
+   */
+  alts?: string[];
 }
 
-export function DicedImageGrid({ slides, className }: DicedImageGridProps) {
+export function DicedImageGrid({ slides, className, alts }: DicedImageGridProps) {
   return (
     <div
       className={className}
@@ -34,7 +39,7 @@ export function DicedImageGrid({ slides, className }: DicedImageGridProps) {
         >
           <img
             src={slide?.image}
-            alt={slide?.title ?? ""}
+            alt={alts?.[index] ?? slide?.title ?? ""}
             className={`warped-image ${
               ["bottom-right", "bottom-left", "top-right", "top-left"][index]
             }`}

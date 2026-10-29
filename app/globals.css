@@ -2,10 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&display=swap");
 
 :root {
-  --background: #F4EFE6;
+  --background: #ffffff;
   --foreground: #0F2147;
   --rule: rgba(15, 33, 71, 0.14);
 }
@@ -24,7 +23,7 @@ body {
 }
 
 body {
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-feature-settings: "ss01", "cv11";
   font-weight: 400;
 }
@@ -33,15 +32,14 @@ h1,
 h2,
 h3,
 .font-display {
-  font-family: "Fraunces", "Tiempos", Georgia, serif;
-  font-feature-settings: "ss01";
-  letter-spacing: -0.025em;
-  font-weight: 400;
+  font-family: var(--font-heading), var(--font-sans), ui-sans-serif, sans-serif;
+  letter-spacing: -0.03em;
+  font-weight: 700;
 }
 
 ::selection {
   background: #0F2147;
-  color: #F4EFE6;
+  color: #ffffff;
 }
 
 @layer components {
@@ -49,72 +47,90 @@ h3,
     @apply mx-auto w-full max-w-[88rem] px-6 sm:px-10 lg:px-14;
   }
 
-  /* Buttons — editorial, restrained */
+  /* Buttons — rounded pills, matching the landing page */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-none bg-navy-900 px-8 py-4 text-[13px] font-medium uppercase tracking-[0.18em] text-cream-50 transition-colors duration-300 ease-out hover:bg-navy-800;
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-navy-950 px-7 py-3.5 font-heading text-[14px] font-semibold text-white transition-colors duration-300 ease-out hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-40;
   }
 
   .btn-accent {
-    @apply inline-flex items-center justify-center gap-2 rounded-none bg-sun-700 px-8 py-4 text-[13px] font-medium uppercase tracking-[0.18em] text-cream-50 transition-colors duration-300 ease-out hover:bg-sun-800;
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-sun-400 px-7 py-3.5 font-heading text-[14px] font-semibold text-navy-950 transition-all duration-300 ease-out hover:bg-sun-300 hover:shadow-glow active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-none border border-navy-900/30 bg-transparent px-8 py-4 text-[13px] font-medium uppercase tracking-[0.18em] text-navy-900 transition-colors duration-300 ease-out hover:border-navy-900 hover:bg-navy-900 hover:text-cream-50;
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-white px-7 py-3.5 font-heading text-[14px] font-semibold text-navy-950 ring-1 ring-navy-900/15 transition-colors duration-300 ease-out hover:ring-navy-900/40 disabled:cursor-not-allowed disabled:opacity-40;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium text-navy-900/80 transition-colors hover:text-navy-900;
+    @apply inline-flex items-center justify-center gap-1.5 px-3 py-2 font-heading text-sm font-medium text-navy-900/70 transition-colors hover:text-navy-950;
   }
 
   .btn-link {
-    @apply inline-flex items-center gap-2 text-[13px] font-medium uppercase tracking-[0.16em] text-navy-900 border-b border-navy-900/30 pb-1 hover:border-navy-900 transition;
+    @apply inline-flex min-h-6 items-center gap-2 py-1.5 font-heading text-[14px] font-medium text-navy-900/70 underline decoration-navy-900/25 underline-offset-4 transition-colors hover:text-navy-950 hover:decoration-navy-900/60;
   }
 
-  /* Tiny meta tag — replaces "pill" */
+  /* Small labels — gold, sentence case, like the landing page tags */
   .meta {
-    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-navy-700;
+    @apply inline-flex items-center gap-2 font-heading text-[13px] font-semibold text-sun-700;
   }
 
   .meta-dark {
-    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-cream-50/85;
+    @apply inline-flex items-center gap-2 font-heading text-[13px] font-semibold text-sun-300;
   }
 
-  /* Legacy "pill" — kept as a quiet editorial tag for pages not yet redesigned */
   .pill {
-    @apply inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-navy-900/70;
+    @apply inline-flex items-center gap-2 rounded-full bg-sun-100 px-4 py-1.5 font-heading text-[12px] font-semibold text-sun-800;
   }
 
   .pill-dark {
-    @apply inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.24em] text-cream-50/85;
+    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 font-heading text-[12px] font-semibold text-sun-200;
   }
 
-  /* Eyebrow — refined, smaller, no color noise */
   .eyebrow {
-    @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-navy-900/70;
+    @apply font-heading text-[13px] font-semibold text-sun-700;
   }
 
   .eyebrow-light {
-    @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-cream-50/70;
+    @apply font-heading text-[13px] font-semibold text-sun-300;
   }
 
   .label {
-    @apply text-sm font-medium text-navy-900;
+    @apply font-heading text-sm font-semibold text-navy-950;
   }
 
   .input {
-    @apply w-full rounded-none border-0 border-b border-navy-900/25 bg-transparent px-0 py-3 text-[15px] text-navy-900 placeholder:text-navy-900/35 focus:border-navy-900 focus:outline-none focus:ring-0 transition;
+    @apply w-full rounded-2xl border-0 bg-white px-4 py-3.5 text-base text-navy-950 ring-1 ring-navy-900/15 placeholder:text-navy-900/60 focus:outline-none focus:ring-2 focus:ring-navy-950 transition;
   }
 
   .checkbox-card {
-    @apply flex cursor-pointer items-start gap-3 rounded-none border border-navy-900/15 bg-transparent p-4 transition-colors duration-200 hover:border-navy-900/40 hover:bg-cream-100/40;
+    @apply flex cursor-pointer items-start gap-3 rounded-2xl bg-white p-4 ring-1 ring-navy-900/10 transition duration-200 hover:ring-navy-900/30;
   }
 
   .checkbox-card[data-checked="true"] {
-    @apply border-navy-900 bg-cream-100;
+    @apply bg-sun-50 ring-2 ring-sun-400;
   }
 
   .section {
     @apply py-24 sm:py-32;
+  }
+
+  /* Landing — rounded, bold, wellness style */
+  .btn-pill {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-sun-400 px-7 py-3.5 text-[14px] font-semibold text-navy-950 transition-all duration-300 ease-out hover:bg-sun-300 hover:shadow-glow active:scale-[0.98];
+  }
+  .btn-pill-dark {
+    @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full bg-navy-900 px-7 py-3.5 text-[14px] font-semibold text-white transition-colors duration-300 ease-out hover:bg-navy-800;
+  }
+  .btn-pill-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3.5 text-[14px] font-semibold text-white transition-colors duration-300 ease-out hover:border-white/60 hover:bg-white/5;
+  }
+  .tag-pill {
+    @apply inline-flex items-center gap-2 rounded-full bg-sun-100 px-4 py-1.5 text-[12px] font-semibold text-sun-800;
+  }
+  .tag-pill-dark {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[12px] font-semibold text-sun-200;
+  }
+  .text-gold-gradient {
+    @apply bg-gradient-to-r from-sun-200 via-sun-300 to-sun-400 bg-clip-text text-transparent;
   }
 
   .section-tight {
@@ -194,4 +210,21 @@ h3,
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(15, 33, 71, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Visible keyboard focus everywhere (WCAG 2.4.7). */
+:focus-visible {
+  outline: 2px solid #b07820;
+  outline-offset: 3px;
 }

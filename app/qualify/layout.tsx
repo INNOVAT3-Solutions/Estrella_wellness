@@ -1,4 +1,4 @@
-import { IntakeProgress } from "@/components/intake/progress";
+import { BookingFooter, BookingHeader } from "@/components/booking/booking-chrome";
 
 export default function QualifyLayout({
   children,
@@ -6,9 +6,10 @@ export default function QualifyLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-sand-50">
-      <IntakeProgress />
-      <div className="container-x py-12 sm:py-16">{children}</div>
+    <div className="min-h-screen bg-mist-50 font-heading">
+      <BookingHeader />
+      <div className="container-x py-10 sm:py-14">{children}</div>
+      <BookingFooter />
     </div>
   );
 }

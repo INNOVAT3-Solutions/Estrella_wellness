@@ -1,380 +1,504 @@
 "use client";
 
+import { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  ArrowRight,
-  ShieldCheck,
-  Clock,
-  Stethoscope,
-  Lock,
-} from "lucide-react";
+import { ArrowRight, MapPin, PhoneCall, Loader2 } from "lucide-react";
 import { useLang, pick } from "@/lib/i18n";
-import { WEIGHT_LOSS, fmtPrice, programCopy } from "@/lib/programs";
+import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
+import { EstrellaStar } from "@/components/ui/estrella-star";
+import {
+  CONSENT_TEXT,
+  HOURS_SUMMARY,
+  LOCATIONS,
+  dateRange,
+  formatTime,
+  saveSummary,
+  slotsFor,
+  validateBooking,
+  type BookingErrors,
+  type BookingField,
+  type BookingInput,
+} from "@/lib/booking";
+import { cn } from "@/lib/cn";
 
 const COPY = {
   en: {
-    eyebrow: "GLP-1 Weight Loss Consultation",
-    h1a: "Your weight loss consultation",
-    h1b: " — starts here.",
-    intro:
-      "About ten minutes. Your answers save automatically. A licensed Estrella provider reviews your file and designs your personal GLP-1 weight loss plan — usually within 24 hours. There's no charge until a provider determines you're a fit.",
-    priceLine: (promo: string, regular: string) =>
-      `Limited-time special: ${promo}/month (reg. ${regular}/month) — consultation included.`,
-    reassurance: [
-      { title: "~10 minutes", body: "Progress saves automatically" },
-      { title: "Encrypted", body: "Stored securely · never sold" },
-      { title: "Provider reviewed", body: "Every patient · every time" },
-      { title: "No charge", body: "Until a provider approves" },
+    step: "Step 1 of 3",
+    title: "Book your consultation",
+    lead: "Tell us how to reach you and when you'd like to come in. It takes about a minute, and no health questions are asked here.",
+    name: "Full name",
+    phone: "Phone number",
+    phoneHint: "We'll call this number to coordinate your visit.",
+    email: "Email",
+    location: "Choose the location closest to you",
+    date: "Preferred date",
+    time: "Preferred time",
+    timePick: "Choose a time",
+    timeFirst: "Choose a date first",
+    closed: "Closed on Sundays",
+    hours: "Our hours",
+    consentLabel: "Consent",
+    readTerms: "Terms of Service",
+    readPrivacy: "Privacy Policy",
+    opens: "(opens in a new tab)",
+    required: "required",
+    submit: "Continue to payment",
+    sending: "Sending",
+    fix: "Please fix the highlighted fields.",
+    failTitle: "We couldn't send your request.",
+    failBody: "Please try again in a moment, or email us at",
+    failBody2: "and we'll book your visit.",
+    sideTitle: "What happens next",
+    side: [
+      "Choose to pay now online or pay at your visit.",
+      "Our team calls you to ask a few questions and coordinate your visit.",
+      "You meet your doctor at the clinic for your consultation and blood work review.",
     ],
-    cta: "Start my consultation",
-    howItWorks: "How it works",
-    imageAlt: "Patient completing the Estrella intake on a phone",
-
-    includedEyebrow: "What's included",
-    includedH2a: "One monthly price.",
-    includedH2b: "Everything included.",
-    includedPrice: (promo: string, regular: string) =>
-      `${promo}/month — limited-time special (reg. ${regular}/month). Your consultation is included.`,
-
-    askedEyebrow: "What you'll be asked",
-    askedH2a: "Eight short",
-    askedH2b: "sections.",
-    askedBody:
-      "Plain language, never tricky. Every answer is reviewed by a licensed clinician credentialed in the state where you live.",
-    sections: [
-      { title: "Account", body: "Contact and shipping details." },
-      { title: "Your goals", body: "What you want to achieve with your weight." },
-      { title: "Health history", body: "Conditions and safety screening." },
-      { title: "Current medications", body: "Prescriptions and supplements." },
-      { title: "Allergies", body: "Medication allergies and safety checks." },
-      { title: "Weight loss details", body: "Your history with weight management." },
-      { title: "Lifestyle", body: "Sleep, activity, and daily habits." },
-      { title: "Consent", body: "Telehealth consents and disclosures." },
-    ],
-
-    nextEyebrow: "What happens next",
-    nextH2a: "You submit.",
-    nextH2b: "We read carefully.",
-    nextSteps: [
-      {
-        when: "Within 24 hrs",
-        title: "A doctor reviews your consultation",
-        body: "If the GLP-1 program is right for you, your doctor designates your peptide and designs your guided nutrition plan and management exercises. If not, you'll hear why — clearly and respectfully. No charge if you're not a fit.",
-      },
-      {
-        when: "Days 3–5 after approval",
-        title: "Discreet shipment",
-        body: "Your doctor-designated GLP-1 peptide is dispensed by a partner state-licensed compounding pharmacy and shipped in plain packaging.",
-      },
-      {
-        when: "Ongoing",
-        title: "Continuous, supervised weight loss",
-        body: "Doctor check-ins, refills, your nutrition plan, and management exercises live in your dashboard. Pause, change, or cancel any time.",
-      },
-    ],
-
-    readyTitle: "Ready when you are.",
-    readyBody: (promo: string, regular: string) =>
-      `About ten minutes. No charge until a doctor approves your file. Limited-time special: ${promo}/month (reg. ${regular}/month).`,
-
-    importantLabel: "Important",
-    compliancePre:
-      "By beginning your consultation, you acknowledge that telehealth services are subject to the regulations of the state where you live. The GLP-1 medications offered by Estrella may be ",
-    complianceBold: "compounded medications",
-    compliancePost:
-      " — preparations made by a state-licensed compounding pharmacy under a clinician's prescription. Compounded combinations are not FDA-approved. Treatment is at the discretion of a licensed clinician based on your intake, medical history, labs, and goals. The information here is educational and is not a recommendation, diagnosis, or guarantee of outcome.",
+    sidePrice: "Limited-time price",
+    perMonth: "/month",
+    regular: "Regularly",
   },
-
   es: {
-    eyebrow: "Consulta de Pérdida de Peso GLP-1",
-    h1a: "Tu consulta de pérdida de peso",
-    h1b: " — empieza aquí.",
-    intro:
-      "Unos diez minutos. Tus respuestas se guardan automáticamente. Un proveedor licenciado de Estrella revisa tu expediente y diseña tu plan personal de pérdida de peso con GLP-1 — normalmente en 24 horas. No hay ningún cargo hasta que un médico determine que eres candidato.",
-    priceLine: (promo: string, regular: string) =>
-      `Especial por tiempo limitado: ${promo} al mes (precio regular ${regular} al mes) — consulta incluida.`,
-    reassurance: [
-      { title: "~10 minutos", body: "Tu avance se guarda automáticamente" },
-      { title: "Cifrado", body: "Guardado de forma segura · nunca se vende" },
-      { title: "Revisión médica", body: "Cada paciente · siempre" },
-      { title: "Sin cargo", body: "Hasta que un médico apruebe" },
+    step: "Paso 1 de 3",
+    title: "Agenda tu consulta",
+    lead: "Dinos cómo contactarte y cuándo te gustaría venir. Toma un minuto y aquí no te hacemos preguntas de salud.",
+    name: "Nombre completo",
+    phone: "Teléfono",
+    phoneHint: "Te llamaremos a este número para coordinar tu visita.",
+    email: "Correo electrónico",
+    location: "Elige el centro más cercano a ti",
+    date: "Fecha preferida",
+    time: "Hora preferida",
+    timePick: "Elige una hora",
+    timeFirst: "Primero elige una fecha",
+    closed: "Cerrado los domingos",
+    hours: "Nuestro horario",
+    consentLabel: "Consentimiento",
+    readTerms: "Términos del Servicio",
+    readPrivacy: "Política de Privacidad",
+    opens: "(se abre en una pestaña nueva)",
+    required: "obligatorio",
+    submit: "Continuar al pago",
+    sending: "Enviando",
+    fix: "Corrige los campos marcados.",
+    failTitle: "No pudimos enviar tu solicitud.",
+    failBody: "Inténtalo de nuevo en un momento o escríbenos a",
+    failBody2: "y agendamos tu visita.",
+    sideTitle: "Qué sigue",
+    side: [
+      "Elige pagar ahora en línea o pagar en tu visita.",
+      "Nuestro equipo te llama para hacerte unas preguntas y coordinar tu visita.",
+      "Conoces a tu médico en la clínica para tu consulta y la revisión de tus análisis.",
     ],
-    cta: "Iniciar mi consulta",
-    howItWorks: "Cómo funciona",
-    imageAlt: "Paciente completando el cuestionario de Estrella en su teléfono",
-
-    includedEyebrow: "Qué incluye",
-    includedH2a: "Un solo precio mensual.",
-    includedH2b: "Todo incluido.",
-    includedPrice: (promo: string, regular: string) =>
-      `${promo} al mes — especial por tiempo limitado (precio regular ${regular} al mes). Tu consulta está incluida.`,
-
-    askedEyebrow: "Qué te vamos a preguntar",
-    askedH2a: "Ocho secciones",
-    askedH2b: "breves.",
-    askedBody:
-      "Lenguaje sencillo, sin trucos. Cada respuesta la revisa un médico licenciado y acreditado en el estado donde vives.",
-    sections: [
-      { title: "Cuenta", body: "Datos de contacto y envío." },
-      { title: "Tus metas", body: "Lo que quieres lograr con tu peso." },
-      { title: "Historial de salud", body: "Condiciones y evaluación de seguridad." },
-      { title: "Medicamentos actuales", body: "Recetas y suplementos." },
-      { title: "Alergias", body: "Alergias a medicamentos y controles de seguridad." },
-      { title: "Detalles de pérdida de peso", body: "Tu historia con el manejo del peso." },
-      { title: "Estilo de vida", body: "Sueño, actividad y hábitos diarios." },
-      { title: "Consentimiento", body: "Consentimientos y avisos de telesalud." },
-    ],
-
-    nextEyebrow: "Qué sigue después",
-    nextH2a: "Tú envías.",
-    nextH2b: "Nosotros leemos con cuidado.",
-    nextSteps: [
-      {
-        when: "En 24 hrs",
-        title: "Un médico revisa tu consulta",
-        body: "Si el programa GLP-1 es adecuado para ti, tu médico designa tu péptido y diseña tu plan de nutrición guiado y tus ejercicios de manejo. Si no, sabrás por qué — con claridad y respeto. Sin cargo si no eres candidato.",
-      },
-      {
-        when: "Días 3–5 tras la aprobación",
-        title: "Envío discreto",
-        body: "Tu péptido GLP-1 designado por el médico lo prepara una farmacia magistral asociada con licencia estatal y se envía en un empaque discreto.",
-      },
-      {
-        when: "Continuo",
-        title: "Pérdida de peso continua y supervisada",
-        body: "Los chequeos con tu médico, los resurtidos, tu plan de nutrición y tus ejercicios de manejo viven en tu panel. Pausa, cambia o cancela cuando quieras.",
-      },
-    ],
-
-    readyTitle: "Cuando tú digas.",
-    readyBody: (promo: string, regular: string) =>
-      `Unos diez minutos. Sin cargo hasta que un médico apruebe tu expediente. Especial por tiempo limitado: ${promo} al mes (precio regular ${regular} al mes).`,
-
-    importantLabel: "Importante",
-    compliancePre:
-      "Al iniciar tu consulta, reconoces que los servicios de telesalud están sujetos a las regulaciones del estado donde vives. Los medicamentos GLP-1 que ofrece Estrella pueden ser ",
-    complianceBold: "medicamentos magistrales",
-    compliancePost:
-      " — preparaciones hechas por una farmacia magistral con licencia estatal bajo la receta de un médico. Las combinaciones magistrales no están aprobadas por la FDA. El tratamiento queda a discreción de un médico licenciado según tu cuestionario, historial médico, laboratorios y metas. La información aquí es educativa y no constituye una recomendación, diagnóstico ni garantía de resultado.",
+    sidePrice: "Precio por tiempo limitado",
+    perMonth: "/mes",
+    regular: "Normalmente",
   },
 };
 
-export default function QualifyIntroPage() {
-  const { lang } = useLang();
-  const t = pick(lang, COPY);
-  const promo = fmtPrice(WEIGHT_LOSS.price);
-  const regular = fmtPrice(WEIGHT_LOSS.regularPrice);
-  const includes = programCopy(lang).includes;
+const EMPTY: BookingInput = {
+  name: "",
+  phone: "",
+  email: "",
+  locationId: "",
+  date: "",
+  time: "",
+  consent: false,
+};
 
+const FIELD_ORDER: BookingField[] = ["name", "phone", "email", "locationId", "date", "time", "consent"];
+
+const inputCls = (invalid: boolean) =>
+  cn(
+    "input mt-2 placeholder:text-navy-900/60",
+    invalid && "ring-2 ring-red-600 focus:ring-red-700"
+  );
+
+function Req({ label }: { label: string }) {
   return (
     <>
-      {/* Editorial header */}
-      <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-7">
-          <div className="eyebrow">{t.eyebrow}</div>
-          <h1 className="mt-6 font-display text-display-lg font-light leading-[1.02] text-navy-900">
-            {t.h1a}
-            <span className="font-normal italic">{t.h1b}</span>
-          </h1>
-          <p className="mt-7 max-w-xl text-[17px] leading-[1.7] text-navy-900/75">
-            {t.intro}
-          </p>
-          <p className="mt-4 max-w-xl text-[15px] font-semibold leading-[1.6] text-sun-700">
-            {t.priceLine(promo, regular)}
-          </p>
+      <span aria-hidden className="text-red-700"> *</span>
+      <span className="sr-only"> ({label})</span>
+    </>
+  );
+}
 
-          {/* Reassurance strip — hairline-bordered, not boxy */}
-          <div className="mt-10 grid gap-x-10 gap-y-5 border-y border-navy-900/15 py-6 sm:grid-cols-2 lg:grid-cols-4">
-            {t.reassurance.map(({ title, body }, i) => {
-              const Icon = [Clock, Lock, Stethoscope, ShieldCheck][i];
-              return (
-                <div key={title} className="flex items-start gap-3">
-                  <Icon
-                    className="mt-1 h-4 w-4 shrink-0 text-sun-700"
-                    strokeWidth={1.75}
-                  />
-                  <div>
-                    <div className="text-[13px] font-semibold text-navy-900">
-                      {title}
-                    </div>
-                    <div className="mt-0.5 text-[12px] text-navy-900/55">
-                      {body}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+function FieldError({ id, msg }: { id: string; msg?: string }) {
+  if (!msg) return null;
+  return (
+    <p id={id} className="mt-2 text-[13px] font-medium text-red-700">
+      {msg}
+    </p>
+  );
+}
 
-          <div className="mt-10 flex flex-wrap items-center gap-5">
-            <Link href="/qualify/account" className="btn-accent">
-              {t.cta}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link href="/how-it-works" className="btn-link">
-              {t.howItWorks}
-            </Link>
-          </div>
+export default function BookingPage() {
+  const router = useRouter();
+  const { lang } = useLang();
+  const t = pick(lang, COPY);
+
+  const [form, setForm] = useState<BookingInput>(EMPTY);
+  const [errors, setErrors] = useState<BookingErrors>({});
+  const [status, setStatus] = useState<"idle" | "sending" | "failed">("idle");
+  const [honeypot, setHoneypot] = useState("");
+  const summaryRef = useRef<HTMLDivElement>(null);
+
+  const { min, max } = useMemo(() => dateRange(), []);
+  const slots = form.date ? slotsFor(form.date) : [];
+
+  const update = <K extends BookingField>(key: K, value: BookingInput[K]) => {
+    setForm((f) => {
+      const next = { ...f, [key]: value };
+      if (key === "date") next.time = ""; // slots differ per day
+      return next;
+    });
+    if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
+  };
+
+  const onDateChange = (value: string) => {
+    update("date", value);
+    const msg = validateBooking({ ...form, date: value, time: "" }, lang).date;
+    setErrors((e) => ({ ...e, date: msg, time: undefined }));
+  };
+
+  const focusFirstError = (errs: BookingErrors) => {
+    const first = FIELD_ORDER.find((f) => errs[f]);
+    if (!first) return;
+    const el = document.getElementById(
+      first === "locationId" ? `loc-${form.locationId || LOCATIONS[0].id}` : `f-${first}`
+    );
+    el?.focus();
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const errs = validateBooking(form, lang);
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) {
+      focusFirstError(errs);
+      return;
+    }
+
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, lang, company: honeypot }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 422 && data.errors) {
+        setErrors(data.errors);
+        setStatus("idle");
+        focusFirstError(data.errors);
+        return;
+      }
+      if (!res.ok || !data.ok) throw new Error("failed");
+
+      saveSummary({
+        bookingId: data.bookingId,
+        firstName: form.name.trim().split(/\s+/)[0],
+        email: form.email.trim(),
+        phone: form.phone,
+        locationId: form.locationId,
+        date: form.date,
+        time: form.time,
+      });
+      router.push("/qualify/payment");
+    } catch {
+      setStatus("failed");
+      requestAnimationFrame(() => summaryRef.current?.focus());
+    }
+  };
+
+  const hasErrors = Object.values(errors).some(Boolean);
+
+  return (
+    <div className="mx-auto grid max-w-5xl gap-8 lg:grid-cols-12">
+      <div className="lg:col-span-8">
+        <p className="eyebrow">{t.step}</p>
+        <h1 className="mt-2 font-heading text-[clamp(1.9rem,3.6vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.03em] text-navy-950">
+          {t.title}
+        </h1>
+        <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-navy-900/75">{t.lead}</p>
+
+        <div ref={summaryRef} tabIndex={-1} aria-live="assertive" className="outline-none">
+          {status === "failed" && (
+            <div role="alert" className="mt-6 rounded-2xl bg-red-50 p-5 text-[15px] text-red-900 ring-1 ring-red-200">
+              <p className="font-semibold">{t.failTitle}</p>
+              <p className="mt-1">
+                {t.failBody}{" "}
+                <a href="mailto:info@estrellamedicalcenters.com" className="font-semibold underline">
+                  info@estrellamedicalcenters.com
+                </a>{" "}
+                {t.failBody2}
+              </p>
+            </div>
+          )}
+          {status === "idle" && hasErrors && (
+            <p role="alert" className="mt-6 text-[14px] font-semibold text-red-700">
+              {t.fix}
+            </p>
+          )}
         </div>
 
-        <div className="lg:col-span-5">
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-navy-100">
-            <Image
-              src="/images/form-fill-scene.png"
-              alt={t.imageAlt}
-              fill
-              className="object-cover"
-              priority
+        <form
+          noValidate
+          onSubmit={onSubmit}
+          className="mt-6 space-y-6 rounded-3xl bg-white p-6 shadow-[0_24px_60px_-28px_rgba(6,14,34,.30)] ring-1 ring-navy-900/[0.07] sm:p-8"
+        >
+          {/* Honeypot for bots: hidden from people and assistive tech */}
+          <div aria-hidden className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden">
+            <label htmlFor="f-company">Company</label>
+            <input
+              id="f-company"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
             />
           </div>
-        </div>
-      </div>
 
-      {/* What's included */}
-      <div className="mt-24 grid gap-14 border-t border-navy-900/15 pt-16 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-5">
-          <div className="eyebrow">{t.includedEyebrow}</div>
-          <h2 className="mt-5 font-display text-display-md font-light leading-[1.05] text-navy-900">
-            {t.includedH2a}
-            <br />
-            <span className="font-normal italic">{t.includedH2b}</span>
-          </h2>
-          <p className="mt-6 max-w-md text-[15px] leading-[1.7] text-navy-900/70">
-            {t.includedPrice(promo, regular)}
-          </p>
-        </div>
+          <div>
+            <label htmlFor="f-name" className="label">
+              {t.name}
+              <Req label={t.required} />
+            </label>
+            <input
+              id="f-name"
+              type="text"
+              autoComplete="name"
+              required
+              aria-required="true"
+              aria-invalid={!!errors.name}
+              aria-describedby={errors.name ? "e-name" : undefined}
+              value={form.name}
+              onChange={(e) => update("name", e.target.value)}
+              className={inputCls(!!errors.name)}
+            />
+            <FieldError id="e-name" msg={errors.name} />
+          </div>
 
-        <ol className="lg:col-span-7 divide-y divide-navy-900/12 border-y border-navy-900/15">
-          {includes.map((s, i) => (
-            <li
-              key={s.title}
-              className="flex items-baseline gap-6 py-5 sm:gap-10 sm:py-6"
-            >
-              <span className="font-display text-sm font-light text-navy-900/40">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0">
-                <div className="font-display text-lg font-medium text-navy-900 sm:text-xl">
-                  {s.title}
-                </div>
-                <div className="mt-1 text-[13.5px] leading-relaxed text-navy-900/65 sm:text-sm">
-                  {s.body}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label htmlFor="f-phone" className="label">
+                {t.phone}
+                <Req label={t.required} />
+              </label>
+              <input
+                id="f-phone"
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                required
+                aria-required="true"
+                aria-invalid={!!errors.phone}
+                aria-describedby={`h-phone${errors.phone ? " e-phone" : ""}`}
+                value={form.phone}
+                onChange={(e) => update("phone", e.target.value)}
+                placeholder="(305) 555-0123"
+                className={inputCls(!!errors.phone)}
+              />
+              <p id="h-phone" className="mt-2 text-[13px] text-navy-900/75">
+                {t.phoneHint}
+              </p>
+              <FieldError id="e-phone" msg={errors.phone} />
+            </div>
+            <div>
+              <label htmlFor="f-email" className="label">
+                {t.email}
+                <Req label={t.required} />
+              </label>
+              <input
+                id="f-email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                required
+                aria-required="true"
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? "e-email" : undefined}
+                value={form.email}
+                onChange={(e) => update("email", e.target.value)}
+                className={inputCls(!!errors.email)}
+              />
+              <FieldError id="e-email" msg={errors.email} />
+            </div>
+          </div>
 
-      {/* What you'll be asked */}
-      <div className="mt-24 grid gap-14 border-t border-navy-900/15 pt-16 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-5">
-          <div className="eyebrow">{t.askedEyebrow}</div>
-          <h2 className="mt-5 font-display text-display-md font-light leading-[1.05] text-navy-900">
-            {t.askedH2a}
-            <br />
-            <span className="font-normal italic">{t.askedH2b}</span>
-          </h2>
-          <p className="mt-6 max-w-md text-[15px] leading-[1.7] text-navy-900/70">
-            {t.askedBody}
-          </p>
-        </div>
+          <fieldset aria-describedby={errors.locationId ? "e-location" : undefined}>
+            <legend className="label">
+              {t.location}
+              <Req label={t.required} />
+            </legend>
+            <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              {LOCATIONS.map((loc) => {
+                const checked = form.locationId === loc.id;
+                return (
+                  <label
+                    key={loc.id}
+                    data-checked={checked}
+                    className={cn(
+                      "checkbox-card h-full flex-col gap-2 has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-sun-500",
+                      errors.locationId && "ring-2 ring-red-600"
+                    )}
+                  >
+                    <input
+                      id={`loc-${loc.id}`}
+                      type="radio"
+                      name="location"
+                      value={loc.id}
+                      checked={checked}
+                      onChange={() => update("locationId", loc.id)}
+                      className="sr-only"
+                    />
+                    <MapPin aria-hidden className={cn("h-5 w-5", checked ? "text-sun-700" : "text-navy-900/70")} />
+                    <span className="text-[15px] font-semibold text-navy-950">{loc.name}</span>
+                    <span className="text-[13px] leading-snug text-navy-900/75">{loc.address}</span>
+                  </label>
+                );
+              })}
+            </div>
+            <FieldError id="e-location" msg={errors.locationId} />
+          </fieldset>
 
-        <ol className="lg:col-span-7 divide-y divide-navy-900/12 border-y border-navy-900/15">
-          {t.sections.map((s, i) => (
-            <li
-              key={s.title}
-              className="flex items-baseline gap-6 py-5 sm:gap-10 sm:py-6"
-            >
-              <span className="font-display text-sm font-light text-navy-900/40">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0">
-                <div className="font-display text-lg font-medium text-navy-900 sm:text-xl">
-                  {s.title}
-                </div>
-                <div className="mt-1 text-[13.5px] leading-relaxed text-navy-900/65 sm:text-sm">
-                  {s.body}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      {/* What happens next */}
-      <div className="mt-24 grid gap-14 lg:grid-cols-12 lg:gap-14">
-        <div className="lg:col-span-5">
-          <div className="eyebrow">{t.nextEyebrow}</div>
-          <h2 className="mt-5 font-display text-display-md font-light leading-[1.05] text-navy-900">
-            {t.nextH2a}
-            <br />
-            <span className="font-normal italic">{t.nextH2b}</span>
-          </h2>
-        </div>
-        <div className="lg:col-span-7">
-          <ol>
-            {t.nextSteps.map((s, i) => (
-              <li
-                key={s.title}
-                className={`grid grid-cols-12 gap-6 py-7 sm:gap-10 ${
-                  i === 0
-                    ? "border-t border-navy-900/15"
-                    : "border-t border-navy-900/12"
-                }`}
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label htmlFor="f-date" className="label">
+                {t.date}
+                <Req label={t.required} />
+              </label>
+              <input
+                id="f-date"
+                type="date"
+                min={min}
+                max={max}
+                required
+                aria-required="true"
+                aria-invalid={!!errors.date}
+                aria-describedby={`h-hours${errors.date ? " e-date" : ""}`}
+                value={form.date}
+                onChange={(e) => onDateChange(e.target.value)}
+                className={inputCls(!!errors.date)}
+              />
+              <FieldError id="e-date" msg={errors.date} />
+            </div>
+            <div>
+              <label htmlFor="f-time" className="label">
+                {t.time}
+                <Req label={t.required} />
+              </label>
+              <select
+                id="f-time"
+                required
+                aria-required="true"
+                aria-invalid={!!errors.time}
+                aria-describedby={`h-hours${errors.time ? " e-time" : ""}`}
+                disabled={slots.length === 0}
+                value={form.time}
+                onChange={(e) => update("time", e.target.value)}
+                className={cn(inputCls(!!errors.time), "disabled:cursor-not-allowed disabled:bg-mist-50")}
               >
-                <div className="col-span-12 text-[10px] font-semibold uppercase tracking-[0.22em] text-sun-700 sm:col-span-3">
-                  {s.when}
-                </div>
-                <div className="col-span-12 sm:col-span-9">
-                  <div className="font-display text-lg font-medium text-navy-900 sm:text-xl">
-                    {s.title}
-                  </div>
-                  <p className="mt-2 max-w-xl text-[14.5px] leading-[1.7] text-navy-900/70">
-                    {s.body}
-                  </p>
-                </div>
+                <option value="">
+                  {!form.date ? t.timeFirst : slots.length === 0 ? t.closed : t.timePick}
+                </option>
+                {slots.map((s) => (
+                  <option key={s} value={s}>
+                    {formatTime(s, lang)}
+                  </option>
+                ))}
+              </select>
+              <FieldError id="e-time" msg={errors.time} />
+            </div>
+          </div>
+          <p id="h-hours" className="-mt-2 text-[13px] text-navy-900/75">
+            {t.hours}: {HOURS_SUMMARY[lang]}.
+          </p>
+
+          <div>
+            <label
+              data-checked={form.consent}
+              className={cn(
+                "checkbox-card has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-sun-500",
+                errors.consent && "ring-2 ring-red-600"
+              )}
+            >
+              <input
+                id="f-consent"
+                type="checkbox"
+                required
+                aria-required="true"
+                aria-invalid={!!errors.consent}
+                aria-describedby={errors.consent ? "e-consent" : undefined}
+                checked={form.consent}
+                onChange={(e) => update("consent", e.target.checked)}
+                className="mt-0.5 h-5 w-5 shrink-0 accent-navy-950"
+              />
+              <span className="text-[14px] leading-relaxed text-navy-900/80">
+                {CONSENT_TEXT[lang]}
+                <Req label={t.required} />
+              </span>
+            </label>
+            <p className="mt-2 text-[13px] text-navy-900/75">
+              <Link href="/terms" target="_blank" rel="noopener noreferrer" className="font-semibold text-navy-950 underline underline-offset-2">
+                {t.readTerms}
+                <span className="sr-only"> {t.opens}</span>
+              </Link>
+              {" · "}
+              <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="font-semibold text-navy-950 underline underline-offset-2">
+                {t.readPrivacy}
+                <span className="sr-only"> {t.opens}</span>
+              </Link>
+            </p>
+            <FieldError id="e-consent" msg={errors.consent} />
+          </div>
+
+          <button type="submit" disabled={status === "sending"} className="btn-pill w-full sm:w-auto">
+            {status === "sending" ? (
+              <>
+                <Loader2 aria-hidden className="h-4 w-4 animate-spin" />
+                {t.sending}
+              </>
+            ) : (
+              <>
+                {t.submit}
+                <ArrowRight aria-hidden className="h-4 w-4" />
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+
+      <aside className="lg:col-span-4">
+        <div className="rounded-3xl bg-navy-950 p-7 text-white lg:sticky lg:top-24">
+          <EstrellaStar className="w-8" />
+          <p className="mt-4 text-[13px] font-semibold text-sun-300">{t.sidePrice}</p>
+          <p className="mt-1 flex items-baseline gap-2">
+            <span className="text-[36px] font-extrabold leading-none tracking-tight">
+              {fmtPrice(WEIGHT_LOSS.price)}
+            </span>
+            <span className="text-[14px] text-white/75">{t.perMonth}</span>
+          </p>
+          <p className="mt-1 text-[13px] text-white/75">
+            {t.regular} <span className="line-through">{fmtPrice(WEIGHT_LOSS.regularPrice)}</span>
+          </p>
+          <h2 className="mt-7 font-heading text-[16px] font-bold">{t.sideTitle}</h2>
+          <ol className="mt-4 space-y-4">
+            {t.side.map((s, i) => (
+              <li key={s} className="flex gap-3 text-[14px] leading-relaxed text-white/80">
+                <span
+                  aria-hidden
+                  className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10 text-[12px] font-bold text-sun-300"
+                >
+                  {i === 1 ? <PhoneCall className="h-3.5 w-3.5" /> : i + 1}
+                </span>
+                {s}
               </li>
             ))}
           </ol>
         </div>
-      </div>
-
-      {/* CTA */}
-      <div className="mt-20 flex flex-col items-start gap-5 border-t border-navy-900/15 pt-12 sm:flex-row sm:items-center sm:justify-between">
-        <div className="max-w-xl">
-          <div className="font-display text-2xl font-medium leading-tight text-navy-900 sm:text-3xl">
-            {t.readyTitle}
-          </div>
-          <p className="mt-2 text-[14.5px] leading-relaxed text-navy-900/70">
-            {t.readyBody(promo, regular)}
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-5">
-          <Link href="/qualify/account" className="btn-accent">
-            {t.cta}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link href="/how-it-works" className="btn-link">
-            {t.howItWorks}
-          </Link>
-        </div>
-      </div>
-
-      {/* Compliance footer */}
-      <div className="mt-14 border-t border-navy-900/15 pt-8">
-        <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-navy-900/55">
-          {t.importantLabel}
-        </div>
-        <p className="mt-3 max-w-3xl text-[13px] leading-[1.75] text-navy-900/65">
-          {t.compliancePre}
-          <span className="font-semibold text-navy-900/85">
-            {t.complianceBold}
-          </span>
-          {t.compliancePost}
-        </p>
-      </div>
-    </>
+      </aside>
+    </div>
   );
 }

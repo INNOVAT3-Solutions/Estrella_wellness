@@ -1,236 +1,250 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { HeroSection } from "@/components/ui/hero-section-2";
 import { Reveal } from "@/components/ui/reveal";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import { useLang, pick } from "@/lib/i18n";
+
+const EMAIL = "info@estrellamedicalcenters.com";
+const PROMO = fmtPrice(WEIGHT_LOSS.price);
 
 const COPY = {
   en: {
     slogan: "The Process",
     heroTitle1: "From consultation",
     heroTitle2: "to your plan,",
-    heroTitle3: "handled by doctors.",
-    heroSubtitle: `Estrella is structured as a telehealth wellness clinic — your GLP-1 weight loss plan is read, decided, and signed by a licensed clinician. The ${fmtPrice(WEIGHT_LOSS.price)}/month special includes the consultation, your designated peptide, a guided nutrition plan, and management exercises.`,
+    heroTitle3: "led by doctors.",
+    heroSubtitle: `Your GLP-1 weight loss plan is decided by a licensed Estrella doctor and your care happens in person, at our clinics in Miami. The ${PROMO}/month special includes the consultation and blood work review, the GLP-1 medication your doctor chooses if treatment is right for you (given weekly in the clinic), a nutritionist meal plan and a guided exercise program.`,
     heroCta: "Start my consultation",
+    heroImageAlt:
+      "Two Estrella doctors in white coats reviewing a patient file on a computer in a bright clinic office",
     contact: {
       website: "Bilingual EN · ES",
-      phone: "Reply within 24 hrs",
-      address: "South Florida medical group",
+      phone: "Weekly visits in the clinic",
+      address: "Estrella Medical Centers, Miami, FL",
     },
-    stepsEyebrow: "The choreography",
-    stepsTitle1: "Six deliberate steps,",
+    stepsEyebrow: "Step by step",
+    stepsTitle1: "Six clear steps,",
     stepsTitle2: "none of them rushed.",
     stepsLead:
-      "Telehealth at the cadence of considered medicine — neither a checkout flow nor a waiting-room wait. Each step exists for a clinical reason.",
-    duration: "Duration",
+      "In-person medicine with a doctor involved at every step. Each step exists for a clinical reason.",
+    duration: "When",
     steps: [
       {
-        title: "The intake",
-        body: "A single secure questionnaire — about ten minutes. Weight loss goals, history, medications, allergies, prior treatments, the things that matter for prescribing. Saves automatically as you go.",
-        duration: "≈ 10 minutes",
+        title: "Book your consultation",
+        body: "Book online with your contact details and your preferred Estrella location, date and time. There are no health questions to fill out online. Our team calls you to ask a few questions and coordinate your visit.",
+        duration: "Online",
       },
       {
         title: "The consultation",
-        body: "An Estrella clinician licensed in your state reads your file in full and consults with you. For most patients the review is asynchronous; higher-acuity cases are routed to a video visit at no extra charge.",
-        duration: "Within 24 hours",
+        body: `At an Estrella location in Miami, a licensed doctor meets with you and reviews your health history, current medications and blood work. You can pay online through our secure Stripe checkout when you book, or pay at your visit, with a full refund if you are not approved or the doctor decides the program is not a fit for you.`,
+        duration: "In the clinic",
       },
       {
-        title: "Follow-up, where warranted",
-        body: "Sometimes the right next step is a question, a clarifying message, or a recent lab panel. Anything additional we need is coordinated through your dashboard — no phone tag.",
-        duration: "Same week",
+        title: "Follow-up, where needed",
+        body: "Sometimes the right next step is another question or new lab work before a decision. Your doctor will tell you what is needed, and we'll contact you to schedule anything else.",
+        duration: "If needed",
       },
       {
         title: "Your complete plan",
-        body: "If treatment is appropriate, your doctor designates your GLP-1 peptide and pairs it with your guided nutrition plan and management exercises. You will see exactly what is in the plan, how it is dosed, and how it is monitored.",
-        duration: "Day of approval",
+        body: "If treatment is appropriate, your doctor chooses your GLP-1 medication and pairs it with a nutritionist meal plan and a guided exercise program. Your doctor explains what is in the plan, how it is dosed and how it is monitored.",
+        duration: "After your consultation",
       },
       {
-        title: "Pharmacy fulfillment",
-        body: "Your peptide is dispensed by Greenstone Rx in Miami and shipped discreetly to the address on file. Your nutrition plan and exercises are waiting in your dashboard.",
-        duration: "3 — 5 business days",
+        title: "Weekly care in the clinic",
+        body: "On your doctor's prescription, your medication may be prepared by Greenstone Rx, our partner compounding pharmacy in Miami. Our medical team gives your injection every week at an Estrella Medical Centers location in Miami, with a check-in on your weight, vitals, how you feel and your dose.",
+        duration: "Every week",
       },
       {
         title: "Continuing care",
-        body: "Refills, secure messaging, progress tracking, and provider check-ins all sit in one private dashboard. Pause, change, or cancel from the same place at any time.",
-        duration: "Ongoing",
+        body: `Your doctor adjusts your dose and plan based on your check-ins. The program renews monthly until you cancel. To cancel, email ${EMAIL} or tell the clinic; cancelling stops future charges.`,
+        duration: "Monthly",
       },
     ],
     reviewEyebrow: "The review",
-    reviewTitle1: "Read front to back,",
-    reviewTitle2: "by a licensed clinician.",
+    reviewTitle1: "Your full picture,",
+    reviewTitle2: "reviewed by a licensed doctor.",
     reviewBody1:
-      "Every Estrella intake is read end to end by a clinician licensed in your state — never auto-approved, never routed through a flowchart. The provider considers the full picture before deciding whether treatment makes sense, which peptide to designate, how it should be dosed, and what to watch for.",
+      "Every patient is seen by a licensed Estrella doctor. Nothing is approved automatically. Your doctor considers your full picture before deciding whether treatment makes sense, which medication to choose, how to dose it and what to watch for.",
     reviewBody2:
-      "The aim is the standard our patients have always known at our South Florida clinics: clinical judgment, written plainly, without theatre.",
+      "It is the same care more than 8,000 patients know at Estrella Medical Centers, from doctors with 20+ years of experience: clear clinical judgment, explained plainly.",
     reviewCta: "Start my consultation",
-    vol1: "Volume I — What a provider considers",
+    vol1: "What your doctor considers",
     reviewItems: [
       {
-        label: "Goals & desired outcome",
-        note: "How much weight you want to lose, and the timeline you have in mind.",
+        label: "Goals",
+        note: "How much weight you want to lose, and what matters most to you.",
       },
       {
         label: "Personal & family history",
-        note: "Conditions, prior diagnoses, and relevant inherited risk.",
+        note: "Conditions, prior diagnoses and relevant family history.",
       },
       {
         label: "Current medications & supplements",
-        note: "Including dosage, frequency, and how long you have been on them.",
+        note: "Including dose, how often you take them and for how long.",
       },
       {
         label: "Allergies & known reactions",
-        note: "Cross-checked against every compound a provider may consider.",
+        note: "Checked against any medication your doctor may consider.",
       },
       {
-        label: "Lab values, when available",
-        note: "Recent panels speed approval; we can also order labs when necessary.",
+        label: "Blood work",
+        note: "Your doctor reviews your blood work and orders new labs if needed.",
       },
       {
-        label: "Lifestyle context",
-        note: "Sleep, stress, activity, nutrition — the variables that shape your plan.",
+        label: "Lifestyle",
+        note: "Sleep, stress, activity and eating habits: the things that shape your plan.",
       },
     ],
-    vol2: "Volume II — What a provider may decide",
+    vol2: "What your doctor may decide",
     decisions: [
       {
         verdict: "Approve",
-        body: "When the picture is clear, your doctor designates your peptide and writes your plan that day.",
+        body: "When the picture is clear, your doctor chooses your medication and writes your plan.",
       },
       {
         verdict: "Approve with monitoring",
-        body: "A plan begins, with periodic labs, check-ins, or follow-up messages built in.",
+        body: "Your plan begins, with extra lab work or closer check-ins built in.",
       },
       {
-        verdict: "Request more information",
-        body: "A short message thread or a video visit to clarify history before a decision.",
+        verdict: "Ask for more information",
+        body: "Your doctor may ask more questions or order lab work before deciding.",
       },
       {
         verdict: "Adjust the plan",
-        body: "If a different dose or compound is a better fit, your provider will route you there.",
+        body: "If a different dose or medication is a better fit, your doctor will change the plan.",
       },
       {
         verdict: "Decline",
-        body: "When treatment is not right for you yet, your provider will say so plainly — and explain why.",
+        body: "When treatment is not right for you yet, your doctor will say so plainly and explain why. You get a full refund.",
       },
     ],
     closing:
-      "In every case, a real clinician makes the call. Compounded medications, when prescribed, are dispensed by Greenstone Rx in Miami in response to that prescription — and only that prescription.",
+      "In every case, a licensed doctor makes the call. When prescribed, compounded medication is prepared by Greenstone Rx in Miami on that prescription only. Compounded drugs are not FDA-approved and have not been reviewed by the FDA for safety, effectiveness or quality. Availability may vary.",
+    policies: "Refund policy",
+    terms: "Terms of service",
   },
   es: {
     slogan: "El Proceso",
     heroTitle1: "De la consulta",
     heroTitle2: "a tu plan,",
-    heroTitle3: "en manos de médicos.",
-    heroSubtitle: `Estrella está estructurada como una clínica de bienestar por telesalud — tu plan de pérdida de peso GLP-1 lo lee, decide y firma un médico licenciado. El especial de ${fmtPrice(WEIGHT_LOSS.price)}/mes incluye la consulta, tu péptido designado, un plan de nutrición guiado y ejercicios de manejo.`,
+    heroTitle3: "de la mano de médicos.",
+    heroSubtitle: `Tu plan de pérdida de peso GLP-1 lo decide un médico licenciado de Estrella y tu atención es en persona, en nuestras clínicas de Miami. El especial de ${PROMO}/mes incluye la consulta y la revisión de tus análisis de sangre, el medicamento GLP-1 que elija tu médico si el tratamiento es adecuado para ti (aplicado cada semana en la clínica), un plan de comidas de una nutricionista y un programa de ejercicios guiado.`,
     heroCta: "Iniciar mi consulta",
+    heroImageAlt:
+      "Dos médicos de Estrella con bata blanca revisando el expediente de un paciente en una computadora, en un consultorio luminoso",
     contact: {
       website: "Bilingüe EN · ES",
-      phone: "Respuesta en 24 h",
-      address: "Grupo médico del sur de la Florida",
+      phone: "Visitas semanales en la clínica",
+      address: "Estrella Medical Centers, Miami, FL",
     },
-    stepsEyebrow: "La coreografía",
-    stepsTitle1: "Seis pasos deliberados,",
+    stepsEyebrow: "Paso a paso",
+    stepsTitle1: "Seis pasos claros,",
     stepsTitle2: "ninguno apresurado.",
     stepsLead:
-      "Telesalud al ritmo de la medicina bien pensada — ni un carrito de compras ni una sala de espera. Cada paso existe por una razón clínica.",
-    duration: "Duración",
+      "Medicina en persona, con un médico presente en cada paso. Cada paso existe por una razón clínica.",
+    duration: "Cuándo",
     steps: [
       {
-        title: "El cuestionario",
-        body: "Un solo cuestionario seguro — unos diez minutos. Metas de pérdida de peso, historial, medicamentos, alergias, tratamientos previos: lo que importa para recetar. Se guarda automáticamente.",
-        duration: "≈ 10 minutos",
+        title: "Agenda tu consulta",
+        body: "Agenda en línea con tus datos de contacto y el centro Estrella, la fecha y la hora que prefieras. No tienes que llenar preguntas de salud en línea. Nuestro equipo te llama para hacerte algunas preguntas y coordinar tu visita.",
+        duration: "En línea",
       },
       {
         title: "La consulta",
-        body: "Un médico de Estrella con licencia en tu estado lee tu expediente completo y consulta contigo. Para la mayoría la revisión es asincrónica; los casos de mayor complejidad pasan a videoconsulta sin costo extra.",
-        duration: "Dentro de 24 horas",
+        body: "En un centro Estrella de Miami, un médico licenciado se reúne contigo y revisa tu historial, los medicamentos que tomas y tus análisis de sangre. Puedes pagar en línea con nuestro pago seguro de Stripe al agendar, o pagar en tu visita, con reembolso completo si no eres aprobado o si el médico decide que el programa no es adecuado para ti.",
+        duration: "En la clínica",
       },
       {
-        title: "Seguimiento, cuando corresponde",
-        body: "A veces el siguiente paso correcto es una pregunta, un mensaje aclaratorio o un laboratorio reciente. Todo lo adicional se coordina desde tu panel — sin llamadas perdidas.",
-        duration: "La misma semana",
+        title: "Seguimiento, si hace falta",
+        body: "A veces el siguiente paso es otra pregunta o nuevos análisis antes de decidir. Tu médico te dirá qué hace falta y te contactaremos para agendar lo que sea necesario.",
+        duration: "Si hace falta",
       },
       {
         title: "Tu plan completo",
-        body: "Si el tratamiento es apropiado, tu médico designa tu péptido GLP-1 y lo acompaña con tu plan de nutrición guiado y ejercicios de manejo. Verás exactamente qué contiene el plan, cómo se dosifica y cómo se supervisa.",
-        duration: "El día de la aprobación",
+        body: "Si el tratamiento es apropiado, tu médico elige tu medicamento GLP-1 y lo acompaña con un plan de comidas de una nutricionista y un programa de ejercicios guiado. Tu médico te explica qué incluye el plan, cómo se dosifica y cómo se supervisa.",
+        duration: "Después de tu consulta",
       },
       {
-        title: "Preparación en farmacia",
-        body: "Tu péptido lo dispensa Greenstone Rx en Miami y se envía discretamente a tu dirección. Tu plan de nutrición y ejercicios te esperan en tu panel.",
-        duration: "3 — 5 días hábiles",
+        title: "Atención semanal en la clínica",
+        body: "Con la receta de tu médico, tu medicamento puede prepararlo Greenstone Rx, nuestra farmacia magistral asociada en Miami. Nuestro equipo médico te aplica la inyección cada semana en un centro de Estrella Medical Centers en Miami, con un chequeo de tu peso, tus signos vitales, cómo te sientes y tu dosis.",
+        duration: "Cada semana",
       },
       {
         title: "Cuidado continuo",
-        body: "Resurtidos, mensajería segura, seguimiento de progreso y chequeos médicos viven en un panel privado. Pausa, cambia o cancela desde el mismo lugar en cualquier momento.",
-        duration: "Continuo",
+        body: `Tu médico ajusta tu dosis y tu plan según tus chequeos. El programa se renueva cada mes hasta que lo canceles. Para cancelar, escribe a ${EMAIL} o avisa en la clínica; al cancelar se detienen los cobros futuros.`,
+        duration: "Cada mes",
       },
     ],
     reviewEyebrow: "La revisión",
-    reviewTitle1: "Leído de principio a fin,",
-    reviewTitle2: "por un médico licenciado.",
+    reviewTitle1: "Tu panorama completo,",
+    reviewTitle2: "revisado por un médico licenciado.",
     reviewBody1:
-      "Cada cuestionario de Estrella lo lee completo un médico con licencia en tu estado — nunca se aprueba automáticamente, nunca pasa por un diagrama. El proveedor considera el panorama completo antes de decidir si el tratamiento tiene sentido, qué péptido designar, cómo dosificarlo y qué vigilar.",
+      "A cada paciente lo atiende un médico licenciado de Estrella. Nada se aprueba de forma automática. Tu médico considera tu panorama completo antes de decidir si el tratamiento tiene sentido, qué medicamento elegir, cómo dosificarlo y qué vigilar.",
     reviewBody2:
-      "La meta es el estándar que nuestros pacientes siempre han conocido en nuestras clínicas del sur de la Florida: criterio clínico, escrito con claridad, sin teatro.",
+      "Es la misma atención que conocen más de 8,000 pacientes de Estrella Medical Centers, con médicos de más de 20 años de experiencia: criterio clínico claro, explicado con sencillez.",
     reviewCta: "Iniciar mi consulta",
-    vol1: "Volumen I — Lo que el proveedor considera",
+    vol1: "Lo que tu médico considera",
     reviewItems: [
       {
-        label: "Metas y resultado deseado",
-        note: "Cuánto peso quieres perder y el plazo que tienes en mente.",
+        label: "Metas",
+        note: "Cuánto peso quieres perder y lo que más te importa.",
       },
       {
         label: "Historial personal y familiar",
-        note: "Condiciones, diagnósticos previos y riesgo hereditario relevante.",
+        note: "Condiciones, diagnósticos previos y antecedentes familiares relevantes.",
       },
       {
         label: "Medicamentos y suplementos actuales",
-        note: "Incluyendo dosis, frecuencia y cuánto tiempo llevas con ellos.",
+        note: "Incluida la dosis, cada cuánto los tomas y desde cuándo.",
       },
       {
         label: "Alergias y reacciones conocidas",
-        note: "Cotejadas contra cada compuesto que el proveedor pueda considerar.",
+        note: "Se comparan con cualquier medicamento que tu médico pueda considerar.",
       },
       {
-        label: "Laboratorios, cuando existen",
-        note: "Paneles recientes agilizan la aprobación; también podemos ordenarlos si hace falta.",
+        label: "Análisis de sangre",
+        note: "Tu médico revisa tus análisis y pide nuevos si hace falta.",
       },
       {
-        label: "Contexto de estilo de vida",
-        note: "Sueño, estrés, actividad, nutrición — las variables que dan forma a tu plan.",
+        label: "Estilo de vida",
+        note: "Sueño, estrés, actividad y alimentación: lo que da forma a tu plan.",
       },
     ],
-    vol2: "Volumen II — Lo que el proveedor puede decidir",
+    vol2: "Lo que tu médico puede decidir",
     decisions: [
       {
         verdict: "Aprobar",
-        body: "Cuando el panorama es claro, tu médico designa tu péptido y escribe tu plan ese mismo día.",
+        body: "Cuando el panorama es claro, tu médico elige tu medicamento y escribe tu plan.",
       },
       {
-        verdict: "Aprobar con monitoreo",
-        body: "El plan comienza, con laboratorios periódicos, chequeos o mensajes de seguimiento incorporados.",
+        verdict: "Aprobar con seguimiento",
+        body: "Tu plan comienza, con análisis adicionales o chequeos más cercanos.",
       },
       {
         verdict: "Pedir más información",
-        body: "Un hilo corto de mensajes o una videoconsulta para aclarar el historial antes de decidir.",
+        body: "Tu médico puede hacerte más preguntas o pedir análisis antes de decidir.",
       },
       {
         verdict: "Ajustar el plan",
-        body: "Si otra dosis u otro compuesto encaja mejor, tu proveedor te dirigirá allí.",
+        body: "Si otra dosis u otro medicamento encaja mejor, tu médico cambiará el plan.",
       },
       {
         verdict: "Declinar",
-        body: "Cuando el tratamiento aún no es adecuado para ti, tu proveedor te lo dirá con claridad — y te explicará por qué.",
+        body: "Cuando el tratamiento aún no es adecuado para ti, tu médico te lo dirá con claridad y te explicará por qué. Te devolvemos el pago completo.",
       },
     ],
     closing:
-      "En todos los casos, decide un médico real. Los medicamentos magistrales, cuando se recetan, los dispensa Greenstone Rx en Miami en respuesta a esa receta — y solo a esa receta.",
+      "En todos los casos, decide un médico licenciado. Cuando se receta, el medicamento magistral lo prepara Greenstone Rx en Miami solo para esa receta. Los medicamentos magistrales no están aprobados por la FDA y la FDA no ha revisado su seguridad, eficacia ni calidad. La disponibilidad puede variar.",
+    policies: "Política de reembolsos",
+    terms: "Términos del servicio",
   },
 };
+
+const FOCUS =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sun-500 focus-visible:ring-offset-2";
 
 export default function HowItWorksPage() {
   const { lang } = useLang();
@@ -242,11 +256,9 @@ export default function HowItWorksPage() {
         slogan={t.slogan}
         title={
           <>
-            {t.heroTitle1}
+            {t.heroTitle1} {t.heroTitle2}
             <br />
-            {t.heroTitle2}
-            <br />
-            <span className="font-normal italic">{t.heroTitle3}</span>
+            <span className="text-sun-600">{t.heroTitle3}</span>
           </>
         }
         subtitle={t.heroSubtitle}
@@ -255,52 +267,47 @@ export default function HowItWorksPage() {
           href: "/qualify",
         }}
         backgroundImage="/images/how-it-works-scene.png"
+        imageAlt={t.heroImageAlt}
         contactInfo={t.contact}
       />
 
-      {/* Six steps — editorial long-form list */}
-      <section className="bg-cream-50 paper-grain paper-grain-light">
-        <div className="container-x py-24 sm:py-32">
-          <div className="grid items-end gap-10 border-b border-navy-900/15 pb-14 md:grid-cols-12">
+      {/* Six steps */}
+      <section className="bg-white py-20 font-heading sm:py-28">
+        <div className="container-x">
+          <div className="grid items-end gap-6 md:grid-cols-12 md:gap-10">
             <Reveal className="md:col-span-7">
-              <div className="eyebrow">{t.stepsEyebrow}</div>
-              <h2 className="mt-5 font-display text-display-lg font-light leading-[0.98] text-navy-900">
-                {t.stepsTitle1}
-                <br />
-                <span className="font-normal italic">{t.stepsTitle2}</span>
+              <p className="text-[13px] font-semibold text-sun-700">{t.stepsEyebrow}</p>
+              <h2 className="mt-3 text-balance font-heading text-[clamp(2rem,3.8vw,3.25rem)] font-bold leading-[1.08] tracking-[-0.03em] text-navy-950">
+                {t.stepsTitle1} <span className="text-sun-600">{t.stepsTitle2}</span>
               </h2>
             </Reveal>
-            <Reveal delay={120} className="md:col-span-5 md:text-right">
-              <p className="max-w-md text-[16px] leading-[1.7] text-navy-900/70 md:ml-auto">
+            <Reveal delay={120} className="md:col-span-5">
+              <p className="max-w-md text-[17px] leading-relaxed text-navy-900/70 md:ml-auto">
                 {t.stepsLead}
               </p>
             </Reveal>
           </div>
 
-          <ol className="mt-4 divide-y divide-navy-900/15">
+          <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {t.steps.map((s, i) => (
-              <Reveal key={s.title} delay={i * 60}>
-                <li className="grid grid-cols-12 items-baseline gap-6 py-12 sm:py-16">
-                  <div className="col-span-12 sm:col-span-2">
-                    <div className="font-display text-[44px] font-light leading-none text-navy-900/55 sm:text-[56px]">
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-                  </div>
-                  <div className="col-span-12 sm:col-span-7">
-                    <h3 className="font-display text-[28px] font-light leading-tight text-navy-900 sm:text-[32px]">
-                      {s.title}
-                    </h3>
-                    <p className="mt-4 max-w-xl text-[15px] leading-[1.75] text-navy-900/70">
-                      {s.body}
-                    </p>
-                  </div>
-                  <div className="col-span-12 sm:col-span-3 sm:text-right">
-                    <div className="text-[10px] uppercase tracking-[0.24em] text-navy-900/55">
+              <Reveal key={s.title} delay={i * 60} className="h-full">
+                <li className="flex h-full flex-col rounded-3xl bg-mist-50 p-7 ring-1 ring-navy-900/[0.07] sm:p-8">
+                  <span aria-hidden className="flex h-11 w-11 items-center justify-center rounded-full bg-navy-950 text-[15px] font-bold text-sun-300">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="mt-6 text-[22px] font-bold leading-tight tracking-[-0.02em] text-navy-950">
+                    {s.title}
+                  </h3>
+                  <p className="mt-3 flex-1 text-[15px] leading-relaxed text-navy-900/70">
+                    {s.body}
+                  </p>
+                  <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2 border-t border-navy-900/10 pt-4">
+                    <span className="text-[13px] font-semibold text-sun-700">
                       {t.duration}
-                    </div>
-                    <div className="mt-2 font-display text-[18px] font-light text-navy-900">
+                    </span>
+                    <span className="text-[15px] font-bold text-navy-950">
                       {s.duration}
-                    </div>
+                    </span>
                   </div>
                 </li>
               </Reveal>
@@ -310,48 +317,44 @@ export default function HowItWorksPage() {
       </section>
 
       {/* The review */}
-      <section className="bg-cream-100 paper-grain paper-grain-light">
-        <div className="container-x py-24 sm:py-32">
-          <div className="grid gap-16 lg:grid-cols-12 lg:gap-20">
+      <section className="bg-mist-50 py-20 font-heading sm:py-28">
+        <div className="container-x">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <Reveal className="lg:col-span-5 lg:sticky lg:top-32 lg:self-start">
-              <div className="eyebrow">{t.reviewEyebrow}</div>
-              <h2 className="mt-5 font-display text-display-lg font-light leading-[0.98] text-navy-900">
-                {t.reviewTitle1}
-                <br />
-                <span className="font-normal italic">{t.reviewTitle2}</span>
+              <p className="text-[13px] font-semibold text-sun-700">{t.reviewEyebrow}</p>
+              <h2 className="mt-3 text-balance font-heading text-[clamp(2rem,3.8vw,3.25rem)] font-bold leading-[1.08] tracking-[-0.03em] text-navy-950">
+                {t.reviewTitle1} <span className="text-sun-600">{t.reviewTitle2}</span>
               </h2>
-              <p className="mt-7 max-w-md text-[16px] leading-[1.75] text-navy-900/70">
+              <p className="mt-5 max-w-md text-[17px] leading-relaxed text-navy-900/70">
                 {t.reviewBody1}
               </p>
-              <p className="mt-5 max-w-md text-[15px] leading-[1.75] text-navy-900/60">
+              <p className="mt-4 max-w-md text-[15px] leading-relaxed text-navy-900/70">
                 {t.reviewBody2}
               </p>
               <Link
                 href="/qualify"
-                className="mt-9 inline-flex items-center gap-2 border-b border-navy-900/30 pb-1 text-[13px] font-medium uppercase tracking-[0.2em] text-navy-900 transition-colors hover:border-navy-900"
+                className={`btn-pill mt-8 shadow-[0_12px_28px_-12px_rgba(200,146,56,.8)] ${FOCUS}`}
               >
                 {t.reviewCta}
-                <ArrowRight className="h-3.5 w-3.5" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </Reveal>
 
-            <div className="lg:col-span-7">
-              <div className="border-t border-navy-900/25 pt-10">
-                <div className="text-[10px] uppercase tracking-[0.24em] text-navy-900/55">
-                  {t.vol1}
-                </div>
-                <ol className="mt-2 divide-y divide-navy-900/15">
+            <div className="min-w-0 lg:col-span-7">
+              <div className="rounded-3xl bg-white p-6 shadow-[0_24px_60px_-28px_rgba(6,14,34,.30)] ring-1 ring-navy-900/[0.07] sm:p-8">
+                <h3 className="text-[13px] font-semibold text-sun-700">{t.vol1}</h3>
+                <ol className="mt-5 grid gap-3 sm:grid-cols-2">
                   {t.reviewItems.map((item, i) => (
-                    <Reveal key={item.label} delay={i * 50}>
-                      <li className="grid grid-cols-12 items-baseline gap-4 py-7">
-                        <div className="col-span-2 font-display text-[14px] font-light text-navy-900/45">
+                    <Reveal key={item.label} delay={i * 50} className="h-full">
+                      <li className="flex h-full gap-4 rounded-2xl bg-mist-50 p-5">
+                        <span aria-hidden className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-950 text-[12px] font-bold text-sun-300">
                           {String(i + 1).padStart(2, "0")}
-                        </div>
-                        <div className="col-span-10">
-                          <h4 className="font-display text-[20px] font-light leading-tight text-navy-900">
+                        </span>
+                        <div className="min-w-0">
+                          <h4 className="text-[16px] font-bold leading-snug text-navy-950">
                             {item.label}
                           </h4>
-                          <p className="mt-2 max-w-md text-[14px] leading-[1.7] text-navy-900/65">
+                          <p className="mt-1.5 text-[14px] leading-relaxed text-navy-900/75">
                             {item.note}
                           </p>
                         </div>
@@ -361,18 +364,19 @@ export default function HowItWorksPage() {
                 </ol>
               </div>
 
-              <div className="mt-16 border-t border-navy-900/25 pt-10">
-                <div className="text-[10px] uppercase tracking-[0.24em] text-navy-900/55">
-                  {t.vol2}
-                </div>
-                <dl className="mt-2 divide-y divide-navy-900/15">
+              <div className="mt-5 rounded-3xl bg-white p-6 shadow-[0_24px_60px_-28px_rgba(6,14,34,.30)] ring-1 ring-navy-900/[0.07] sm:p-8">
+                <h3 className="text-[13px] font-semibold text-sun-700">{t.vol2}</h3>
+                <dl className="mt-3 divide-y divide-navy-900/10">
                   {t.decisions.map((d, i) => (
                     <Reveal key={d.verdict} delay={i * 50}>
-                      <div className="grid grid-cols-12 items-baseline gap-4 py-6">
-                        <dt className="col-span-12 font-display text-[18px] font-light leading-tight text-navy-900 sm:col-span-4">
+                      <div className="grid gap-1.5 py-5 sm:grid-cols-12 sm:gap-4">
+                        <dt className="flex items-center gap-2.5 text-[16px] font-bold leading-snug text-navy-950 sm:col-span-5">
+                          <span aria-hidden className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sun-400 text-navy-950">
+                            <Check className="h-3 w-3" strokeWidth={3.5} />
+                          </span>
                           {d.verdict}
                         </dt>
-                        <dd className="col-span-12 max-w-lg text-[14px] leading-[1.7] text-navy-900/65 sm:col-span-8">
+                        <dd className="text-[14px] leading-relaxed text-navy-900/75 sm:col-span-7">
                           {d.body}
                         </dd>
                       </div>
@@ -382,8 +386,22 @@ export default function HowItWorksPage() {
               </div>
 
               <Reveal>
-                <p className="mt-12 max-w-xl border-t border-navy-900/15 pt-8 text-[13px] leading-[1.75] text-navy-900/55">
+                <p className="mt-8 max-w-xl text-[13px] leading-relaxed text-navy-900/70">
                   {t.closing}
+                </p>
+                <p className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-[13px]">
+                  <Link
+                    href="/refunds"
+                    className={`inline-block rounded py-1.5 font-semibold text-navy-950 underline decoration-sun-500 underline-offset-4 ${FOCUS}`}
+                  >
+                    {t.policies}
+                  </Link>
+                  <Link
+                    href="/terms"
+                    className={`inline-block rounded py-1.5 font-semibold text-navy-950 underline decoration-sun-500 underline-offset-4 ${FOCUS}`}
+                  >
+                    {t.terms}
+                  </Link>
                 </p>
               </Reveal>
             </div>

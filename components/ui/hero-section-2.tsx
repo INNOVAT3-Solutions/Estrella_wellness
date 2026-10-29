@@ -18,7 +18,7 @@ const InfoIcon = ({ type }: { type: "website" | "phone" | "address" }) => {
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="h-4 w-4 text-navy-900"
+        className="h-4 w-4"
       >
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="2" x2="22" y1="12" y2="12"></line>
@@ -36,7 +36,7 @@ const InfoIcon = ({ type }: { type: "website" | "phone" | "address" }) => {
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="h-4 w-4 text-navy-900"
+        className="h-4 w-4"
       >
         <circle cx="12" cy="12" r="9"></circle>
         <polyline points="12 7 12 12 15 14"></polyline>
@@ -53,14 +53,18 @@ const InfoIcon = ({ type }: { type: "website" | "phone" | "address" }) => {
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="h-4 w-4 text-navy-900"
+        className="h-4 w-4"
       >
         <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
         <circle cx="12" cy="10" r="3"></circle>
       </svg>
     ),
   };
-  return <div className="mr-3 flex-shrink-0">{icons[type]}</div>;
+  return (
+    <span aria-hidden className="mr-2.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-950 text-sun-300">
+      {icons[type]}
+    </span>
+  );
 };
 
 interface HeroSectionProps {
@@ -78,6 +82,8 @@ interface HeroSectionProps {
     href: string;
   };
   backgroundImage: string;
+  /** Describes the hero image for screen readers. Omit or pass "" if decorative. */
+  imageAlt?: string;
   contactInfo: {
     website: string;
     phone: string;
@@ -87,7 +93,17 @@ interface HeroSectionProps {
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
   (
-    { className, logo, slogan, title, subtitle, callToAction, backgroundImage, contactInfo },
+    {
+      className,
+      logo,
+      slogan,
+      title,
+      subtitle,
+      callToAction,
+      backgroundImage,
+      imageAlt,
+      contactInfo,
+    },
     ref
   ) => {
     const containerVariants = {
@@ -117,107 +133,101 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       <motion.section
         ref={ref}
         className={cn(
-          "relative flex w-full flex-col overflow-hidden bg-cream-50 paper-grain paper-grain-light text-navy-900 md:flex-row",
+          "relative w-full overflow-hidden bg-mist-50 font-heading text-navy-950",
           className
         )}
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
-        {/* Left Side: Content */}
-        <div className="flex w-full flex-col justify-between p-8 md:w-1/2 md:p-14 lg:w-3/5 lg:p-20 lg:min-h-[680px]">
-          {/* Top Section: Logo & Main Content */}
-          <div>
+        <div className="container-x grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.08fr_1fr] lg:gap-14 lg:py-24">
+          {/* Copy */}
+          <div className="min-w-0">
             {(logo || slogan) && (
-              <motion.header className="mb-14" variants={itemVariants}>
-                <div className="flex items-center">
-                  {logo && (
-                    <img src={logo.url} alt={logo.alt} className="mr-4 h-9 w-auto" />
-                  )}
-                  <div>
-                    {logo?.text && (
-                      <p className="font-display text-[17px] font-light text-navy-900">
-                        {logo.text}
-                      </p>
-                    )}
-                    {slogan && (
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-navy-900/55">
-                        {slogan}
-                      </p>
-                    )}
-                  </div>
-                </div>
+              <motion.header className="flex flex-wrap items-center gap-3" variants={itemVariants}>
+                {logo && (
+                  <img src={logo.url} alt={logo.alt} className="h-9 w-auto" />
+                )}
+                {logo?.text && (
+                  <p className="text-[17px] font-bold text-navy-950">{logo.text}</p>
+                )}
+                {slogan && (
+                  <span className="tag-pill">
+                    <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-sun-500" />
+                    {slogan}
+                  </span>
+                )}
               </motion.header>
             )}
 
-            <motion.main variants={containerVariants}>
+            <motion.div variants={containerVariants}>
               <motion.h1
-                className="font-display font-light leading-[0.98] tracking-[-0.03em] text-navy-900 text-[clamp(40px,5.5vw,76px)]"
+                className="mt-5 text-balance font-heading text-[clamp(2.4rem,3.9vw,4.4rem)] font-extrabold leading-[1.03] tracking-[-0.035em] text-navy-950"
                 variants={itemVariants}
               >
                 {title}
               </motion.h1>
-              <motion.div
-                className="my-8 h-px w-24 bg-navy-900/30"
-                variants={itemVariants}
-              ></motion.div>
               <motion.p
-                className="mb-10 max-w-md text-[16px] leading-[1.7] text-navy-900/70"
+                className="mt-5 max-w-lg text-pretty text-[17px] leading-relaxed text-navy-900/70"
                 variants={itemVariants}
               >
                 {subtitle}
               </motion.p>
-              <motion.a
-                href={callToAction.href}
-                className="inline-flex items-center gap-2 border-b border-navy-900/30 pb-1 text-[13px] font-medium uppercase tracking-[0.22em] text-navy-900 transition-colors hover:border-navy-900"
-                variants={itemVariants}
-              >
-                {callToAction.text}
-                <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                  <path
-                    d="M7 10H13M13 10L10 7M13 10L10 13"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </motion.a>
-            </motion.main>
+              <motion.div className="mt-8" variants={itemVariants}>
+                <a
+                  href={callToAction.href}
+                  className="btn-pill px-8 py-4 text-[15px] shadow-[0_12px_28px_-12px_rgba(200,146,56,.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sun-500 focus-visible:ring-offset-2"
+                >
+                  {callToAction.text}
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                    <path
+                      d="M4 10H16M16 10L11 5M16 10L11 15"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </a>
+              </motion.div>
+            </motion.div>
+
+            {/* Footer info */}
+            <motion.footer
+              className="mt-10 border-t border-navy-900/10 pt-6"
+              variants={itemVariants}
+            >
+              <ul className="flex flex-col gap-3 text-[14px] font-medium text-navy-900/75 sm:flex-row sm:flex-wrap sm:gap-x-7">
+                <li className="flex items-center">
+                  <InfoIcon type="website" />
+                  <span>{contactInfo.website}</span>
+                </li>
+                <li className="flex items-center">
+                  <InfoIcon type="phone" />
+                  <span>{contactInfo.phone}</span>
+                </li>
+                <li className="flex items-center">
+                  <InfoIcon type="address" />
+                  <span>{contactInfo.address}</span>
+                </li>
+              </ul>
+            </motion.footer>
           </div>
 
-          {/* Bottom Section: Footer Info */}
-          <motion.footer
-            className="mt-16 w-full border-t border-navy-900/15 pt-7"
-            variants={itemVariants}
-          >
-            <div className="grid grid-cols-1 gap-5 text-[12px] text-navy-900/70 sm:grid-cols-3">
-              <div className="flex items-center">
-                <InfoIcon type="website" />
-                <span className="uppercase tracking-[0.16em]">{contactInfo.website}</span>
-              </div>
-              <div className="flex items-center">
-                <InfoIcon type="phone" />
-                <span className="uppercase tracking-[0.16em]">{contactInfo.phone}</span>
-              </div>
-              <div className="flex items-center">
-                <InfoIcon type="address" />
-                <span className="uppercase tracking-[0.16em]">{contactInfo.address}</span>
-              </div>
-            </div>
-          </motion.footer>
+          {/* Image */}
+          <motion.div
+            className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-cover bg-center shadow-[0_24px_60px_-28px_rgba(6,14,34,.30)] ring-1 ring-navy-900/[0.07] sm:aspect-[16/11] lg:aspect-[4/5]"
+            style={{
+              backgroundImage: `url(${backgroundImage})`,
+            }}
+            {...(imageAlt
+              ? { role: "img", "aria-label": imageAlt }
+              : { "aria-hidden": true })}
+            initial={{ opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.9, ease: "easeOut" as const }}
+          ></motion.div>
         </div>
-
-        {/* Right Side: Image with Clip Path Animation */}
-        <motion.div
-          className="w-full min-h-[420px] bg-cover bg-center md:w-1/2 md:min-h-full lg:w-2/5"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-          }}
-          initial={{ clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)" }}
-          animate={{ clipPath: "polygon(25% 0, 100% 0, 100% 100%, 0% 100%)" }}
-          transition={{ duration: 1.2, ease: "circOut" as const }}
-        ></motion.div>
       </motion.section>
     );
   }

@@ -3,88 +3,72 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight } from "lucide-react";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import { useLang, pick } from "@/lib/i18n";
+import { SHOW_PATIENT_PORTAL } from "@/lib/features";
 
 const COPY = {
   en: {
-    ctaEyebrow: "Limited-time offer",
-    ctaTitle1: `${fmtPrice(WEIGHT_LOSS.price)} a month.`,
-    ctaTitle2: "Everything included.",
-    ctaBody: `Doctor consultation, your designated GLP-1 peptide, a guided nutrition plan, and management exercises — normally ${fmtPrice(WEIGHT_LOSS.regularPrice)}/month.`,
-    ctaButton: "Start my consultation",
     about:
-      "Estrella Wellness is the telehealth arm of Estrella Medical Centers — extending clinician-guided weight loss care from our South Florida medical group to patients across our licensed states.",
-    programs: "The Program",
+      "Estrella Wellness is the new wellness program from Estrella Medical Centers. Doctor-led weight loss with weekly visits at our Miami locations, open to everyone.",
+    programs: "Program",
     programLink: "GLP-1 Weight Loss Program",
-    startLink: "Start my consultation",
-    clinic: "The Clinic",
+    comingSoonItems: ["Hormone Therapy", "Skin Rejuvenation"],
+    comingSoon: "Coming soon",
+    startLink: "Book consultation",
+    clinic: "Clinic",
     process: "How it works",
-    providers: "Providers",
     faq: "FAQ",
     login: "Patient login",
-    reading: "Reading",
-    readingItems: [
-      "Treatment guides",
-      "Clinical research",
-      "Patient stories",
-      "Bilingual care",
-    ],
     pharmacyPartner: "Pharmacy partner",
     legal: "Legal",
     legalItems: [
-      "Privacy policy",
-      "Terms of service",
-      "HIPAA notice",
-      "Telemedicine consent",
-      "Compounded med disclosure",
+      { href: "/privacy", label: "Privacy policy" },
+      { href: "/terms", label: "Terms of service" },
+      { href: "/refunds", label: "Refund policy" },
+      { href: "/cookies", label: "Cookie policy" },
+      { href: "/accessibility", label: "Accessibility" },
     ],
+    contact: "Contact",
+    npp: "Our HIPAA Notice of Privacy Practices is available at our clinics or by email.",
+    emergency: "In a medical emergency, call 911.",
     rights: "All rights reserved.",
     designedBy: "Designed by",
     disclaimer:
-      "Estrella Wellness offers telehealth services through licensed clinicians. Compounded medications are not FDA-approved in the same manner as commercially manufactured drugs and are dispensed by our partner compounding pharmacy,",
+      "Care in the Estrella Wellness program is provided in person by licensed clinicians at Estrella Medical Centers in Miami. Compounded medications are not FDA-approved and have not been reviewed by the FDA for safety, effectiveness or quality. When prescribed, they are prepared by our partner compounding pharmacy,",
     disclaimer2:
-      "(Miami, FL · FL DOH PH35751), in response to a prescription written by an Estrella clinician. This site is for informational purposes and is not medical advice. Treatment is at the discretion of the licensed clinician.",
+      "(Miami, FL, FL DOH PH35751), in response to a prescription written by an Estrella clinician. This site is for informational purposes and is not medical advice. Treatment is at the discretion of the licensed clinician, and individual results vary.",
   },
   es: {
-    ctaEyebrow: "Oferta por tiempo limitado",
-    ctaTitle1: `${fmtPrice(WEIGHT_LOSS.price)} al mes.`,
-    ctaTitle2: "Todo incluido.",
-    ctaBody: `Consulta médica, tu péptido GLP-1 designado, un plan de nutrición guiado y ejercicios de manejo — normalmente ${fmtPrice(WEIGHT_LOSS.regularPrice)}/mes.`,
-    ctaButton: "Iniciar mi consulta",
     about:
-      "Estrella Wellness es el brazo de telesalud de Estrella Medical Centers — llevando la atención médica para bajar de peso de nuestro grupo médico del sur de la Florida a pacientes en los estados donde tenemos licencia.",
-    programs: "El Programa",
+      "Estrella Wellness es el nuevo programa de bienestar de Estrella Medical Centers. Pérdida de peso dirigida por médicos, con visitas semanales en nuestros centros de Miami y abierto para todos.",
+    programs: "Programa",
     programLink: "Programa de Pérdida de Peso GLP-1",
-    startLink: "Iniciar mi consulta",
-    clinic: "La Clínica",
+    comingSoonItems: ["Terapia Hormonal", "Rejuvenecimiento de la Piel"],
+    comingSoon: "Próximamente",
+    startLink: "Agenda tu consulta",
+    clinic: "Clínica",
     process: "Cómo funciona",
-    providers: "Médicos",
     faq: "Preguntas frecuentes",
     login: "Portal del paciente",
-    reading: "Lecturas",
-    readingItems: [
-      "Guías de tratamiento",
-      "Investigación clínica",
-      "Historias de pacientes",
-      "Atención bilingüe",
-    ],
     pharmacyPartner: "Farmacia asociada",
     legal: "Legal",
     legalItems: [
-      "Política de privacidad",
-      "Términos de servicio",
-      "Aviso HIPAA",
-      "Consentimiento de telemedicina",
-      "Divulgación de medicamentos magistrales",
+      { href: "/privacy", label: "Política de privacidad" },
+      { href: "/terms", label: "Términos de servicio" },
+      { href: "/refunds", label: "Política de reembolso" },
+      { href: "/cookies", label: "Política de cookies" },
+      { href: "/accessibility", label: "Accesibilidad" },
     ],
+    contact: "Contacto",
+    npp: "Nuestro Aviso de Prácticas de Privacidad (HIPAA) está disponible en nuestras clínicas o por correo.",
+    emergency: "En una emergencia médica, llama al 911.",
     rights: "Todos los derechos reservados.",
     designedBy: "Diseñado por",
     disclaimer:
-      "Estrella Wellness ofrece servicios de telesalud a través de médicos licenciados. Los medicamentos magistrales no están aprobados por la FDA de la misma manera que los medicamentos comerciales y son dispensados por nuestra farmacia magistral asociada,",
+      "La atención del programa Estrella Wellness la brindan en persona médicos licenciados en Estrella Medical Centers en Miami. Los medicamentos magistrales no están aprobados por la FDA y la FDA no ha revisado su seguridad, eficacia ni calidad. Cuando se recetan, los prepara nuestra farmacia magistral asociada,",
     disclaimer2:
-      "(Miami, FL · FL DOH PH35751), en respuesta a una receta escrita por un médico de Estrella. Este sitio es informativo y no constituye consejo médico. El tratamiento queda a discreción del médico licenciado.",
+      "(Miami, FL, FL DOH PH35751), en respuesta a una receta escrita por un médico de Estrella. Este sitio es informativo y no constituye consejo médico. El tratamiento queda a discreción del médico licenciado y los resultados varían según cada persona.",
   },
 };
 
@@ -96,74 +80,63 @@ export function Footer() {
   if (pathname.startsWith("/qualify")) return null;
 
   return (
-    <footer className="bg-navy-900 text-cream-50/80">
-      {/* Top CTA strip — the offer, one more time */}
-      <div className="border-b border-cream-50/12">
-        <div className="container-x grid items-end gap-10 py-16 md:grid-cols-12 md:py-20">
-          <div className="md:col-span-7">
-            <div className="eyebrow-light">{t.ctaEyebrow}</div>
-            <h3 className="mt-5 font-display text-[40px] font-light leading-[1.0] text-cream-50 sm:text-[56px]">
-              {t.ctaTitle1}
-              <br />
-              <span className="font-normal italic">{t.ctaTitle2}</span>
-            </h3>
-            <p className="mt-6 max-w-xl text-[15px] leading-[1.7] text-cream-50/70">
-              {t.ctaBody}
-            </p>
-          </div>
-          <div className="md:col-span-5 md:flex md:justify-end">
-            <Link
-              href="/qualify"
-              className="inline-flex items-center justify-center gap-2 bg-cream-50 px-8 py-4 text-[12px] font-medium uppercase tracking-[0.2em] text-navy-900 transition-colors hover:bg-cream-100"
-            >
-              {t.ctaButton}
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        </div>
-      </div>
-
+    <footer className="bg-navy-950 pb-[calc(6rem+env(safe-area-inset-bottom))] font-heading text-white/75 md:pb-0">
       {/* Main grid */}
-      <div className="container-x grid gap-14 py-20 md:grid-cols-12">
-        <div className="md:col-span-4">
-          <div className="bg-cream-50 p-3 inline-block">
-            <Image
-              src="/logo/logo.png"
-              alt="Estrella Medical Centers"
-              width={160}
-              height={42}
-              className="h-9 w-auto"
-            />
-          </div>
-          <p className="mt-7 max-w-sm text-[14px] leading-[1.7] text-cream-50/65">
+      <div className="container-x grid gap-12 py-20 md:grid-cols-12">
+        <div className="md:col-span-5">
+          <Image
+            src="/logo/logo-light.png"
+            alt="Estrella Medical Centers"
+            width={235}
+            height={110}
+            className="h-12 w-auto"
+          />
+          <p className="mt-7 max-w-sm text-[14px] leading-[1.7] text-white/80">
             {t.about}
           </p>
-          <div className="mt-8 space-y-1.5 text-[13px] text-cream-50/65">
-            <div>305.217.7553</div>
-            <div>innovat3solutions@gmail.com</div>
-          </div>
+          <address className="mt-8 space-y-1.5 text-[13px] not-italic text-white/75">
+            <div className="font-semibold text-white">{t.contact}</div>
+            <div>Estrella Medical Centers, Miami, FL</div>
+            <a
+              href="mailto:info@estrellamedicalcenters.com"
+              className="underline-offset-2 hover:text-white hover:underline"
+            >
+              info@estrellamedicalcenters.com
+            </a>
+          </address>
+          <p className="mt-6 max-w-sm text-[13px] leading-relaxed text-white/75">
+            {t.emergency} {t.npp}
+          </p>
         </div>
 
         <div className="md:col-span-2">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cream-50/45">
+          <div className="text-[14px] font-semibold text-white">
             {t.programs}
           </div>
-          <ul className="mt-5 space-y-3 text-[14px]">
+          <ul className="mt-4 space-y-1 text-[14px]">
             <li>
               <Link
                 href="/programs/weight-loss"
-                className="text-cream-50/90 transition hover:text-cream-50"
+                className="inline-block py-1.5 text-white/90 transition hover:text-white"
               >
                 {t.programLink}
-                <span className="ml-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-sun-300">
+                <span className="ml-2 text-[13px] font-semibold text-sun-300">
                   {fmtPrice(WEIGHT_LOSS.price)}
                 </span>
               </Link>
             </li>
+            {t.comingSoonItems.map((item) => (
+              <li key={item} className="text-white/75">
+                {item}
+                <span className="ml-2 text-[12px] font-semibold text-white/75">
+                  {t.comingSoon}
+                </span>
+              </li>
+            ))}
             <li>
               <Link
                 href="/qualify"
-                className="text-cream-50/80 transition hover:text-cream-50"
+                className="inline-block py-1.5 text-white/80 transition hover:text-white"
               >
                 {t.startLink}
               </Link>
@@ -172,78 +145,59 @@ export function Footer() {
         </div>
 
         <div className="md:col-span-2">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cream-50/45">
+          <div className="text-[14px] font-semibold text-white">
             {t.clinic}
           </div>
-          <ul className="mt-5 space-y-3 text-[14px]">
+          <ul className="mt-4 space-y-1 text-[14px]">
             <li>
               <Link
                 href="/how-it-works"
-                className="text-cream-50/80 hover:text-cream-50"
+                className="inline-block py-1.5 text-white/80 hover:text-white"
               >
                 {t.process}
               </Link>
             </li>
             <li>
-              <Link
-                href="/providers"
-                className="text-cream-50/80 hover:text-cream-50"
-              >
-                {t.providers}
-              </Link>
-            </li>
-            <li>
-              <Link href="/faq" className="text-cream-50/80 hover:text-cream-50">
+              <Link href="/faq" className="inline-block py-1.5 text-white/80 hover:text-white">
                 {t.faq}
               </Link>
             </li>
-            <li>
-              <Link
-                href="/dashboard"
-                className="text-cream-50/80 hover:text-cream-50"
-              >
-                {t.login}
-              </Link>
-            </li>
+            {SHOW_PATIENT_PORTAL && (
+              <li>
+                <Link
+                  href="/dashboard"
+                  className="inline-block py-1.5 text-white/80 hover:text-white"
+                >
+                  {t.login}
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
 
-        <div className="md:col-span-2">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cream-50/45">
-            {t.reading}
-          </div>
-          <ul className="mt-5 space-y-3 text-[14px] text-cream-50/80">
-            {t.readingItems.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-            <li>
-              <a
-                href="https://www.greenstonerx.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-cream-50"
-              >
-                {t.pharmacyPartner}
-              </a>
-            </li>
-          </ul>
-        </div>
 
-        <div className="md:col-span-2">
-          <div className="text-[10px] font-semibold uppercase tracking-[0.22em] text-cream-50/45">
+        <div className="md:col-span-3">
+          <div className="text-[14px] font-semibold text-white">
             {t.legal}
           </div>
-          <ul className="mt-5 space-y-3 text-[14px] text-cream-50/80">
+          <ul className="mt-4 space-y-1 text-[14px] text-white/80">
             {t.legalItems.map((item) => (
-              <li key={item}>{item}</li>
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className="inline-block py-1.5 text-white/80 underline-offset-2 hover:text-white hover:underline"
+                >
+                  {item.label}
+                </Link>
+              </li>
             ))}
           </ul>
         </div>
       </div>
 
       {/* Bottom legal */}
-      <div className="border-t border-cream-50/12 bg-navy-950">
-        <div className="container-x flex flex-col gap-4 py-8 text-[11px] leading-[1.7] text-cream-50/50 lg:flex-row lg:items-start lg:justify-between">
+      <div className="border-t border-white/10">
+        <div className="container-x flex flex-col gap-4 py-8 text-[12px] leading-[1.7] text-white/75 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <div>
               © {new Date().getFullYear()} Estrella Medical Centers. {t.rights}
@@ -254,7 +208,7 @@ export function Footer() {
                 href="https://innovat3solutions.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline-offset-2 hover:text-cream-50 hover:underline"
+                className="underline-offset-2 hover:text-white hover:underline"
               >
                 Innovat3 Solutions
               </a>
@@ -266,7 +220,7 @@ export function Footer() {
               href="https://www.greenstonerx.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline-offset-2 hover:text-cream-50 hover:underline"
+              className="underline-offset-2 hover:text-white hover:underline"
             >
               Greenstone Rx
             </a>{" "}

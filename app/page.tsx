@@ -1,29 +1,25 @@
-import { Hero } from "@/components/home/hero";
-import { PressStrip } from "@/components/home/press-strip";
-import { WhatsIncluded } from "@/components/home/whats-included";
-import { ProgramsGrid } from "@/components/home/programs-grid";
-import { StatsBar } from "@/components/home/stats-bar";
-import { HowItWorks } from "@/components/home/how-it-works";
-import { Testimonials } from "@/components/home/testimonials";
-import { Comparison } from "@/components/home/comparison";
-import { PharmacyPartner } from "@/components/home/pharmacy-partner";
-import { ProvidersStrip } from "@/components/home/providers-strip";
-import { FinalCta } from "@/components/home/cta";
+import { LandingHero } from "@/components/landing/hero";
+import { OfferBand } from "@/components/landing/offer-band";
+import { LandingAbout } from "@/components/landing/about";
+import { OpenToAll } from "@/components/landing/open-to-all";
+import { WhyUs } from "@/components/landing/why-us";
+import { Journey } from "@/components/landing/journey";
+import { PatientStories } from "@/components/landing/patient-stories";
+import { ComingSoon } from "@/components/landing/coming-soon";
+import { Pricing } from "@/components/landing/pricing";
 
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <PressStrip />
-      <WhatsIncluded />
-      <ProgramsGrid />
-      <HowItWorks />
-      <StatsBar />
-      <Testimonials />
-      <Comparison />
-      <PharmacyPartner />
-      <ProvidersStrip />
-      <FinalCta />
+      <LandingHero />
+      <OfferBand />
+      <LandingAbout />
+      <OpenToAll />
+      <WhyUs />
+      <Journey />
+      <PatientStories />
+      <ComingSoon />
+      <Pricing />
     </>
   );
 }

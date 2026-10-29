@@ -4,6 +4,10 @@ const nextConfig = {
   images: {
     remotePatterns: [],
   },
+  // The doctors page was removed; send old links home.
+  async redirects() {
+    return [{ source: "/providers", destination: "/", permanent: true }];
+  },
 };
 
 module.exports = nextConfig;

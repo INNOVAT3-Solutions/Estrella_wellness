@@ -45,6 +45,11 @@ const config: Config = {
           800: "#103551",
           900: "#0b2238",
         },
+        mist: {
+          50: "#F4F6FA",
+          100: "#E9EDF4",
+          200: "#D5DCE8",
+        },
         cream: {
           50: "#F4EFE6",
           100: "#EDE6D6",
@@ -69,9 +74,10 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ['"Fraunces"', '"Tiempos"', "Georgia", "serif"],
+        display: ["var(--font-heading)", "var(--font-sans)", "ui-sans-serif", "sans-serif"],
+        heading: ["var(--font-heading)", "var(--font-sans)", "ui-sans-serif", "sans-serif"],
         sans: [
-          '"Inter"',
+          "var(--font-sans)",
           "ui-sans-serif",
           "system-ui",
           "sans-serif",
