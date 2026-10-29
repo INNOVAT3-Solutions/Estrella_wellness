@@ -16,10 +16,13 @@ const LABELS: Record<Lang, { full: string; compact: string }> = {
 export function LangToggle({
   variant = "full",
   tone = "light",
+  icon = true,
   className,
 }: {
   variant?: "full" | "compact";
   tone?: "light" | "dark";
+  /** Hide the globe where space is tight (the centered-logo phone header). */
+  icon?: boolean;
   className?: string;
 }) {
   const dark = tone === "dark";
@@ -37,14 +40,14 @@ export function LangToggle({
         className
       )}
     >
-      <Globe
+      {icon && <Globe
         className={cn(
           "ml-2 mr-1 h-3.5 w-3.5 shrink-0",
           dark ? "text-white/75" : "text-navy-900/70"
         )}
         strokeWidth={1.75}
         aria-hidden
-      />
+      />}
       {(["en", "es"] as Lang[]).map((l) => (
         <button
           key={l}

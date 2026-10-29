@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { useLang, pick } from "@/lib/i18n";
@@ -18,7 +18,12 @@ const IMAGES = [
 
 // Crop focus for landscape photos in the portrait frame, so both people stay in.
 const FOCUS: Record<string, string> = {
-  "/images/nutritionist-session.jpg": "object-[62%_50%] sm:object-center lg:object-[62%_50%]",
+  "/images/nutritionist-session.jpg": "object-[62%_50%]",
+};
+
+// Crop focus for the wide in-step photos on phones and tablets.
+const FOCUS_WIDE: Record<string, string> = {
+  "/images/lab-technician-drawing-blood.png": "object-[50%_40%]",
 };
 
 const COPY = {
@@ -26,6 +31,7 @@ const COPY = {
     title: "How the program works",
     lead: "Five steps, one care team, all close to home.",
     cta: "Book consultation",
+    next: "Next step",
     steps: [
       {
         title: "Consultation and blood work",
@@ -58,6 +64,7 @@ const COPY = {
     title: "Cómo funciona el programa",
     lead: "Cinco pasos, un mismo equipo médico, cerca de tu casa.",
     cta: "Agenda tu consulta",
+    next: "Siguiente paso",
     steps: [
       {
         title: "Consulta y análisis de sangre",
@@ -92,6 +99,20 @@ export function Journey() {
   const { lang } = useLang();
   const t = pick(lang, COPY);
   const [active, setActive] = useState(0);
+  const items = useRef<(HTMLLIElement | null)[]>([]);
+
+  // Open the next step, then bring it into view once the previous panel has
+  // finished collapsing (the panels animate for 500ms).
+  const goNext = (i: number) => {
+    setActive(i + 1);
+    window.setTimeout(() => {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      items.current[i + 1]?.scrollIntoView({
+        behavior: reduce ? "auto" : "smooth",
+        block: "nearest",
+      });
+    }, 520);
+  };
 
   return (
     <section className="bg-mist-50 py-20 font-heading sm:py-28">
@@ -107,13 +128,22 @@ export function Journey() {
           <ol className="mt-10 border-t border-navy-900/10">
             {t.steps.map((step, i) => {
               const on = active === i;
+              const next = t.steps[i + 1];
               return (
-                <li key={step.title} className="border-b border-navy-900/10">
+                <li
+                  key={step.title}
+                  ref={(el) => {
+                    items.current[i] = el;
+                  }}
+                  className="scroll-mt-24 border-b border-navy-900/10"
+                >
                   <button
                     type="button"
+                    id={`journey-step-${i}`}
                     onClick={() => setActive(i)}
                     onMouseEnter={() => setActive(i)}
                     aria-expanded={on}
+                    aria-controls={`journey-panel-${i}`}
                     className="group flex w-full items-start gap-5 py-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sun-500"
                   >
                     <span
@@ -126,31 +156,15 @@ export function Journey() {
                     >
                       {i + 1}
                     </span>
-                    <span className="flex-1">
-                      <span
-                        className={cn(
-                          "block text-[clamp(1.15rem,1.8vw,1.4rem)] font-bold tracking-[-0.015em] transition-colors duration-300",
-                          on
-                            ? "text-navy-950"
-                            : "text-navy-900/70 group-hover:text-navy-900/75"
-                        )}
-                      >
-                        {step.title}
-                      </span>
-                      <span
-                        className={cn(
-                          "grid transition-all duration-500 ease-out",
-                          on
-                            ? "grid-rows-[1fr] opacity-100"
-                            : "grid-rows-[0fr] opacity-0"
-                        )}
-                      >
-                        <span className="overflow-hidden">
-                          <span className="block max-w-md pt-2 text-[15px] leading-relaxed text-navy-900/70">
-                            {step.body}
-                          </span>
-                        </span>
-                      </span>
+                    <span
+                      className={cn(
+                        "block flex-1 text-[clamp(1.15rem,1.8vw,1.4rem)] font-bold tracking-[-0.015em] transition-colors duration-300",
+                        on
+                          ? "text-navy-950"
+                          : "text-navy-900/70 group-hover:text-navy-900/75"
+                      )}
+                    >
+                      {step.title}
                     </span>
                     <Plus
                       className={cn(
@@ -159,6 +173,49 @@ export function Journey() {
                       )}
                     />
                   </button>
+
+                  <div
+                    id={`journey-panel-${i}`}
+                    role="region"
+                    aria-labelledby={`journey-step-${i}`}
+                    className={cn(
+                      "grid transition-all duration-500 ease-out",
+                      on
+                        ? "grid-rows-[1fr] opacity-100"
+                        : "invisible grid-rows-[0fr] opacity-0"
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="pb-6 pl-12">
+                        <p className="max-w-md text-[15px] leading-relaxed text-navy-900/70">
+                          {step.body}
+                        </p>
+
+                        {/* Phones and tablets: each step carries its own photo */}
+                        <div className="relative mt-5 aspect-[4/3] overflow-hidden rounded-3xl lg:hidden">
+                          <Image
+                            src={IMAGES[i]}
+                            alt={step.alt}
+                            fill
+                            quality={90}
+                            sizes="(min-width: 640px) 90vw, 100vw"
+                            className={cn("object-cover", FOCUS_WIDE[IMAGES[i]])}
+                          />
+                        </div>
+
+                        {next && (
+                          <button
+                            type="button"
+                            onClick={() => goNext(i)}
+                            className="mt-5 inline-flex items-center gap-2 rounded-full py-1.5 text-[14px] font-semibold text-navy-950 underline decoration-sun-500 decoration-2 underline-offset-[6px] transition-colors hover:text-sun-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sun-500"
+                          >
+                            {t.next}: {next.title}
+                            <ArrowRight className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </li>
               );
             })}
@@ -170,8 +227,9 @@ export function Journey() {
           </Link>
         </div>
 
-        <Reveal delay={120} className="lg:col-span-6">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl sm:aspect-[4/3] lg:aspect-[4/5]">
+        {/* Desktop: one photo frame beside the list that follows the open step */}
+        <Reveal delay={120} className="hidden lg:col-span-6 lg:block">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl">
             {IMAGES.map((src, i) => (
               <Image
                 key={src}
@@ -179,7 +237,7 @@ export function Journey() {
                 alt={active === i ? t.steps[i].alt : ""}
                 fill
                 quality={90}
-                sizes="(min-width: 1024px) 45vw, 100vw"
+                sizes="45vw"
                 className={cn(
                   "object-cover transition-opacity duration-700",
                   FOCUS[src],
