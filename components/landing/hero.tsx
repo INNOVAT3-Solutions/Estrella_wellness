@@ -82,9 +82,9 @@ export function LandingHero() {
             src="/images/hero-grandkids.jpg"
             alt={t.imageAlt}
             fill
-            quality={90}
+            quality={75}
             priority
-            sizes="(min-width: 1024px) 48vw, 100vw"
+            sizes="(min-width: 1280px) 600px, (min-width: 1024px) 48vw, 100vw"
             className="object-cover object-[50%_10%] lg:object-[50%_20%]"
           />
           {/* Phones: a soft fade that is solid behind the headline and clear

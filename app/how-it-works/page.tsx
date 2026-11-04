@@ -266,7 +266,7 @@ export default function HowItWorksPage() {
           text: t.heroCta,
           href: "/qualify",
         }}
-        backgroundImage="/images/how-it-works-scene.png"
+        backgroundImage="/images/how-it-works-scene.jpg"
         imageAlt={t.heroImageAlt}
         contactInfo={t.contact}
       />

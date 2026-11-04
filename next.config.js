@@ -33,6 +33,11 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     remotePatterns: [],
+    // AVIF first (smallest), WebP for browsers without it.
+    formats: ["image/avif", "image/webp"],
+    // Optimized images are cached for 30 days. Give a changed image a new
+    // filename so visitors get it right away.
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
