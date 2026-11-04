@@ -3,13 +3,13 @@
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, MapPin, PhoneCall, Loader2 } from "lucide-react";
+import { ArrowRight, CalendarDays, MapPin, PhoneCall, Loader2 } from "lucide-react";
 import { useLang, pick } from "@/lib/i18n";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import { EstrellaStar } from "@/components/ui/estrella-star";
 import {
   CONSENT_TEXT,
-  HOURS_SUMMARY,
+  HOURS_VARY,
   LOCATIONS,
   dateRange,
   formatTime,
@@ -33,11 +33,12 @@ const COPY = {
     email: "Email",
     location: "Choose the location closest to you",
     date: "Preferred date",
+    datePick: "Choose a date",
     time: "Preferred time",
     timePick: "Choose a time",
-    timeFirst: "Choose a date first",
-    closed: "Closed on Sundays",
-    hours: "Our hours",
+    timeFirst: "Choose a location and date first",
+    closed: "Closed that day",
+    hours: "Hours",
     consentLabel: "Consent",
     readTerms: "Terms of Service",
     readPrivacy: "Privacy Policy",
@@ -69,11 +70,12 @@ const COPY = {
     email: "Correo electrónico",
     location: "Elige el centro más cercano a ti",
     date: "Fecha preferida",
+    datePick: "Elige una fecha",
     time: "Hora preferida",
     timePick: "Elige una hora",
-    timeFirst: "Primero elige una fecha",
-    closed: "Cerrado los domingos",
-    hours: "Nuestro horario",
+    timeFirst: "Primero elige un centro y una fecha",
+    closed: "Cerrado ese día",
+    hours: "Horario",
     consentLabel: "Consentimiento",
     readTerms: "Términos del Servicio",
     readPrivacy: "Política de Privacidad",
@@ -115,6 +117,18 @@ const inputCls = (invalid: boolean) =>
     invalid && "ring-2 ring-red-600 focus:ring-red-700"
   );
 
+/** "2026-11-10" -> "Tue, Nov 10" (or "mar, 10 nov") */
+function shortDate(date: string, lang: string): string {
+  const [y, m, d] = date.split("-").map(Number);
+  if (!y || !m || !d) return date;
+  return new Intl.DateTimeFormat(lang === "es" ? "es-US" : "en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(y, m - 1, d)));
+}
+
 function Req({ label }: { label: string }) {
   return (
     <>
@@ -145,12 +159,13 @@ export default function BookingPage() {
   const summaryRef = useRef<HTMLDivElement>(null);
 
   const { min, max } = useMemo(() => dateRange(), []);
-  const slots = form.date ? slotsFor(form.date) : [];
+  const slots = form.date && form.locationId ? slotsFor(form.date, form.locationId) : [];
+  const clinic = LOCATIONS.find((l) => l.id === form.locationId);
 
   const update = <K extends BookingField>(key: K, value: BookingInput[K]) => {
     setForm((f) => {
       const next = { ...f, [key]: value };
-      if (key === "date") next.time = ""; // slots differ per day
+      if (key === "date" || key === "locationId") next.time = ""; // slots differ per day and clinic
       return next;
     });
     if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
@@ -160,6 +175,15 @@ export default function BookingPage() {
     update("date", value);
     const msg = validateBooking({ ...form, date: value, time: "" }, lang).date;
     setErrors((e) => ({ ...e, date: msg, time: undefined }));
+  };
+
+  // A clinic change can make the chosen date a closed day there.
+  const onLocationChange = (id: string) => {
+    update("locationId", id);
+    if (form.date) {
+      const msg = validateBooking({ ...form, locationId: id, time: "" }, lang).date;
+      setErrors((e) => ({ ...e, date: msg, time: undefined }));
+    }
   };
 
   const focusFirstError = (errs: BookingErrors) => {
@@ -350,7 +374,7 @@ export default function BookingPage() {
                       name="location"
                       value={loc.id}
                       checked={checked}
-                      onChange={() => update("locationId", loc.id)}
+                      onChange={() => onLocationChange(loc.id)}
                       className="sr-only"
                     />
                     <MapPin aria-hidden className={cn("h-5 w-5", checked ? "text-sun-700" : "text-navy-900/70")} />
@@ -369,19 +393,48 @@ export default function BookingPage() {
                 {t.date}
                 <Req label={t.required} />
               </label>
-              <input
-                id="f-date"
-                type="date"
-                min={min}
-                max={max}
-                required
-                aria-required="true"
-                aria-invalid={!!errors.date}
-                aria-describedby={`h-hours${errors.date ? " e-date" : ""}`}
-                value={form.date}
-                onChange={(e) => onDateChange(e.target.value)}
-                className={inputCls(!!errors.date)}
-              />
+              {/* Native date picker, dressed as a clear "tap to choose" field.
+                  Phones show an empty date input as a blank box, so the label,
+                  icon and chosen date are drawn on top; any tap opens the picker. */}
+              <div className="relative mt-2">
+                <input
+                  id="f-date"
+                  type="date"
+                  min={min}
+                  max={max}
+                  required
+                  aria-required="true"
+                  aria-invalid={!!errors.date}
+                  aria-describedby={`h-hours${errors.date ? " e-date" : ""}`}
+                  value={form.date}
+                  onChange={(e) => onDateChange(e.target.value)}
+                  onClick={(e) => {
+                    try {
+                      e.currentTarget.showPicker?.();
+                    } catch {
+                      /* older browsers open their own picker */
+                    }
+                  }}
+                  className={cn(
+                    inputCls(!!errors.date),
+                    "peer mt-0 block min-h-[3.25rem] cursor-pointer appearance-none pl-12 text-left text-transparent focus-visible:text-navy-950",
+                    "[&::-webkit-date-and-time-value]:text-left [&::-webkit-date-and-time-value]:opacity-0 [&::-webkit-datetime-edit]:opacity-0 focus-visible:[&::-webkit-datetime-edit]:opacity-100 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0"
+                  )}
+                />
+                <CalendarDays
+                  aria-hidden
+                  className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-sun-700"
+                />
+                <span
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute inset-y-0 left-12 right-4 flex items-center truncate text-base peer-focus-visible:hidden",
+                    form.date ? "font-medium text-navy-950" : "text-navy-900/60"
+                  )}
+                >
+                  {form.date ? shortDate(form.date, lang) : t.datePick}
+                </span>
+              </div>
               <FieldError id="e-date" msg={errors.date} />
             </div>
             <div>
@@ -401,7 +454,7 @@ export default function BookingPage() {
                 className={cn(inputCls(!!errors.time), "disabled:cursor-not-allowed disabled:bg-mist-50")}
               >
                 <option value="">
-                  {!form.date ? t.timeFirst : slots.length === 0 ? t.closed : t.timePick}
+                  {!form.date || !form.locationId ? t.timeFirst : slots.length === 0 ? t.closed : t.timePick}
                 </option>
                 {slots.map((s) => (
                   <option key={s} value={s}>
@@ -413,7 +466,7 @@ export default function BookingPage() {
             </div>
           </div>
           <p id="h-hours" className="-mt-2 text-[13px] text-navy-900/75">
-            {t.hours}: {HOURS_SUMMARY[lang]}.
+            {clinic ? `${t.hours} (${clinic.name}): ${clinic.hoursSummary[lang]}.` : `${HOURS_VARY[lang]}.`}
           </p>
 
           <div>

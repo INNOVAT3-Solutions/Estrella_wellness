@@ -4,44 +4,64 @@
 export type Lang = "en" | "es";
 
 /* ------------------------------------------------------------------ */
-/*  Locations                                                          */
-/*  TODO before launch: replace the placeholders with the real clinic  */
-/*  names and addresses. Keep each `id` stable once live; the CRM uses */
-/*  it to route the request.                                           */
+/*  Locations and hours (America/New_York)                             */
+/*  Keep each `id` stable once live; the CRM uses it to route the      */
+/*  request. Hours are [open, close] in minutes after midnight, indexed */
+/*  by JS weekday (0 = Sunday); null = closed. Slots are 30-minute     */
+/*  start times that finish by closing.                                */
 /* ------------------------------------------------------------------ */
 
-export type Location = { id: string; name: string; address: string };
+type Hours = ([number, number] | null)[];
+
+export type Location = {
+  id: string;
+  name: string;
+  address: string;
+  hours: Hours;
+  hoursSummary: { en: string; es: string };
+};
+
+const h = (hh: number, mm = 0) => hh * 60 + mm;
+
+// Mon-Fri 7:30 AM-5 PM, Sat 8 AM-3 PM
+const WEEKDAY_EARLY_SAT: Hours = [null, ...Array(5).fill([h(7, 30), h(17)]), [h(8), h(15)]];
+// Mon-Sat 8 AM-4:30 PM
+const MON_SAT: Hours = [null, ...Array(6).fill([h(8), h(16, 30)])];
+// Mon-Fri 7:30 AM-5 PM
+const WEEKDAYS_ONLY: Hours = [null, ...Array(5).fill([h(7, 30), h(17)]), null];
+
+const SUMMARY = {
+  earlySat: {
+    en: "Monday to Friday 7:30 AM to 5:00 PM, Saturday 8:00 AM to 3:00 PM",
+    es: "Lunes a viernes de 7:30 a. m. a 5:00 p. m., sábado de 8:00 a. m. a 3:00 p. m.",
+  },
+  monSat: {
+    en: "Monday to Saturday 8:00 AM to 4:30 PM",
+    es: "Lunes a sábado de 8:00 a. m. a 4:30 p. m.",
+  },
+  weekdays: {
+    en: "Monday to Friday 7:30 AM to 5:00 PM",
+    es: "Lunes a viernes de 7:30 a. m. a 5:00 p. m.",
+  },
+};
 
 export const LOCATIONS: Location[] = [
-  { id: "location-1", name: "[Location 1 name]", address: "[Street address, city, FL ZIP]" },
-  { id: "location-2", name: "[Location 2 name]", address: "[Street address, city, FL ZIP]" },
-  { id: "location-3", name: "[Location 3 name]", address: "[Street address, city, FL ZIP]" },
+  { id: "flagler", name: "Flagler", address: "4795 W Flagler St, Miami, FL 33134", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
+  { id: "kendall", name: "Kendall", address: "13980 SW 47th St, Miami, FL 33175", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
+  { id: "doral", name: "Doral", address: "10305 NW 41st St, Suite 227, Doral, FL 33178", hours: MON_SAT, hoursSummary: SUMMARY.monSat },
+  { id: "hialeah", name: "Hialeah", address: "4305 E 8th Ave, Hialeah, FL 33013", hours: MON_SAT, hoursSummary: SUMMARY.monSat },
+  { id: "plantation", name: "Plantation", address: "1860 N Pine Island Rd, Plantation, FL 33322", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
+  { id: "pembroke-pines", name: "Pembroke Pines", address: "1806 N Flamingo Rd, Suite 280, Pembroke Pines, FL 33028", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
 ];
-
-/* ------------------------------------------------------------------ */
-/*  Operating hours (America/New_York)                                 */
-/*  Mon-Fri 8:00 AM-6:00 PM, Sat 9:00 AM-1:00 PM, closed Sunday.       */
-/*  Slots are 30-minute start times that finish by closing.            */
-/* ------------------------------------------------------------------ */
 
 const SLOT_MINUTES = 30;
-// Index = JS weekday (0 = Sunday). [open, close] in minutes after midnight.
-const HOURS: ([number, number] | null)[] = [
-  null,
-  [8 * 60, 18 * 60],
-  [8 * 60, 18 * 60],
-  [8 * 60, 18 * 60],
-  [8 * 60, 18 * 60],
-  [8 * 60, 18 * 60],
-  [9 * 60, 13 * 60],
-];
 
 /** How far ahead a patient may request a date. */
 export const BOOKING_WINDOW_DAYS = 60;
 
-export const HOURS_SUMMARY = {
-  en: "Monday to Friday 8:00 AM to 6:00 PM, Saturday 9:00 AM to 1:00 PM",
-  es: "Lunes a viernes de 8:00 a. m. a 6:00 p. m., sábado de 9:00 a. m. a 1:00 p. m.",
+export const HOURS_VARY = {
+  en: "Hours vary by clinic. Choose a location to see its hours",
+  es: "El horario varía según el centro. Elige un centro para ver su horario",
 };
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -81,10 +101,11 @@ export function dateRange(now = new Date()) {
   return { min: addDays(today, 1), max: addDays(today, BOOKING_WINDOW_DAYS) };
 }
 
-/** 24-hour "HH:MM" start times for a date; empty when the clinic is closed. */
-export function slotsFor(date: string): string[] {
-  if (!isRealDate(date)) return [];
-  const hours = HOURS[weekday(date)];
+/** 24-hour "HH:MM" start times at a clinic on a date; empty when it's closed. */
+export function slotsFor(date: string, locationId: string): string[] {
+  const location = LOCATIONS.find((l) => l.id === locationId);
+  if (!location || !isRealDate(date)) return [];
+  const hours = location.hours[weekday(date)];
   if (!hours) return [];
   const [open, close] = hours;
   const out: string[] = [];
@@ -139,7 +160,7 @@ const MESSAGES = {
     email: "Please enter a valid email address.",
     locationId: "Please choose a location.",
     date: "Please choose a date from tomorrow up to 60 days ahead.",
-    dateClosed: "We're closed on Sundays. Please choose another day.",
+    dateClosed: "This clinic is closed that day. Please choose another day.",
     time: "Please choose a time within our hours.",
     consent: "Please check this box to continue.",
   },
@@ -149,7 +170,7 @@ const MESSAGES = {
     email: "Escribe un correo electrónico válido.",
     locationId: "Elige un centro.",
     date: "Elige una fecha desde mañana hasta 60 días después.",
-    dateClosed: "Los domingos estamos cerrados. Elige otro día.",
+    dateClosed: "Este centro está cerrado ese día. Elige otro día.",
     time: "Elige una hora dentro de nuestro horario.",
     consent: "Marca esta casilla para continuar.",
   },
@@ -189,9 +210,9 @@ export function validateBooking(
   const { min, max } = dateRange(now);
   if (!isRealDate(input.date) || input.date < min || input.date > max) {
     errors.date = t.date;
-  } else if (slotsFor(input.date).length === 0) {
+  } else if (!errors.locationId && slotsFor(input.date, input.locationId).length === 0) {
     errors.date = t.dateClosed;
-  } else if (!slotsFor(input.date).includes(input.time)) {
+  } else if (!slotsFor(input.date, input.locationId).includes(input.time)) {
     errors.time = t.time;
   }
 

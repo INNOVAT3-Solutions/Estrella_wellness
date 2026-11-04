@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, CalendarDays, CreditCard, Lock, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowRight, CalendarDays, ChevronDown, CreditCard, Lock, MapPin, ShieldCheck } from "lucide-react";
 import { useLang, pick } from "@/lib/i18n";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import {
@@ -22,7 +22,7 @@ const COPY = {
   en: {
     step: "Step 2 of 3",
     title: (n: string) => `Thanks, ${n}. Your request is in.`,
-    lead: "Pay now to reserve your spot, or pay at your visit. Either way, our team will call you to confirm.",
+    lead: "Pay now to reserve your spot. Our team will call you to confirm your visit.",
     yourRequest: "Your requested visit",
     timeNote: "This is your preferred time. We'll confirm the exact time when we call.",
     payNowTitle: "Pay now",
@@ -41,6 +41,7 @@ const COPY = {
     laterTitle: "Pay at my visit",
     laterBody: "No payment today. You'll pay at the clinic.",
     later: "Pay at my visit",
+    laterPrompt: "Prefer to pay at the clinic?",
     missingTitle: "We couldn't find your booking details.",
     missingBody: "This can happen if the page was opened in a new tab. Please book again, it only takes a minute.",
     missingCta: "Book a consultation",
@@ -48,7 +49,7 @@ const COPY = {
   es: {
     step: "Paso 2 de 3",
     title: (n: string) => `Gracias, ${n}. Recibimos tu solicitud.`,
-    lead: "Paga ahora para reservar tu lugar o paga en tu visita. En ambos casos, nuestro equipo te llamará para confirmar.",
+    lead: "Paga ahora para reservar tu lugar. Nuestro equipo te llamará para confirmar tu visita.",
     yourRequest: "Tu visita solicitada",
     timeNote: "Esta es tu hora preferida. Confirmaremos la hora exacta cuando te llamemos.",
     payNowTitle: "Pagar ahora",
@@ -67,6 +68,7 @@ const COPY = {
     laterTitle: "Pagar en mi visita",
     laterBody: "Hoy no pagas nada. Pagarás en la clínica.",
     later: "Pagar en mi visita",
+    laterPrompt: "¿Prefieres pagar en la clínica?",
     missingTitle: "No encontramos los datos de tu reserva.",
     missingBody: "Puede pasar si abriste la página en otra pestaña. Vuelve a agendar, solo toma un minuto.",
     missingCta: "Agendar una consulta",
@@ -87,6 +89,7 @@ export default function PaymentPage() {
   const [summary, setSummary] = useState<BookingSummary | null | undefined>(undefined);
   const [agreed, setAgreed] = useState(false);
   const [agreeError, setAgreeError] = useState(false);
+  const [showLater, setShowLater] = useState(false);
 
   useEffect(() => setSummary(loadSummary()), []);
 
@@ -153,11 +156,11 @@ export default function PaymentPage() {
         <p className="mt-4 text-[13px] text-navy-900/75">{t.timeNote}</p>
       </section>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-12">
+      <div className="mt-6">
         {/* Pay now */}
         <section
           aria-labelledby="pay-title"
-          className="rounded-3xl bg-navy-950 p-7 text-white sm:p-9 lg:col-span-8"
+          className="rounded-3xl bg-navy-950 p-7 text-white sm:p-9"
         >
           <div className="flex items-center gap-3">
             <CreditCard aria-hidden className="h-6 w-6 text-sun-300" />
@@ -226,24 +229,50 @@ export default function PaymentPage() {
           )}
         </section>
 
-        {/* Pay later */}
-        <section
-          aria-labelledby="later-title"
-          className="flex flex-col rounded-3xl bg-white p-7 ring-1 ring-navy-900/[0.07] lg:col-span-4"
-        >
-          <h2 id="later-title" className="font-heading text-[18px] font-bold text-navy-950">
-            {t.laterTitle}
-          </h2>
-          <p className="mt-2 text-[15px] text-navy-900/75">{t.laterBody}</p>
+        {/* Pay later: a quiet alternative, shown in full only when online payment is unavailable */}
+        {STRIPE_LINK ? (
+          <div className="mt-6 text-center">
+            <button
+              type="button"
+              aria-expanded={showLater}
+              aria-controls="later-panel"
+              onClick={() => setShowLater((v) => !v)}
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[14px] font-medium text-navy-900/75 underline underline-offset-4 hover:text-navy-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-950"
+            >
+              {t.laterPrompt}
+              <ChevronDown aria-hidden className={cn("h-4 w-4 transition-transform", showLater && "rotate-180")} />
+            </button>
+            {showLater && (
+              <section
+                id="later-panel"
+                aria-labelledby="later-title"
+                className="mx-auto mt-3 max-w-md rounded-2xl bg-white p-5 text-left ring-1 ring-navy-900/[0.07]"
+              >
+                <h2 id="later-title" className="font-heading text-[16px] font-bold text-navy-950">
+                  {t.laterTitle}
+                </h2>
+                <p className="mt-1 text-[14px] text-navy-900/75">{t.laterBody}</p>
+                <button
+                  type="button"
+                  onClick={() => router.push("/qualify/confirmed")}
+                  className="mt-4 inline-flex items-center gap-2 text-[14px] font-semibold text-navy-950 underline underline-offset-4 hover:text-navy-900"
+                >
+                  {t.later}
+                  <ArrowRight aria-hidden className="h-4 w-4" />
+                </button>
+              </section>
+            )}
+          </div>
+        ) : (
           <button
             type="button"
             onClick={() => router.push("/qualify/confirmed")}
-            className="btn-pill-dark mt-6 w-full lg:mt-auto"
+            className="btn-pill-dark mt-6 w-full sm:w-auto"
           >
             {t.later}
             <ArrowRight aria-hidden className="h-4 w-4" />
           </button>
-        </section>
+        )}
       </div>
     </div>
   );
