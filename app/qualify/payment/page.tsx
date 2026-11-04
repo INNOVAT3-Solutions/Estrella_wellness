@@ -1,7 +1,8 @@
 "use client";
 
+import { localePath } from "@/lib/locale-path";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import Link from "@/components/ui/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight, CalendarDays, ChevronDown, CreditCard, Lock, MapPin, ShieldCheck } from "lucide-react";
 import { useLang, pick } from "@/lib/i18n";
@@ -254,7 +255,7 @@ export default function PaymentPage() {
                 <p className="mt-1 text-[14px] text-navy-900/75">{t.laterBody}</p>
                 <button
                   type="button"
-                  onClick={() => router.push("/qualify/confirmed")}
+                  onClick={() => router.push(localePath(lang, "/qualify/confirmed"))}
                   className="mt-4 inline-flex items-center gap-2 text-[14px] font-semibold text-navy-950 underline underline-offset-4 hover:text-navy-900"
                 >
                   {t.later}
@@ -266,7 +267,7 @@ export default function PaymentPage() {
         ) : (
           <button
             type="button"
-            onClick={() => router.push("/qualify/confirmed")}
+            onClick={() => router.push(localePath(lang, "/qualify/confirmed"))}
             className="btn-pill-dark mt-6 w-full sm:w-auto"
           >
             {t.later}

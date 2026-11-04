@@ -1,25 +1,23 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { matchLang, parseAcceptLanguage, type Lang } from "@/lib/lang-detect";
+import type { Lang } from "@/lib/lang-detect";
+import { LANG_HEADER, localePath } from "@/lib/locale-path";
 
 /** Production origin. Canonicals, OG URLs and the sitemap resolve against it. */
 export const SITE_URL = "https://www.estrellawellnessplans.com";
 export const SITE_NAME = "Estrella Wellness";
 
-/** The visitor's language, from the Accept-Language header their device sends. */
+/** The page language, from the URL (/es/* is Spanish), as set by middleware.ts. */
 export function requestLang(): Lang {
-  return matchLang(parseAcceptLanguage(headers().get("accept-language")));
+  return headers().get(LANG_HEADER) === "es" ? "es" : "en";
 }
 
 export type PageCopy = Record<Lang, { title: string; description: string }>;
 
 /**
  * Metadata for one page: its own title and description, a self-referencing
- * canonical and matching Open Graph / Twitter tags.
- *
- * Spanish is still served from the same URL (picked by Accept-Language), so
- * no hreflang alternates are emitted: pointing `en` and `es` at one URL is
- * invalid. Add them when Spanish gets its own URLs.
+ * canonical, reciprocal hreflang (en, es, x-default) and matching Open Graph /
+ * Twitter tags. `path` is the English path; the Spanish one is derived.
  */
 export function pageMetadata(
   path: string,
@@ -28,16 +26,21 @@ export function pageMetadata(
 ): Metadata {
   const lang = requestLang();
   const { title, description } = copy[lang];
+  const url = localePath(lang, path);
   return {
     title: opts.absoluteTitle ? { absolute: title } : title,
     description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: url,
+      languages: { en: path, es: localePath("es", path), "x-default": path },
+    },
     openGraph: {
       title,
       description,
-      url: path,
+      url,
       siteName: SITE_NAME,
       locale: lang === "es" ? "es_US" : "en_US",
+      alternateLocale: lang === "es" ? "en_US" : "es_US",
       type: "website",
     },
     twitter: { card: "summary", title, description },

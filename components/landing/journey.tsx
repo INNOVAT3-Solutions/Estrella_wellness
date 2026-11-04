@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/link";
 import { useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";

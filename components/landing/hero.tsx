@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/ui/link";
 import { ArrowRight, Check, CalendarCheck, ShieldCheck } from "lucide-react";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import { useLang, pick } from "@/lib/i18n";

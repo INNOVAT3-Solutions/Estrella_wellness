@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/ui/link";
 import { Check } from "lucide-react";
-import { useLang, pick } from "@/lib/i18n";
+import { useLang, pick, useBarePath } from "@/lib/i18n";
 import { LangToggle } from "@/components/ui/lang-toggle";
 import { cn } from "@/lib/cn";
 
@@ -40,7 +39,7 @@ const COPY = {
 export function BookingHeader() {
   const { lang } = useLang();
   const t = pick(lang, COPY);
-  const pathname = usePathname() || "/qualify";
+  const pathname = useBarePath("/qualify");
   const current = Math.max(0, STEPS.findIndex((s) => s.path === pathname));
 
   return (

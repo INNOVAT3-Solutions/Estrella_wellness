@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { WEIGHT_LOSS } from "@/lib/programs";
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, requestLang } from "@/lib/seo";
+import { localePath } from "@/lib/locale-path";
 import { PAGE_COPY } from "@/lib/page-copy";
 import { WeightLossDetail } from "@/components/programs/weight-loss-detail";
 
@@ -18,7 +19,7 @@ export default function ProgramPage({ params }: { params: { slug: string } }) {
   // The GLP-1 weight loss program is the only program; any other
   // program URL lands on it.
   if (params.slug !== WEIGHT_LOSS.slug) {
-    redirect(`/programs/${WEIGHT_LOSS.slug}`);
+    redirect(localePath(requestLang(), `/programs/${WEIGHT_LOSS.slug}`));
   }
   return <WeightLossDetail />;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { localePath } from "@/lib/locale-path";
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, CalendarDays, MapPin, PhoneCall } from "lucide-react";
@@ -119,7 +120,7 @@ function Confirmed() {
         type="button"
         onClick={() => {
           clearSummary();
-          router.push("/");
+          router.push(localePath(lang, "/"));
         }}
         className="btn-pill-dark mt-8"
       >
