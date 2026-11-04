@@ -12,6 +12,7 @@ import {
   Syringe,
   Salad,
   Dumbbell,
+  Plus,
 } from "lucide-react";
 import { WEIGHT_LOSS, fmtPrice, programCopy } from "@/lib/programs";
 import { Reveal } from "@/components/ui/reveal";
@@ -326,7 +327,7 @@ function FaqList({ faqs, idPrefix }: { faqs: Faq[]; idPrefix: string }) {
                     isOpen ? "rotate-45 bg-sun-400" : "bg-mist-100"
                   }`}
                 >
-                  +
+                  <Plus className="h-4 w-4" strokeWidth={2.5} />
                 </span>
               </button>
             </h3>

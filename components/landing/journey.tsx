@@ -31,6 +31,7 @@ const COPY = {
     title: "How the program works",
     lead: "Five steps, one care team, all close to home.",
     cta: "Book consultation",
+    stepsLink: "See each step in detail",
     next: "Next step",
     steps: [
       {
@@ -64,6 +65,7 @@ const COPY = {
     title: "Cómo funciona el programa",
     lead: "Cinco pasos, un mismo equipo médico, cerca de tu casa.",
     cta: "Agenda tu consulta",
+    stepsLink: "Ver cada paso en detalle",
     next: "Siguiente paso",
     steps: [
       {
@@ -221,10 +223,15 @@ export function Journey() {
             })}
           </ol>
 
-          <Link href="/qualify" className="btn-pill-dark mt-10">
-            {t.cta}
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <Link href="/qualify" className="btn-pill-dark">
+              {t.cta}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/how-it-works" className="btn-link">
+              {t.stepsLink}
+            </Link>
+          </div>
         </div>
 
         {/* Desktop: one photo frame beside the list that follows the open step */}

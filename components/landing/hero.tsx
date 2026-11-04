@@ -13,7 +13,7 @@ const SAVINGS = fmtPrice(WEIGHT_LOSS.regularPrice - WEIGHT_LOSS.price).replace(
 
 const COPY = {
   en: {
-    badge: "New doctor-led weight loss program",
+    badge: "New: doctor-led GLP-1 weight loss in Miami",
     line1: "Get your life back,",
     line2: "enjoy your family.",
     lead: "Doctor-led GLP-1 weight loss with weekly care at Estrella clinics. Open to everyone, no membership needed.",
@@ -39,7 +39,7 @@ const COPY = {
     imageAlt: "A grandmother laughing as she runs across a Coral Gables lawn with her two grandchildren",
   },
   es: {
-    badge: "Nuevo programa de pérdida de peso con médicos",
+    badge: "Nuevo: bajar de peso con GLP-1 y médicos en Miami",
     line1: "Recupera tu vida,",
     line2: "disfruta a tu familia.",
     lead: "Pérdida de peso con GLP-1 dirigida por médicos, con cuidado semanal en Estrella. Abierto para todos, sin membresía.",
@@ -119,16 +119,17 @@ export function LandingHero() {
             hook, details, offer, proof. */}
         <div className="flex min-w-0 items-center lg:order-1">
           <div className="relative -mt-36 flex w-full flex-col items-center px-5 pb-12 text-center sm:px-8 lg:ml-auto lg:mt-0 lg:max-w-[46rem] lg:items-stretch lg:pb-16 lg:pl-10 lg:pr-14 lg:pt-28 lg:text-left">
-            <span className="tag-pill order-1 lg:self-start">
+            {/* The label is the H1 (it names the topic); the slogan below is display text. */}
+            <h1 className="tag-pill order-1 lg:self-start">
               <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-sun-500" />
               {t.badge}
-            </span>
+            </h1>
 
-            <h1 className="order-2 mt-4 text-balance font-heading text-[clamp(2.1rem,8.8vw,3rem)] font-extrabold leading-[1.03] tracking-[-0.035em] text-navy-950 lg:mt-5 lg:text-[clamp(2.4rem,3.9vw,4.4rem)]">
+            <p className="order-2 mt-4 text-balance font-heading text-[clamp(2.1rem,8.8vw,3rem)] font-extrabold leading-[1.03] tracking-[-0.035em] text-navy-950 lg:mt-5 lg:text-[clamp(2.4rem,3.9vw,4.4rem)]">
               {t.line1}
               <br />
               <span className="text-sun-600">{t.line2}</span>
-            </h1>
+            </p>
 
             <p className="order-3 mt-4 max-w-md text-pretty text-[16px] leading-relaxed text-navy-900/70 lg:mt-5 lg:max-w-lg lg:text-[17px]">
               {t.lead}

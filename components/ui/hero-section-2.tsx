@@ -151,22 +151,23 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 {logo?.text && (
                   <p className="text-[17px] font-bold text-navy-950">{logo.text}</p>
                 )}
+                {/* The slogan pill is the H1 (it names the topic); the title is display text. */}
                 {slogan && (
-                  <span className="tag-pill">
+                  <h1 className="tag-pill">
                     <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-sun-500" />
                     {slogan}
-                  </span>
+                  </h1>
                 )}
               </motion.header>
             )}
 
             <motion.div variants={containerVariants}>
-              <motion.h1
+              <motion.p
                 className="mt-5 text-balance font-heading text-[clamp(2.4rem,3.9vw,4.4rem)] font-extrabold leading-[1.03] tracking-[-0.035em] text-navy-950"
                 variants={itemVariants}
               >
                 {title}
-              </motion.h1>
+              </motion.p>
               <motion.p
                 className="mt-5 max-w-lg text-pretty text-[17px] leading-relaxed text-navy-900/70"
                 variants={itemVariants}

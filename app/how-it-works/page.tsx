@@ -12,7 +12,7 @@ const PROMO = fmtPrice(WEIGHT_LOSS.price);
 
 const COPY = {
   en: {
-    slogan: "The Process",
+    slogan: "How our GLP-1 program works",
     heroTitle1: "From consultation",
     heroTitle2: "to your plan,",
     heroTitle3: "led by doctors.",
@@ -71,6 +71,7 @@ const COPY = {
     reviewBody2:
       "It is the same care more than 8,000 patients know at Estrella Medical Centers, from doctors with 20+ years of experience: clear clinical judgment, explained plainly.",
     reviewCta: "Start my consultation",
+    faqLink: "Questions? Read the FAQ",
     vol1: "What your doctor considers",
     reviewItems: [
       {
@@ -127,7 +128,7 @@ const COPY = {
     terms: "Terms of service",
   },
   es: {
-    slogan: "El Proceso",
+    slogan: "Cómo funciona nuestro programa GLP-1",
     heroTitle1: "De la consulta",
     heroTitle2: "a tu plan,",
     heroTitle3: "de la mano de médicos.",
@@ -186,6 +187,7 @@ const COPY = {
     reviewBody2:
       "Es la misma atención que conocen más de 8,000 pacientes de Estrella Medical Centers, con médicos de más de 20 años de experiencia: criterio clínico claro, explicado con sencillez.",
     reviewCta: "Iniciar mi consulta",
+    faqLink: "¿Preguntas? Lee las preguntas frecuentes",
     vol1: "Lo que tu médico considera",
     reviewItems: [
       {
@@ -338,6 +340,11 @@ export default function HowItWorksPage() {
                 {t.reviewCta}
                 <ArrowRight className="h-4 w-4" />
               </Link>
+              <p className="mt-5">
+                <Link href="/faq" className={`btn-link ${FOCUS}`}>
+                  {t.faqLink}
+                </Link>
+              </p>
             </Reveal>
 
             <div className="min-w-0 lg:col-span-7">
