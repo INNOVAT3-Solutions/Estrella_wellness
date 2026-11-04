@@ -19,6 +19,7 @@ export type Location = {
   address: string;
   /** Clinic phone as published on estrellamedicalcenters.com/ubicaciones (2026-11-04). */
   phone: string;
+  county: "Miami-Dade" | "Broward";
   hours: Hours;
   hoursSummary: { en: string; es: string };
 };
@@ -48,12 +49,12 @@ const SUMMARY = {
 };
 
 export const LOCATIONS: Location[] = [
-  { id: "flagler", phone: "+1-305-982-8810", name: "Flagler", address: "4795 W Flagler St, Miami, FL 33134", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
-  { id: "kendall", phone: "+1-305-982-8810", name: "Kendall", address: "13980 SW 47th St, Miami, FL 33175", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
-  { id: "doral", phone: "+1-305-982-8810", name: "Doral", address: "10305 NW 41st St, Suite 227, Doral, FL 33178", hours: MON_SAT, hoursSummary: SUMMARY.monSat },
-  { id: "hialeah", phone: "+1-305-217-2583", name: "Hialeah", address: "4305 E 8th Ave, Hialeah, FL 33013", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
-  { id: "plantation", phone: "+1-305-982-8810", name: "Plantation", address: "1860 N Pine Island Rd, Plantation, FL 33322", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
-  { id: "pembroke-pines", phone: "+1-305-982-8810", name: "Pembroke Pines", address: "1806 N Flamingo Rd, Suite 280, Pembroke Pines, FL 33028", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
+  { id: "flagler", county: "Miami-Dade", phone: "+1-305-982-8810", name: "Flagler", address: "4795 W Flagler St, Miami, FL 33134", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
+  { id: "kendall", county: "Miami-Dade", phone: "+1-305-982-8810", name: "Kendall", address: "13980 SW 47th St, Miami, FL 33175", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
+  { id: "doral", county: "Miami-Dade", phone: "+1-305-982-8810", name: "Doral", address: "10305 NW 41st St, Suite 227, Doral, FL 33178", hours: MON_SAT, hoursSummary: SUMMARY.monSat },
+  { id: "hialeah", county: "Miami-Dade", phone: "+1-305-217-2583", name: "Hialeah", address: "4305 E 8th Ave, Hialeah, FL 33013", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
+  { id: "plantation", county: "Broward", phone: "+1-305-982-8810", name: "Plantation", address: "1860 N Pine Island Rd, Plantation, FL 33322", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
+  { id: "pembroke-pines", county: "Broward", phone: "+1-305-982-8810", name: "Pembroke Pines", address: "1806 N Flamingo Rd, Suite 280, Pembroke Pines, FL 33028", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
 ];
 
 /**
