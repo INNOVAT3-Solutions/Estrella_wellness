@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, MapPin, PhoneCall, Loader2 } from "lucide-react";
+import { ArrowRight, CalendarDays, MapPin, PhoneCall, Loader2 } from "lucide-react";
 import { useLang, pick } from "@/lib/i18n";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import { EstrellaStar } from "@/components/ui/estrella-star";
@@ -33,6 +33,7 @@ const COPY = {
     email: "Email",
     location: "Choose the location closest to you",
     date: "Preferred date",
+    datePick: "Choose a date",
     time: "Preferred time",
     timePick: "Choose a time",
     timeFirst: "Choose a location and date first",
@@ -69,6 +70,7 @@ const COPY = {
     email: "Correo electrónico",
     location: "Elige el centro más cercano a ti",
     date: "Fecha preferida",
+    datePick: "Elige una fecha",
     time: "Hora preferida",
     timePick: "Elige una hora",
     timeFirst: "Primero elige un centro y una fecha",
@@ -114,6 +116,18 @@ const inputCls = (invalid: boolean) =>
     "input mt-2 placeholder:text-navy-900/60",
     invalid && "ring-2 ring-red-600 focus:ring-red-700"
   );
+
+/** "2026-11-10" -> "Tue, Nov 10" (or "mar, 10 nov") */
+function shortDate(date: string, lang: string): string {
+  const [y, m, d] = date.split("-").map(Number);
+  if (!y || !m || !d) return date;
+  return new Intl.DateTimeFormat(lang === "es" ? "es-US" : "en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(y, m - 1, d)));
+}
 
 function Req({ label }: { label: string }) {
   return (
@@ -379,19 +393,48 @@ export default function BookingPage() {
                 {t.date}
                 <Req label={t.required} />
               </label>
-              <input
-                id="f-date"
-                type="date"
-                min={min}
-                max={max}
-                required
-                aria-required="true"
-                aria-invalid={!!errors.date}
-                aria-describedby={`h-hours${errors.date ? " e-date" : ""}`}
-                value={form.date}
-                onChange={(e) => onDateChange(e.target.value)}
-                className={inputCls(!!errors.date)}
-              />
+              {/* Native date picker, dressed as a clear "tap to choose" field.
+                  Phones show an empty date input as a blank box, so the label,
+                  icon and chosen date are drawn on top; any tap opens the picker. */}
+              <div className="relative mt-2">
+                <input
+                  id="f-date"
+                  type="date"
+                  min={min}
+                  max={max}
+                  required
+                  aria-required="true"
+                  aria-invalid={!!errors.date}
+                  aria-describedby={`h-hours${errors.date ? " e-date" : ""}`}
+                  value={form.date}
+                  onChange={(e) => onDateChange(e.target.value)}
+                  onClick={(e) => {
+                    try {
+                      e.currentTarget.showPicker?.();
+                    } catch {
+                      /* older browsers open their own picker */
+                    }
+                  }}
+                  className={cn(
+                    inputCls(!!errors.date),
+                    "peer mt-0 block min-h-[3.25rem] cursor-pointer appearance-none pl-12 text-left text-transparent focus-visible:text-navy-950",
+                    "[&::-webkit-date-and-time-value]:text-left [&::-webkit-date-and-time-value]:opacity-0 [&::-webkit-datetime-edit]:opacity-0 focus-visible:[&::-webkit-datetime-edit]:opacity-100 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0"
+                  )}
+                />
+                <CalendarDays
+                  aria-hidden
+                  className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-sun-700"
+                />
+                <span
+                  aria-hidden
+                  className={cn(
+                    "pointer-events-none absolute inset-y-0 left-12 right-4 flex items-center truncate text-base peer-focus-visible:hidden",
+                    form.date ? "font-medium text-navy-950" : "text-navy-900/60"
+                  )}
+                >
+                  {form.date ? shortDate(form.date, lang) : t.datePick}
+                </span>
+              </div>
               <FieldError id="e-date" msg={errors.date} />
             </div>
             <div>
