@@ -13,6 +13,7 @@ import {
   Salad,
   Dumbbell,
   Plus,
+  Info,
 } from "lucide-react";
 import { WEIGHT_LOSS, fmtPrice, programCopy } from "@/lib/programs";
 import { Reveal } from "@/components/ui/reveal";
@@ -628,11 +629,13 @@ export function WeightLossDetail() {
 
           {/* Compliance footer */}
           <Reveal>
-            <div className="mt-6 rounded-3xl bg-white p-6 ring-1 ring-navy-900/[0.07] sm:p-8">
-              <h3 className="text-[13px] font-semibold text-navy-950">
+            {/* Label beside the text on desktop so the note fills the card. */}
+            <div className="mt-4 grid gap-3 rounded-3xl bg-white p-7 ring-1 ring-navy-900/[0.07] sm:p-8 md:grid-cols-12 md:gap-10">
+              <h3 className="flex items-start gap-2.5 text-[15px] font-semibold leading-snug text-navy-950 md:col-span-4 lg:col-span-3">
+                <Info aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-sun-700" />
                 {t.aboutLabel}
               </h3>
-              <p className="mt-2 max-w-3xl text-[14px] leading-relaxed text-navy-900/75">
+              <p className="text-[15px] leading-relaxed text-navy-900/75 md:col-span-8 lg:col-span-9">
                 {t.aboutBody1}{" "}
                 <span className="font-semibold text-navy-950">
                   {t.aboutBodyBold2}
