@@ -53,7 +53,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
               "The best way to contact you.",
             ],
           },
-          "We will do our best to help you get the information or service you need and to fix the problem. You can also reach us by phone at [Phone number].",
+          "We will do our best to help you get the information or service you need and to fix the problem. You can also reach us by phone at (305) 982-8810.",
         ],
       },
       {
@@ -121,7 +121,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
               "La mejor forma de comunicarnos contigo.",
             ],
           },
-          "Haremos todo lo posible para que obtengas la información o el servicio que necesitas y para corregir el problema. También puedes llamarnos al [Phone number].",
+          "Haremos todo lo posible para que obtengas la información o el servicio que necesitas y para corregir el problema. También puedes llamarnos al (305) 982-8810.",
         ],
       },
       {

@@ -56,6 +56,25 @@ export const LOCATIONS: Location[] = [
   { id: "pembroke-pines", phone: "+1-305-982-8810", name: "Pembroke Pines", address: "1806 N Flamingo Rd, Suite 280, Pembroke Pines, FL 33028", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
 ];
 
+/**
+ * Every clinic's hours in one sentence, grouped by schedule:
+ * "Flagler and Kendall: Monday to Friday ...; Doral: ...". Used wherever a
+ * page states hours, so the text always matches the booking calendar.
+ */
+export function clinicHoursSentence(lang: Lang): string {
+  const groups = new Map<string, string[]>();
+  for (const loc of LOCATIONS) {
+    const key = loc.hoursSummary[lang];
+    groups.set(key, [...(groups.get(key) ?? []), loc.name]);
+  }
+  const and = lang === "es" ? " y " : " and ";
+  const list = (names: string[]) =>
+    names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")}${and}${names[names.length - 1]}`;
+  // Spanish lowercases weekdays after a colon ("Doral: lunes a sábado").
+  const tidy = (h: string) => (lang === "es" ? h.charAt(0).toLowerCase() + h.slice(1) : h);
+  return [...groups].map(([hours, names]) => `${list(names)}: ${tidy(hours)}`).join("; ");
+}
+
 const SLOT_MINUTES = 30;
 
 /** How far ahead a patient may request a date. */

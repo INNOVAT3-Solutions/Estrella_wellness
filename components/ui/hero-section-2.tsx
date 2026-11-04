@@ -1,4 +1,5 @@
 "use client";
+import Link from "@/components/ui/link";
 
 import React from "react";
 import { motion } from "framer-motion";
@@ -175,7 +176,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                 {subtitle}
               </motion.p>
               <motion.div className="mt-8" variants={itemVariants}>
-                <a
+                <Link
                   href={callToAction.href}
                   className="btn-pill px-8 py-4 text-[15px] shadow-[0_12px_28px_-12px_rgba(200,146,56,.8)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sun-500 focus-visible:ring-offset-2"
                 >
@@ -189,7 +190,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                       strokeLinejoin="round"
                     />
                   </svg>
-                </a>
+                </Link>
               </motion.div>
             </motion.div>
 
