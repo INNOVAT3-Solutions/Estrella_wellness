@@ -117,8 +117,20 @@ export function siteGraph(lang: Lang): Json {
 const HOME = { en: "Home", es: "Inicio" };
 
 /** WebPage + BreadcrumbList for an inner page. `path` is the English path. */
-export function pageGraph(lang: Lang, path: string, name: string, extra: Json[] = []): Json {
+export function pageGraph(
+  lang: Lang,
+  path: string,
+  name: string,
+  extra: Json[] = [],
+  parents: { path: string; name: string }[] = [],
+  pageExtra: Json = {},
+): Json {
   const url = abs(localePath(lang, path));
+  const trail = [
+    { name: HOME[lang], path: "/" },
+    ...parents,
+    { name, path },
+  ];
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -130,14 +142,17 @@ export function pageGraph(lang: Lang, path: string, name: string, extra: Json[] 
         inLanguage: lang,
         isPartOf: { "@id": WEBSITE_ID },
         breadcrumb: { "@id": `${url}#breadcrumb` },
+        ...pageExtra,
       },
       {
         "@type": "BreadcrumbList",
         "@id": `${url}#breadcrumb`,
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: HOME[lang], item: abs(localePath(lang, "/")) },
-          { "@type": "ListItem", position: 2, name, item: url },
-        ],
+        itemListElement: trail.map((c, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: c.name,
+          item: abs(localePath(lang, c.path)),
+        })),
       },
       ...extra,
     ],
@@ -181,6 +196,20 @@ export function programGraph(lang: Lang): Json {
       },
     },
   ]);
+}
+
+/**
+ * Medication and cost pages: WebPage (about the drug, or the program's
+ * Service for the cost page) with a Home > Program > Page trail.
+ */
+export function topicGraph(lang: Lang, topic: "semaglutide" | "tirzepatide" | "cost", name: string): Json {
+  const program = `/programs/${WEIGHT_LOSS.slug}`;
+  const parents = [{ path: program, name: WEIGHT_LOSS[lang].name }];
+  const about =
+    topic === "cost"
+      ? { about: { "@type": "Service", "@id": serviceId(lang), name: WEIGHT_LOSS[lang].name } }
+      : { about: { "@type": "Drug", name: topic === "semaglutide" ? "Semaglutide" : "Tirzepatide", nonProprietaryName: topic } };
+  return pageGraph(lang, `${program}/${topic}`, name, [], parents, about);
 }
 
 /** Renders one JSON-LD block. `<` is escaped so text can't close the tag. */

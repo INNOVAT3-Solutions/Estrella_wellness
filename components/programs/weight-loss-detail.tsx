@@ -68,6 +68,8 @@ const COPY = {
     txLeadItalic: "not a recommendation or a guarantee of results.",
     supportsLabel: "Good to know",
     considerationsLabel: "Considerations ·",
+    learnMore: "Learn more about",
+    costLink: "See what the price includes",
 
     aboutLabel: "About compounded medication",
     aboutBody1:
@@ -200,6 +202,8 @@ const COPY = {
     txLeadItalic: "no es una recomendación ni una garantía de resultados.",
     supportsLabel: "Lo que debes saber",
     considerationsLabel: "Consideraciones ·",
+    learnMore: "Más sobre la",
+    costLink: "Mira qué incluye el precio",
 
     aboutLabel: "Sobre los medicamentos magistrales",
     aboutBody1:
@@ -611,6 +615,12 @@ export function WeightLossDetail() {
                       </div>
                     </div>
                   )}
+                  <Link
+                    href={`/programs/weight-loss/${c.name.toLowerCase().startsWith("tirzepat") ? "tirzepatide" : "semaglutide"}`}
+                    className={`btn-link mt-4 ${FOCUS}`}
+                  >
+                    {t.learnMore} {c.name.toLowerCase()}
+                  </Link>
                 </article>
               </Reveal>
             ))}
@@ -788,6 +798,12 @@ export function WeightLossDetail() {
                   className="inline-block rounded py-1.5 text-[14px] font-medium text-white/80 underline decoration-white/40 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sun-300 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
                 >
                   {t.finalLink}
+                </Link>
+                <Link
+                  href="/programs/weight-loss/cost"
+                  className="inline-block rounded py-1.5 text-[14px] font-medium text-white/80 underline decoration-white/40 underline-offset-4 transition-colors hover:text-white hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sun-500"
+                >
+                  {t.costLink}
                 </Link>
                 <div className="flex items-baseline gap-2 sm:ml-auto">
                   <span className="text-[32px] font-extrabold leading-none tracking-tight">
