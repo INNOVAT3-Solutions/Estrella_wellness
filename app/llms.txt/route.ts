@@ -55,6 +55,9 @@ ${clinics}
 
 - [Home](${url("/")}): overview of the program and price
 - [The GLP-1 weight loss program](${url(program)}): what is included, medications, pricing
+- [Semaglutide in Miami](${url(`${program}/semaglutide`)}): how it is given weekly in our clinics, side effects, cost
+- [Tirzepatide in Miami](${url(`${program}/tirzepatide`)}): how it is given weekly in our clinics, side effects, cost
+- [GLP-1 weight loss cost in Miami](${url(`${program}/cost`)}): what the monthly price includes, billing, refunds
 - [How it works](${url("/how-it-works")}): from booking to weekly visits
 - [FAQ](${url("/faq")}): cost, payment and refunds, safety, who qualifies
 - [Book a consultation](${url("/qualify")}): choose a clinic, date and time
@@ -63,6 +66,9 @@ ${clinics}
 
 - [Inicio](${url("/es")}): el programa y su precio
 - [El programa de pérdida de peso GLP-1](${url(`/es${program}`)}): qué incluye, medicamentos, precio
+- [Semaglutida en Miami](${url(`/es${program}/semaglutide`)}): cómo se aplica cada semana, efectos, costo
+- [Tirzepatida en Miami](${url(`/es${program}/tirzepatide`)}): cómo se aplica cada semana, efectos, costo
+- [Cuánto cuesta el GLP-1 en Miami](${url(`/es${program}/cost`)}): qué incluye el precio, pagos, reembolsos
 - [Cómo funciona](${url("/es/how-it-works")}): desde la cita hasta las visitas semanales
 - [Preguntas frecuentes](${url("/es/faq")}): costo, pagos y reembolsos, seguridad
 - [Agenda tu consulta](${url("/es/qualify")}): elige clínica, fecha y hora

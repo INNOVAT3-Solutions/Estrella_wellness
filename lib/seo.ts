@@ -65,6 +65,9 @@ export function pageMetadata(
 export const INDEXABLE_PATHS = [
   "/",
   "/programs/weight-loss",
+  "/programs/weight-loss/semaglutide",
+  "/programs/weight-loss/tirzepatide",
+  "/programs/weight-loss/cost",
   "/how-it-works",
   "/faq",
   "/refunds",
