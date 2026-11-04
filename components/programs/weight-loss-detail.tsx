@@ -17,6 +17,7 @@ import {
 import { WEIGHT_LOSS, fmtPrice, programCopy } from "@/lib/programs";
 import { Reveal } from "@/components/ui/reveal";
 import { DicedImageGrid } from "@/components/ui/diced-image-grid";
+import { Clinics } from "@/components/landing/clinics";
 import { useLang, pick } from "@/lib/i18n";
 
 const INCLUDE_ICONS = [Stethoscope, Syringe, Salad, Dumbbell];
@@ -727,6 +728,8 @@ export function WeightLossDetail() {
           </Reveal>
         </div>
       </section>
+
+      <Clinics />
 
       {/* FAQ */}
       <section className="bg-white py-20 sm:py-28">

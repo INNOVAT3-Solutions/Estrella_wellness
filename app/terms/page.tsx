@@ -3,6 +3,7 @@
 import { LegalPage, type LegalDoc } from "@/components/legal/legal-page";
 import { useLang, pick } from "@/lib/i18n";
 import { PRICING, fmtPrice } from "@/lib/programs";
+import { clinicHoursSentence } from "@/lib/booking";
 
 const PROMO = fmtPrice(PRICING.promo);
 const REGULAR = fmtPrice(PRICING.regular);
@@ -41,7 +42,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
         id: "booking",
         title: "Booking a consultation",
         blocks: [
-          "To book, you fill out a short form on this website with your full name, phone number, email address, preferred Estrella location, and preferred date and time within our operating hours (Monday to Friday, 8:00 AM to 6:00 PM, and Saturday, 9:00 AM to 1:00 PM). The form does not ask for health information.",
+          `To book, you fill out a short form on this website with your full name, phone number, email address, preferred Estrella location, and preferred date and time within that location's hours, which vary by clinic (${clinicHoursSentence("en")}). The form shows the open times for the location you choose and does not ask for health information.`,
           "After you book, someone from the Estrella team will call you to ask a few more questions about your health and coordinate your visit. Your appointment is confirmed when our team confirms it with you. If your preferred time is not available, we will offer you another one.",
           "Submitting the form does not guarantee that you will be accepted into the program. Only an Estrella doctor can decide, at your consultation, whether the program is right for you.",
         ],
@@ -202,7 +203,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
             list: [
               "Email: info@estrellamedicalcenters.com",
               "Mail: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
-              "Phone: [Phone number]",
+              "Phone: (305) 982-8810",
             ],
           },
         ],
@@ -242,7 +243,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
         id: "booking",
         title: "Cómo agendar una consulta",
         blocks: [
-          "Para agendar, llenas un formulario corto en este sitio web con tu nombre completo, número de teléfono, correo electrónico, el centro Estrella que prefieres, y la fecha y la hora que prefieres dentro de nuestro horario (de lunes a viernes, de 8:00 AM a 6:00 PM, y los sábados, de 9:00 AM a 1:00 PM). El formulario no pide información de salud.",
+          `Para agendar, llenas un formulario corto en este sitio web con tu nombre completo, número de teléfono, correo electrónico, el centro Estrella que prefieres, y la fecha y la hora que prefieres dentro del horario de ese centro, que varía según la clínica (${clinicHoursSentence("es")}). El formulario muestra los horarios disponibles del centro que elijas y no pide información de salud.`,
           "Después de agendar, alguien del equipo de Estrella te llamará para hacerte algunas preguntas sobre tu salud y coordinar tu visita. Tu cita queda confirmada cuando nuestro equipo la confirma contigo. Si la hora que prefieres no está disponible, te ofreceremos otra.",
           "Enviar el formulario no garantiza que seas aceptado en el programa. Solo un médico de Estrella puede decidir, en tu consulta, si el programa es adecuado para ti.",
         ],
@@ -403,7 +404,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
             list: [
               "Correo electrónico: info@estrellamedicalcenters.com",
               "Correo postal: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
-              "Teléfono: [Phone number]",
+              "Teléfono: (305) 982-8810",
             ],
           },
         ],

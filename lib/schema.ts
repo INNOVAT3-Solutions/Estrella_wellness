@@ -16,10 +16,12 @@ import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
 type Json = Record<string, unknown>;
 
-const abs = (path: string) => (path === "/" ? `${SITE_URL}/` : `${SITE_URL}${path}`);
+// Same form as the canonical tags: the home page has no trailing slash.
+const abs = (path: string) => (path === "/" ? SITE_URL : `${SITE_URL}${path}`);
 const ORG_ID = `${SITE_URL}/#organization`;
 const WEBSITE_ID = `${SITE_URL}/#website`;
-const SERVICE_ID = `${SITE_URL}/programs/${WEIGHT_LOSS.slug}#service`;
+/** One Service node per language, so EN and ES never assert different names for one @id. */
+const serviceId = (lang: Lang) => `${abs(localePath(lang, `/programs/${WEIGHT_LOSS.slug}`))}#service`;
 const clinicId = (id: string) => `${SITE_URL}/#clinic-${id}`;
 
 const AREA_SERVED = [
@@ -107,7 +109,6 @@ export function siteGraph(lang: Lang): Json {
         name: SITE_NAME,
         inLanguage: lang,
         isPartOf: { "@id": WEBSITE_ID },
-        about: { "@id": SERVICE_ID },
       },
     ],
   };
@@ -151,7 +152,7 @@ export function programGraph(lang: Lang): Json {
   return pageGraph(lang, path, copy.name, [
     {
       "@type": "Service",
-      "@id": SERVICE_ID,
+      "@id": serviceId(lang),
       name: copy.name,
       serviceType: lang === "es" ? "Programa de pérdida de peso dirigido por médicos" : "Doctor-led weight loss program",
       description: copy.description,

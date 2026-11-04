@@ -11,6 +11,7 @@ import { Journey } from "@/components/landing/journey";
 import { PatientStories } from "@/components/landing/patient-stories";
 import { ComingSoon } from "@/components/landing/coming-soon";
 import { Pricing } from "@/components/landing/pricing";
+import { Clinics } from "@/components/landing/clinics";
 
 export function generateMetadata() {
   return pageMetadata("/", PAGE_COPY.home, { absoluteTitle: true });
@@ -26,6 +27,7 @@ export default function HomePage() {
       <OpenToAll />
       <WhyUs />
       <Journey />
+      <Clinics />
       <PatientStories />
       <ComingSoon />
       <Pricing />

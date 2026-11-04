@@ -1,7 +1,7 @@
 "use client";
 
 import { localePath } from "@/lib/locale-path";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "@/components/ui/link";
 import { ArrowRight, CalendarDays, MapPin, PhoneCall, Loader2 } from "lucide-react";
@@ -158,6 +158,12 @@ export default function BookingPage() {
   const [status, setStatus] = useState<"idle" | "sending" | "failed">("idle");
   const [honeypot, setHoneypot] = useState("");
   const summaryRef = useRef<HTMLDivElement>(null);
+
+  // "Book at <clinic>" links arrive as /qualify?clinic=<id>: preselect it.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("clinic");
+    if (id && LOCATIONS.some((l) => l.id === id)) setForm((f) => ({ ...f, locationId: id }));
+  }, []);
 
   const { min, max } = useMemo(() => dateRange(), []);
   const slots = form.date && form.locationId ? slotsFor(form.date, form.locationId) : [];

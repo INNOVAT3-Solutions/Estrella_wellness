@@ -166,7 +166,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
             list: [
               "Email: info@estrellamedicalcenters.com",
               "Mail: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
-              "Phone: [Phone number]",
+              "Phone: (305) 982-8810",
             ],
           },
         ],
@@ -335,7 +335,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
             list: [
               "Correo electrónico: info@estrellamedicalcenters.com",
               "Correo postal: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
-              "Teléfono: [Phone number]",
+              "Teléfono: (305) 982-8810",
             ],
           },
         ],

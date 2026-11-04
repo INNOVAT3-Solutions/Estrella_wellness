@@ -36,12 +36,12 @@ export const CONTACT_EMAIL = "info@estrellamedicalcenters.com";
 
 const CHROME = {
   en: {
-    updated: "Last updated: October 29, 2026",
+    updated: "Last updated: November 4, 2026",
     contents: "On this page",
     backToTop: "Back to top",
   },
   es: {
-    updated: "Última actualización: 29 de octubre de 2026",
+    updated: "Última actualización: 4 de noviembre de 2026",
     contents: "En esta página",
     backToTop: "Volver arriba",
   },
