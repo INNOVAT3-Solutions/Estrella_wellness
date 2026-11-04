@@ -1,8 +1,9 @@
 "use client";
 
+import { localePath } from "@/lib/locale-path";
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/ui/link";
 import { ArrowRight, CalendarDays, MapPin, PhoneCall, Loader2 } from "lucide-react";
 import { useLang, pick } from "@/lib/i18n";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
@@ -229,7 +230,7 @@ export default function BookingPage() {
         date: form.date,
         time: form.time,
       });
-      router.push("/qualify/payment");
+      router.push(localePath(lang, "/qualify/payment"));
     } catch {
       setStatus("failed");
       requestAnimationFrame(() => summaryRef.current?.focus());

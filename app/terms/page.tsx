@@ -11,7 +11,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
   en: {
     title: "Terms of service",
     intro: [
-      "These terms govern your use of this website and your participation in Estrella Wellness, the doctor-led GLP-1 weight loss program offered by Estrella Medical Centers ([Legal entity name]) in Miami, Florida. In these terms, \"Estrella\", \"we\" and \"us\" mean Estrella Medical Centers, and \"you\" means the person using the site or joining the program.",
+      "These terms govern your use of this website and your participation in Estrella Wellness, the doctor-led GLP-1 weight loss program offered by Estrella Medical Centers in Miami, Florida. In these terms, \"Estrella\", \"we\" and \"us\" mean Estrella Medical Centers, and \"you\" means the person using the site or joining the program.",
       "Please read them carefully, especially the sections on payment and automatic renewal, cancellation and compounded medication.",
     ],
     sections: [
@@ -201,7 +201,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
           {
             list: [
               "Email: info@estrellamedicalcenters.com",
-              "Mail: Estrella Medical Centers, [Legal entity name], [Mailing address]",
+              "Mail: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
               "Phone: [Phone number]",
             ],
           },
@@ -212,7 +212,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
   es: {
     title: "Términos de servicio",
     intro: [
-      "Estos términos rigen el uso de este sitio web y tu participación en Estrella Wellness, el programa de pérdida de peso con GLP-1 dirigido por médicos que ofrece Estrella Medical Centers ([Legal entity name]) en Miami, Florida. En estos términos, \"Estrella\" y \"nosotros\" se refieren a Estrella Medical Centers, y \"tú\" se refiere a la persona que usa el sitio o se inscribe en el programa.",
+      "Estos términos rigen el uso de este sitio web y tu participación en Estrella Wellness, el programa de pérdida de peso con GLP-1 dirigido por médicos que ofrece Estrella Medical Centers en Miami, Florida. En estos términos, \"Estrella\" y \"nosotros\" se refieren a Estrella Medical Centers, y \"tú\" se refiere a la persona que usa el sitio o se inscribe en el programa.",
       "Léelos con atención, sobre todo las secciones de pago y renovación automática, cancelación y medicamentos magistrales.",
     ],
     sections: [
@@ -402,7 +402,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
           {
             list: [
               "Correo electrónico: info@estrellamedicalcenters.com",
-              "Correo postal: Estrella Medical Centers, [Legal entity name], [Mailing address]",
+              "Correo postal: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
               "Teléfono: [Phone number]",
             ],
           },

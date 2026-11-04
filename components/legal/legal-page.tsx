@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/ui/link";
 import { Fragment, ReactNode } from "react";
 import { useLang, pick } from "@/lib/i18n";
 

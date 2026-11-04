@@ -28,7 +28,7 @@ const COPY = {
     },
     exercise: {
       title: "Exercise matched to your level.",
-      body: "Step-by-step routines that protect muscle and help you keep the weight off.",
+      body: "Step-by-step routines that start where you are and build up gradually.",
       alt: "A man on a morning walk along the Miami bayfront",
     },
     language: {
@@ -57,7 +57,7 @@ const COPY = {
     },
     exercise: {
       title: "Ejercicio a tu medida.",
-      body: "Rutinas paso a paso que protegen tu músculo y te ayudan a no recuperar el peso.",
+      body: "Rutinas paso a paso que empiezan donde estás y avanzan poco a poco.",
       alt: "Un hombre en una caminata matutina junto a la bahía de Miami",
     },
     language: {

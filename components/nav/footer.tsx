@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/ui/link";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
-import { useLang, pick } from "@/lib/i18n";
+import { useLang, pick, useBarePath } from "@/lib/i18n";
 import { SHOW_PATIENT_PORTAL } from "@/lib/features";
 
 const COPY = {
@@ -73,7 +72,7 @@ const COPY = {
 };
 
 export function Footer() {
-  const pathname = usePathname() || "";
+  const pathname = useBarePath();
   const { lang } = useLang();
   const t = pick(lang, COPY);
 

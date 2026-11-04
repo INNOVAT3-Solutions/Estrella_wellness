@@ -25,7 +25,7 @@ const h = (hh: number, mm = 0) => hh * 60 + mm;
 
 // Mon-Fri 7:30 AM-5 PM, Sat 8 AM-3 PM
 const WEEKDAY_EARLY_SAT: Hours = [null, ...Array(5).fill([h(7, 30), h(17)]), [h(8), h(15)]];
-// Mon-Sat 8 AM-4:30 PM
+// Mon-Sat 8 AM-4:30 PM (Doral). Hours match each clinic page on estrellamedicalcenters.com/ubicaciones (checked 2026-11-04).
 const MON_SAT: Hours = [null, ...Array(6).fill([h(8), h(16, 30)])];
 // Mon-Fri 7:30 AM-5 PM
 const WEEKDAYS_ONLY: Hours = [null, ...Array(5).fill([h(7, 30), h(17)]), null];
@@ -49,7 +49,7 @@ export const LOCATIONS: Location[] = [
   { id: "flagler", name: "Flagler", address: "4795 W Flagler St, Miami, FL 33134", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
   { id: "kendall", name: "Kendall", address: "13980 SW 47th St, Miami, FL 33175", hours: WEEKDAY_EARLY_SAT, hoursSummary: SUMMARY.earlySat },
   { id: "doral", name: "Doral", address: "10305 NW 41st St, Suite 227, Doral, FL 33178", hours: MON_SAT, hoursSummary: SUMMARY.monSat },
-  { id: "hialeah", name: "Hialeah", address: "4305 E 8th Ave, Hialeah, FL 33013", hours: MON_SAT, hoursSummary: SUMMARY.monSat },
+  { id: "hialeah", name: "Hialeah", address: "4305 E 8th Ave, Hialeah, FL 33013", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
   { id: "plantation", name: "Plantation", address: "1860 N Pine Island Rd, Plantation, FL 33322", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
   { id: "pembroke-pines", name: "Pembroke Pines", address: "1806 N Flamingo Rd, Suite 280, Pembroke Pines, FL 33028", hours: WEEKDAYS_ONLY, hoursSummary: SUMMARY.weekdays },
 ];

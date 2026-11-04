@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/components/ui/link";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
-import { useLang, pick } from "@/lib/i18n";
+import { useLang, pick, useBarePath } from "@/lib/i18n";
 
 const COPY = {
   en: {
@@ -23,7 +22,7 @@ const COPY = {
 };
 
 export function StickyMobileCta() {
-  const pathname = usePathname() || "";
+  const pathname = useBarePath();
   const [show, setShow] = useState(false);
   const { lang } = useLang();
   const t = pick(lang, COPY);
