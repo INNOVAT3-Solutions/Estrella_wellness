@@ -218,7 +218,7 @@ export type ComingSoonProgram = {
 export const COMING_SOON: ComingSoonProgram[] = [
   {
     slug: "recovery",
-    image: "/images/recovery-repair.png",
+    image: "/images/recovery-repair.jpg",
     en: {
       name: "Recovery & Repair",
       tagline: "Support how your body heals and rebuilds.",
@@ -230,7 +230,7 @@ export const COMING_SOON: ComingSoonProgram[] = [
   },
   {
     slug: "hormone-optimization",
-    image: "/images/hormone-healthy-aging.png",
+    image: "/images/hormone-healthy-aging.jpg",
     en: {
       name: "Hormone Optimization",
       tagline: "Support healthy hormone balance as you age.",
@@ -242,7 +242,7 @@ export const COMING_SOON: ComingSoonProgram[] = [
   },
   {
     slug: "longevity",
-    image: "/images/longevity-cellular.png",
+    image: "/images/longevity-cellular.jpg",
     en: {
       name: "Longevity & Cellular Health",
       tagline: "Support cellular energy and healthy aging.",
@@ -254,7 +254,7 @@ export const COMING_SOON: ComingSoonProgram[] = [
   },
   {
     slug: "performance",
-    image: "/images/performance-energy.png",
+    image: "/images/performance-energy.jpg",
     en: {
       name: "Performance & Vitality",
       tagline: "Energy, focus, and recovery, supported.",
@@ -266,7 +266,7 @@ export const COMING_SOON: ComingSoonProgram[] = [
   },
   {
     slug: "sexual-health",
-    image: "/images/sexual-health.png",
+    image: "/images/sexual-health.jpg",
     en: {
       name: "Sexual Health",
       tagline: "Discreet, clinician-guided support.",

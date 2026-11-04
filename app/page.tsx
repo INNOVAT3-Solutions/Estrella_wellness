@@ -1,4 +1,6 @@
-import { pageMetadata } from "@/lib/seo";
+import { pageMetadata, requestLang } from "@/lib/seo";
+import { siteGraph } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/json-ld";
 import { PAGE_COPY } from "@/lib/page-copy";
 import { LandingHero } from "@/components/landing/hero";
 import { OfferBand } from "@/components/landing/offer-band";
@@ -17,6 +19,7 @@ export function generateMetadata() {
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={siteGraph(requestLang())} />
       <LandingHero />
       <OfferBand />
       <LandingAbout />

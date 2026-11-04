@@ -12,6 +12,18 @@ export function requestLang(): Lang {
   return headers().get(LANG_HEADER) === "es" ? "es" : "en";
 }
 
+/** Share image per language: 1200x630, composed from brand assets. */
+const OG_IMAGE: Record<Lang, { url: string; alt: string }> = {
+  en: {
+    url: "/og/estrella-wellness-glp1-weight-loss-en.jpg",
+    alt: "Estrella Wellness: doctor-led GLP-1 weight loss. A grandmother running across a lawn with her two grandchildren.",
+  },
+  es: {
+    url: "/og/estrella-wellness-glp1-weight-loss-es.jpg",
+    alt: "Estrella Wellness: bajar de peso con GLP-1 y médicos. Una abuela corre por el césped con sus dos nietos.",
+  },
+};
+
 export type PageCopy = Record<Lang, { title: string; description: string }>;
 
 /**
@@ -42,8 +54,9 @@ export function pageMetadata(
       locale: lang === "es" ? "es_US" : "en_US",
       alternateLocale: lang === "es" ? "en_US" : "es_US",
       type: "website",
+      images: [{ ...OG_IMAGE[lang], width: 1200, height: 630, type: "image/jpeg" }],
     },
-    twitter: { card: "summary", title, description },
+    twitter: { card: "summary_large_image", title, description, images: [OG_IMAGE[lang]] },
     ...(opts.noindex ? { robots: { index: false, follow: false } } : {}),
   };
 }

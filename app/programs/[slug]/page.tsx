@@ -3,6 +3,8 @@ import { WEIGHT_LOSS } from "@/lib/programs";
 import { pageMetadata, requestLang } from "@/lib/seo";
 import { localePath } from "@/lib/locale-path";
 import { PAGE_COPY } from "@/lib/page-copy";
+import { programGraph } from "@/lib/schema";
+import { JsonLd } from "@/components/seo/json-ld";
 import { WeightLossDetail } from "@/components/programs/weight-loss-detail";
 
 export function generateStaticParams() {
@@ -21,5 +23,10 @@ export default function ProgramPage({ params }: { params: { slug: string } }) {
   if (params.slug !== WEIGHT_LOSS.slug) {
     redirect(localePath(requestLang(), `/programs/${WEIGHT_LOSS.slug}`));
   }
-  return <WeightLossDetail />;
+  return (
+    <>
+      <JsonLd data={programGraph(requestLang())} />
+      <WeightLossDetail />
+    </>
+  );
 }

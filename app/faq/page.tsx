@@ -33,13 +33,14 @@ const LINKS = {
 
 const COPY = {
   en: {
-    masthead: "Frequently asked questions",
+    masthead: "GLP-1 weight loss FAQ",
     title1: "What you might wonder,",
     title2: "before you begin.",
     lead: `Answers to common questions about the GLP-1 Weight Loss Program, our doctors and how the program works. If something is still on your mind, email ${EMAIL} or ask your doctor at your consultation.`,
     contents: "Contents",
     still: "Still wondering",
     stillBody: `Email us at ${EMAIL}, or book online with your contact details and preferred location and time. Our team will call you to ask a few questions and coordinate your visit.`,
+    howLink: "See how the program works",
     cta: "Start my consultation",
     colophon: "About this page",
     colophonBody:
@@ -154,13 +155,14 @@ const COPY = {
     ] as Group[],
   },
   es: {
-    masthead: "Preguntas frecuentes",
+    masthead: "Preguntas frecuentes sobre GLP-1",
     title1: "Lo que podrías preguntarte,",
     title2: "antes de empezar.",
     lead: `Respuestas a las preguntas más comunes sobre el Programa de Pérdida de Peso GLP-1, nuestros médicos y cómo funciona el programa. Si te queda alguna duda, escríbenos a ${EMAIL} o pregúntale a tu médico en tu consulta.`,
     contents: "Contenido",
     still: "¿Aún con dudas?",
     stillBody: `Escríbenos a ${EMAIL}, o agenda en línea con tus datos de contacto y el centro, la fecha y la hora que prefieras. Nuestro equipo te llamará para hacerte algunas preguntas y coordinar tu visita.`,
+    howLink: "Mira cómo funciona el programa",
     cta: "Iniciar mi consulta",
     colophon: "Sobre esta página",
     colophonBody:
@@ -300,10 +302,9 @@ function FaqItems({ items, groupId }: { items: QA[]; groupId: string }) {
               >
                 <span
                   aria-hidden
-                  className="hidden w-6 shrink-0 text-[13px] font-semibold text-sun-700 sm:block"
-                >
-                  {String(qi + 1).padStart(2, "0")}
-                </span>
+                  data-n={String(qi + 1).padStart(2, "0")}
+                  className="hidden w-6 shrink-0 text-[13px] font-semibold text-sun-700 before:content-[attr(data-n)] sm:block"
+                />
                 <span className="min-w-0 flex-1 text-[16px] font-semibold leading-snug text-navy-950 sm:text-[17px]">
                   {it.q}
                 </span>
@@ -359,14 +360,15 @@ export default function FaqPage() {
         <div className="container-x py-20 sm:py-28">
           <div className="grid items-end gap-10 md:grid-cols-12 md:gap-12">
             <Reveal className="md:col-span-7">
-              <span className="tag-pill">
+              {/* The label is the H1 (it names the topic); the slogan below is display text. */}
+              <h1 className="tag-pill">
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-sun-500" />
                 {t.masthead}
-              </span>
-              <h1 className="mt-5 text-balance font-heading text-[clamp(2.4rem,3.9vw,4.4rem)] font-extrabold leading-[1.03] tracking-[-0.035em] text-navy-950">
+              </h1>
+              <p className="mt-5 text-balance font-heading text-[clamp(2.4rem,3.9vw,4.4rem)] font-extrabold leading-[1.03] tracking-[-0.035em] text-navy-950">
                 {t.title1}{" "}
                 <span className="text-sun-600">{t.title2}</span>
-              </h1>
+              </p>
             </Reveal>
             <Reveal delay={120} className="md:col-span-5">
               <p className="max-w-lg text-pretty text-[17px] leading-relaxed text-navy-900/70">
@@ -422,6 +424,11 @@ export default function FaqPage() {
                   {t.cta}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
+                <p className="mt-4">
+                  <Link href="/how-it-works" className="inline-block py-1.5 text-[14px] font-medium text-white/75 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60">
+                    {t.howLink}
+                  </Link>
+                </p>
               </div>
             </div>
           </aside>

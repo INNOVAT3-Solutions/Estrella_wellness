@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import Image from "next/image";
 
 type Slide = { title: string; image: string };
 
@@ -29,6 +29,11 @@ export function DicedImageGrid({ slides, className, alts }: DicedImageGridProps)
       {[slides[3], slides[2], slides[1], slides[0]].map((slide, index) => (
         <div
           key={index}
+          // The warped-corner mask sits on the tile, not the image, so
+          // styled-jsx can scope it (it can't reach inside next/image).
+          className={`warped-image ${
+            ["bottom-right", "bottom-left", "top-right", "top-left"][index]
+          }`}
           style={{
             position: "relative",
             width: "100%",
@@ -37,20 +42,14 @@ export function DicedImageGrid({ slides, className, alts }: DicedImageGridProps)
             borderRadius: "20px",
           }}
         >
-          <img
+          <Image
             src={slide?.image}
             alt={alts?.[index] ?? slide?.title ?? ""}
-            className={`warped-image ${
-              ["bottom-right", "bottom-left", "top-right", "top-left"][index]
-            }`}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
+            fill
+            // Each tile is about a quarter of the grid: ~45vw on phones,
+            // ~22vw beside the copy on desktop.
+            sizes="(min-width: 1280px) 260px, (min-width: 1024px) 24vw, 46vw"
+            style={{ objectFit: "cover" }}
           />
         </div>
       ))}

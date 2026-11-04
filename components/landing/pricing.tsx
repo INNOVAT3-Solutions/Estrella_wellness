@@ -20,6 +20,7 @@ const COPY = {
     terms: "Terms",
     disclaimer: "Photo is an illustration. Individual results vary.",
     cta: "Book consultation",
+    included: "See everything included",
     faq: "Questions? Read the FAQ",
     alt: "A smiling woman holding out the waistband of jeans that are now too big for her",
   },
@@ -34,6 +35,7 @@ const COPY = {
     terms: "Términos",
     disclaimer: "Imagen ilustrativa. Los resultados varían según cada persona.",
     cta: "Agenda tu consulta",
+    included: "Ver todo lo que incluye",
     faq: "¿Preguntas? Lee las preguntas frecuentes",
     alt: "Una mujer sonriente sosteniendo la cintura de unos jeans que ahora le quedan grandes",
   },
@@ -124,6 +126,9 @@ export function Pricing() {
                   className="inline-block py-1.5 text-[14px] font-medium text-white/75 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60"
                 >
                   {t.faq}
+                </Link>
+                <Link href="/programs/weight-loss" className="inline-block py-1.5 text-[14px] font-medium text-white/75 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white hover:decoration-white/60">
+                  {t.included}
                 </Link>
               </div>
               <p className="mt-5 max-w-lg text-[13px] leading-relaxed text-white/75">
