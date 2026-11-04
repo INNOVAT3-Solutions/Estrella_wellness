@@ -9,7 +9,7 @@ import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
 import { EstrellaStar } from "@/components/ui/estrella-star";
 import {
   CONSENT_TEXT,
-  HOURS_SUMMARY,
+  HOURS_VARY,
   LOCATIONS,
   dateRange,
   formatTime,
@@ -35,9 +35,9 @@ const COPY = {
     date: "Preferred date",
     time: "Preferred time",
     timePick: "Choose a time",
-    timeFirst: "Choose a date first",
-    closed: "Closed on Sundays",
-    hours: "Our hours",
+    timeFirst: "Choose a location and date first",
+    closed: "Closed that day",
+    hours: "Hours",
     consentLabel: "Consent",
     readTerms: "Terms of Service",
     readPrivacy: "Privacy Policy",
@@ -71,9 +71,9 @@ const COPY = {
     date: "Fecha preferida",
     time: "Hora preferida",
     timePick: "Elige una hora",
-    timeFirst: "Primero elige una fecha",
-    closed: "Cerrado los domingos",
-    hours: "Nuestro horario",
+    timeFirst: "Primero elige un centro y una fecha",
+    closed: "Cerrado ese día",
+    hours: "Horario",
     consentLabel: "Consentimiento",
     readTerms: "Términos del Servicio",
     readPrivacy: "Política de Privacidad",
@@ -145,12 +145,13 @@ export default function BookingPage() {
   const summaryRef = useRef<HTMLDivElement>(null);
 
   const { min, max } = useMemo(() => dateRange(), []);
-  const slots = form.date ? slotsFor(form.date) : [];
+  const slots = form.date && form.locationId ? slotsFor(form.date, form.locationId) : [];
+  const clinic = LOCATIONS.find((l) => l.id === form.locationId);
 
   const update = <K extends BookingField>(key: K, value: BookingInput[K]) => {
     setForm((f) => {
       const next = { ...f, [key]: value };
-      if (key === "date") next.time = ""; // slots differ per day
+      if (key === "date" || key === "locationId") next.time = ""; // slots differ per day and clinic
       return next;
     });
     if (errors[key]) setErrors((e) => ({ ...e, [key]: undefined }));
@@ -160,6 +161,15 @@ export default function BookingPage() {
     update("date", value);
     const msg = validateBooking({ ...form, date: value, time: "" }, lang).date;
     setErrors((e) => ({ ...e, date: msg, time: undefined }));
+  };
+
+  // A clinic change can make the chosen date a closed day there.
+  const onLocationChange = (id: string) => {
+    update("locationId", id);
+    if (form.date) {
+      const msg = validateBooking({ ...form, locationId: id, time: "" }, lang).date;
+      setErrors((e) => ({ ...e, date: msg, time: undefined }));
+    }
   };
 
   const focusFirstError = (errs: BookingErrors) => {
@@ -350,7 +360,7 @@ export default function BookingPage() {
                       name="location"
                       value={loc.id}
                       checked={checked}
-                      onChange={() => update("locationId", loc.id)}
+                      onChange={() => onLocationChange(loc.id)}
                       className="sr-only"
                     />
                     <MapPin aria-hidden className={cn("h-5 w-5", checked ? "text-sun-700" : "text-navy-900/70")} />
@@ -401,7 +411,7 @@ export default function BookingPage() {
                 className={cn(inputCls(!!errors.time), "disabled:cursor-not-allowed disabled:bg-mist-50")}
               >
                 <option value="">
-                  {!form.date ? t.timeFirst : slots.length === 0 ? t.closed : t.timePick}
+                  {!form.date || !form.locationId ? t.timeFirst : slots.length === 0 ? t.closed : t.timePick}
                 </option>
                 {slots.map((s) => (
                   <option key={s} value={s}>
@@ -413,7 +423,7 @@ export default function BookingPage() {
             </div>
           </div>
           <p id="h-hours" className="-mt-2 text-[13px] text-navy-900/75">
-            {t.hours}: {HOURS_SUMMARY[lang]}.
+            {clinic ? `${t.hours} (${clinic.name}): ${clinic.hoursSummary[lang]}.` : `${HOURS_VARY[lang]}.`}
           </p>
 
           <div>

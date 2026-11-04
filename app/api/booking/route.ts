@@ -3,19 +3,29 @@ import {
   CONSENT_TEXT,
   CONSENT_VERSION,
   LOCATIONS,
+  formatDate,
   formatPhone,
+  formatTime,
   normalizePhone,
   validateBooking,
   type BookingInput,
   type Lang,
 } from "@/lib/booking";
+import {
+  TAGS,
+  addNote,
+  addTags,
+  e164,
+  ghlConfigured,
+  upsertContact,
+  upsertOpportunity,
+} from "@/lib/ghl";
+import { WEIGHT_LOSS } from "@/lib/programs";
 
-// Booking requests are forwarded to Estrella's CRM / booking system.
-//
-//   BOOKING_WEBHOOK_URL     required in production. The CRM's inbound
-//                           webhook URL (HTTPS).
-//   BOOKING_WEBHOOK_SECRET  optional. Sent as "Authorization: Bearer ..."
-//                           so the CRM can reject requests from anyone else.
+// Booking requests go to GoHighLevel (see lib/ghl.ts): the contact is created
+// or updated, tagged with the program and the chosen clinic, given a note with
+// the requested (not yet confirmed) day and time, and placed in the GLP-1
+// pipeline. Staff call the patient to confirm availability.
 //
 // Nothing is stored on this server, and personal details are never logged.
 
@@ -56,56 +66,59 @@ export async function POST(request: Request) {
 
   const bookingId = crypto.randomUUID();
   const location = LOCATIONS.find((l) => l.id === input.locationId)!;
-  const payload = {
-    bookingId,
-    source: "estrella-wellness-website",
-    program: "GLP-1 Weight Loss Program",
-    submittedAt: new Date().toISOString(),
-    language: lang,
-    name: input.name.trim(),
-    phone: formatPhone(input.phone),
-    phoneDigits: normalizePhone(input.phone),
-    email: input.email.trim().toLowerCase(),
-    location: { id: location.id, name: location.name, address: location.address },
-    preferredDate: input.date,
-    preferredTime: input.time,
-    timezone: "America/New_York",
-    consent: {
-      agreed: true,
-      version: CONSENT_VERSION,
-      text: CONSENT_TEXT[lang],
-    },
-  };
+  const name = input.name.trim().replace(/\s+/g, " ");
+  const [firstName, ...rest] = name.split(" ");
+  const digits = normalizePhone(input.phone);
 
-  const url = process.env.BOOKING_WEBHOOK_URL;
-  if (!url) {
+  if (!ghlConfigured()) {
     if (process.env.NODE_ENV !== "production") {
-      console.warn("[booking] BOOKING_WEBHOOK_URL is not set; request accepted but not delivered (dev only).");
+      console.warn("[booking] GoHighLevel is not configured; request accepted but not delivered (dev only).");
       return NextResponse.json({ ok: true, bookingId, delivered: false });
     }
     return NextResponse.json({ ok: false, error: "not_configured" }, { status: 503 });
   }
 
+  // Staff read this note before calling. Always in English for the team.
+  const note = [
+    "GLP-1 Weight Loss: website booking request (NOT a confirmed appointment)",
+    `Requested clinic: ${location.name}, ${location.address}`,
+    `Requested time: ${formatDate(input.date, "en")} at ${formatTime(input.time, "en")} (Miami time)`,
+    `Phone: ${formatPhone(input.phone)}`,
+    `Preferred language: ${lang === "es" ? "Spanish" : "English"}`,
+    `Booking reference: ${bookingId}`,
+    `Consent (${CONSENT_VERSION}, ${lang}): ${CONSENT_TEXT[lang]}`,
+    "Next step: call the patient to confirm availability with our doctors. Payment status is tagged \"paid\" when Stripe confirms it.",
+  ].join("\n");
+
+  let contactId: string;
   try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...(process.env.BOOKING_WEBHOOK_SECRET
-          ? { Authorization: `Bearer ${process.env.BOOKING_WEBHOOK_SECRET}` }
-          : {}),
-      },
-      body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(10_000),
+    contactId = await upsertContact({
+      firstName,
+      lastName: rest.join(" ") || undefined,
+      name,
+      email: input.email.trim().toLowerCase(),
+      phone: e164(digits),
     });
-    if (!res.ok) {
-      console.error(`[booking] CRM webhook responded ${res.status}`);
-      return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 502 });
-    }
-  } catch {
-    console.error("[booking] CRM webhook request failed");
+    await addTags(contactId, [TAGS.program, TAGS.source, TAGS.location(location.name)]);
+  } catch (err) {
+    console.error("[booking] GoHighLevel contact failed:", (err as Error).message);
     return NextResponse.json({ ok: false, error: "delivery_failed" }, { status: 502 });
   }
+
+  // The contact and tags are what staff work from; a failed note or pipeline
+  // card shouldn't turn away a patient whose request already landed.
+  const extras = await Promise.allSettled([
+    addNote(contactId, note),
+    upsertOpportunity({
+      contactId,
+      name: `${name}: GLP-1 (${location.name})`,
+      stageId: process.env.GHL_STAGE_NEW_ID,
+      monetaryValue: WEIGHT_LOSS.price,
+    }),
+  ]);
+  extras.forEach((r) => {
+    if (r.status === "rejected") console.error("[booking] GoHighLevel follow-up failed:", (r.reason as Error).message);
+  });
 
   return NextResponse.json({ ok: true, bookingId, delivered: true });
 }
