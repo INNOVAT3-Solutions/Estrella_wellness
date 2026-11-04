@@ -7,7 +7,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
   en: {
     title: "Privacy policy",
     intro: [
-      "This policy explains how Estrella Medical Centers ([Legal entity name]), a medical group in Miami, Florida, collects, uses and protects personal information through this website and in connection with Estrella Wellness, our doctor-led GLP-1 weight loss program. In this policy, \"Estrella\", \"we\" and \"us\" mean Estrella Medical Centers.",
+      "This policy explains how Estrella Medical Centers, a medical group in Miami, Florida, collects, uses and protects personal information through this website and in connection with Estrella Wellness, our doctor-led GLP-1 weight loss program. In this policy, \"Estrella\", \"we\" and \"us\" mean Estrella Medical Centers.",
       "Health information you share with us for your care is also protected by our HIPAA Notice of Privacy Practices, which is provided separately. If this policy and that notice differ on how your health information is handled, the Notice of Privacy Practices controls.",
     ],
     sections: [
@@ -165,7 +165,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
           {
             list: [
               "Email: info@estrellamedicalcenters.com",
-              "Mail: Estrella Medical Centers, [Legal entity name], [Mailing address]",
+              "Mail: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
               "Phone: [Phone number]",
             ],
           },
@@ -176,7 +176,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
   es: {
     title: "Política de privacidad",
     intro: [
-      "Esta política explica cómo Estrella Medical Centers ([Legal entity name]), un grupo médico en Miami, Florida, recopila, usa y protege la información personal a través de este sitio web y en relación con Estrella Wellness, nuestro programa de pérdida de peso con GLP-1 dirigido por médicos. En esta política, \"Estrella\" y \"nosotros\" se refieren a Estrella Medical Centers.",
+      "Esta política explica cómo Estrella Medical Centers, un grupo médico en Miami, Florida, recopila, usa y protege la información personal a través de este sitio web y en relación con Estrella Wellness, nuestro programa de pérdida de peso con GLP-1 dirigido por médicos. En esta política, \"Estrella\" y \"nosotros\" se refieren a Estrella Medical Centers.",
       "La información de salud que nos compartes para tu atención también está protegida por nuestro Aviso de Prácticas de Privacidad de HIPAA, que se entrega por separado. Si esta política y ese aviso difieren sobre el manejo de tu información de salud, prevalece el Aviso de Prácticas de Privacidad.",
     ],
     sections: [
@@ -334,7 +334,7 @@ const COPY: { en: LegalDoc; es: LegalDoc } = {
           {
             list: [
               "Correo electrónico: info@estrellamedicalcenters.com",
-              "Correo postal: Estrella Medical Centers, [Legal entity name], [Mailing address]",
+              "Correo postal: Estrella Medical Centers, 13980 SW 47th St, Miami, FL 33175",
               "Teléfono: [Phone number]",
             ],
           },

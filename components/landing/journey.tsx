@@ -55,7 +55,7 @@ const COPY = {
       },
       {
         title: "Exercise and lasting habits",
-        body: "Guided routines help you keep muscle and keep the weight off for good.",
+        body: "Guided routines at your pace help make movement a regular part of your week.",
         alt: "A couple in workout clothes laughing together on a morning walk"
       },
     ],
@@ -88,7 +88,7 @@ const COPY = {
       },
       {
         title: "Ejercicio y hábitos que duran",
-        body: "Rutinas guiadas te ayudan a conservar músculo y a no recuperar el peso.",
+        body: "Rutinas guiadas a tu ritmo para que moverte sea parte de tu semana.",
         alt: "Una pareja con ropa deportiva riendo juntos en una caminata matutina"
       },
     ],

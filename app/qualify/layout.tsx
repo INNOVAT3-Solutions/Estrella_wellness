@@ -1,4 +1,12 @@
+import { pageMetadata } from "@/lib/seo";
+import { PAGE_COPY } from "@/lib/page-copy";
 import { BookingFooter, BookingHeader } from "@/components/booking/booking-chrome";
+
+// The booking funnel (/qualify, /qualify/payment, /qualify/confirmed) stays out
+// of search results. Child pages inherit the noindex.
+export function generateMetadata() {
+  return pageMetadata("/qualify", PAGE_COPY.qualify, { noindex: true });
+}
 
 export default function QualifyLayout({
   children,

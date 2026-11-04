@@ -1,40 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { headers } from "next/headers";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/nav/header";
 import { Footer } from "@/components/nav/footer";
 import { StickyMobileCta } from "@/components/ui/sticky-mobile-cta";
 import { LanguageProvider } from "@/lib/i18n";
-import { matchLang, parseAcceptLanguage, type Lang } from "@/lib/lang-detect";
+import { SITE_NAME, SITE_URL, requestLang } from "@/lib/seo";
 
-/** The visitor's language, from the Accept-Language header their device sends. */
-function requestLang(): Lang {
-  return matchLang(parseAcceptLanguage(headers().get("accept-language")));
-}
-
-const META = {
-  en: {
-    title: "Estrella Wellness | Doctor-Led GLP-1 Weight Loss in Miami, $199.99/mo",
-    description:
-      "New from Estrella Medical Centers: a doctor-led GLP-1 weight loss program in Miami, open to everyone with no membership needed. Doctor consultation, blood work review, weekly in-clinic injections, a nutritionist meal plan and guided exercise. $199.99/month for a limited time (reg. $299.99). English and Spanish.",
-  },
-  es: {
-    title: "Estrella Wellness | Pérdida de peso con GLP-1 dirigida por médicos en Miami, $199.99/mes",
-    description:
-      "Nuevo de Estrella Medical Centers: un programa de pérdida de peso con GLP-1 dirigido por médicos en Miami, abierto para todos y sin membresía. Consulta médica, revisión de análisis, inyecciones semanales en la clínica, plan de comidas con nutricionista y ejercicios guiados. $199.99 al mes por tiempo limitado (reg. $299.99). Español e inglés.",
-  },
+// Each page sets its own title, description and canonical (see lib/page-copy.ts).
+// These are the site-wide defaults they build on.
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s | ${SITE_NAME}` },
+  applicationName: SITE_NAME,
+  icons: { icon: "/logo/favicon.png", apple: "/logo/favicon.png" },
 };
-
-export function generateMetadata(): Metadata {
-  const lang = requestLang();
-  return {
-    ...META[lang],
-    icons: { icon: "/logo/favicon.png", apple: "/logo/favicon.png" },
-    alternates: { languages: { en: "/", es: "/" } },
-    openGraph: { ...META[lang], locale: lang === "es" ? "es_US" : "en_US", type: "website" },
-  };
-}
 
 export const viewport: Viewport = {
   width: "device-width",

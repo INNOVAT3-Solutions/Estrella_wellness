@@ -1,3 +1,5 @@
+import { pageMetadata } from "@/lib/seo";
+import { PAGE_COPY } from "@/lib/page-copy";
 import { LandingHero } from "@/components/landing/hero";
 import { OfferBand } from "@/components/landing/offer-band";
 import { LandingAbout } from "@/components/landing/about";
@@ -7,6 +9,10 @@ import { Journey } from "@/components/landing/journey";
 import { PatientStories } from "@/components/landing/patient-stories";
 import { ComingSoon } from "@/components/landing/coming-soon";
 import { Pricing } from "@/components/landing/pricing";
+
+export function generateMetadata() {
+  return pageMetadata("/", PAGE_COPY.home, { absoluteTitle: true });
+}
 
 export default function HomePage() {
   return (

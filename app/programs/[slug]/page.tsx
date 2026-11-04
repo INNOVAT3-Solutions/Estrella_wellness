@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
-import { WEIGHT_LOSS, fmtPrice } from "@/lib/programs";
+import { WEIGHT_LOSS } from "@/lib/programs";
+import { pageMetadata } from "@/lib/seo";
+import { PAGE_COPY } from "@/lib/page-copy";
 import { WeightLossDetail } from "@/components/programs/weight-loss-detail";
 
 export function generateStaticParams() {
@@ -7,13 +9,9 @@ export function generateStaticParams() {
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }) {
-  if (params.slug === WEIGHT_LOSS.slug) {
-    return {
-      title: `${WEIGHT_LOSS.en.name} · ${fmtPrice(WEIGHT_LOSS.price)}/mo Limited-Time Offer · Estrella Wellness`,
-      description: WEIGHT_LOSS.en.description,
-    };
-  }
-  return { title: "Estrella Wellness" };
+  // Other slugs redirect to the weight loss program, so they share its metadata.
+  void params;
+  return pageMetadata(`/programs/${WEIGHT_LOSS.slug}`, PAGE_COPY.program);
 }
 
 export default function ProgramPage({ params }: { params: { slug: string } }) {
